@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panel de turnos</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <h1>Panel de turnos</h1>
+  <p class="subtitulo">Vista interna — no es la página que ven los clientes.</p>
+</header>
+
+<main>
+  <section class="stats" id="stats">
+    <div class="stat">
+      <span class="stat-numero" id="stat-total">–</span>
+      <span class="stat-label">Turnos próximos</span>
+    </div>
+    <div class="stat">
+      <span class="stat-numero" id="stat-semana">–</span>
+      <span class="stat-label">Esta semana</span>
+    </div>
+    <div class="stat">
+      <span class="stat-numero" id="stat-top">–</span>
+      <span class="stat-label">Servicio más pedido</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Cargar turno a mano</h2>
+    <p class="panel-nota">Usalo cuando alguien te escribe o te avisa directo a vos, sin pasar por el chat automático.</p>
+    <form id="form-turno" class="form-turno">
+      <label>
+        Servicio
+        <select id="turno-servicio" required></select>
+      </label>
+      <label>
+        Lugar
+        <select id="turno-lugar" required></select>
+      </label>
+      <label>
+        Fecha y hora
+        <input type="datetime-local" id="turno-fecha" required />
+      </label>
+      <label>
+        Cliente (nombre o WhatsApp)
+        <input type="text" id="turno-cliente" placeholder="Ej: Marta - 351..." required />
+      </label>
+      <label>
+        Forma de pago
+        <select id="turno-pago" required></select>
+      </label>
+      <button type="submit">Guardar turno</button>
+      <p id="turno-mensaje" class="mensaje-form" hidden></p>
+    </form>
+  </section>
+
+  <section class="panel">
+    <div class="panel-header">
+      <h2>Turnos</h2>
+      <div class="filtros">
+        <select id="filtro-servicio">
+          <option value="">Todos los servicios</option>
+        </select>
+        <select id="filtro-lugar">
+          <option value="">Todos los lugares</option>
+        </select>
+      </div>
+    </div>
+    <div class="tabla-wrap">
+      <table id="tabla-turnos">
+        <thead>
+          <tr>
+            <th>Horario</th>
+            <th>Servicio</th>
+            <th>Lugar</th>
+            <th>Cliente (WhatsApp)</th>
+            <th>Pago</th>
+            <th>Reservado el</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6" class="cargando">Cargando turnos…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Comentarios</h2>
+    <div id="comentarios" class="lista-comentarios">
+      <p class="cargando">Cargando comentarios…</p>
+    </div>
+  </section>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
