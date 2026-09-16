@@ -144,6 +144,7 @@ table{border-collapse:collapse;width:100%}
 .g-2{grid-template-columns:1.35fr 1fr}
 .g-2e{grid-template-columns:1fr 1fr}
 .g-3{grid-template-columns:repeat(3,1fr);align-items:start}
+.g-top{align-items:start}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--shadow);min-width:0}
 .card-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .card-head h3{font-size:13px;letter-spacing:.02em}
@@ -225,6 +226,37 @@ tr:hover .row-actions{opacity:1}
 .row-actions svg{width:14px;height:14px}
 .empty{text-align:center;padding:36px 16px;color:var(--text-faint);font-size:13px}
 
+/* Barra de navegación por mes */
+.month-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.month-label{min-width:150px;text-align:center}
+.month-label b{display:block;font-size:15px}
+.month-label small{display:block;font-size:11px;color:var(--text-faint)}
+
+/* Presupuesto por categoría */
+.bud-row{padding:10px 0;border-top:1px solid var(--border)}
+.bud-row:first-child{border-top:none}
+.bud-top{display:flex;align-items:center;gap:8px;font-size:12.5px;margin-bottom:6px}
+.bud-top .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bud-top .vl{font-weight:600;font-variant-numeric:tabular-nums}
+.bud-top .rest{font-size:11px;color:var(--text-faint);width:104px;text-align:right}
+.bud-bar{height:7px;border-radius:99px;background:var(--surface-2);overflow:hidden;position:relative}
+.bud-bar>i{display:block;height:100%;border-radius:99px;transition:width .4s ease}
+
+/* Grupos de movimientos del mes */
+.grp{border-top:1px solid var(--border)}
+.grp:first-child{border-top:none}
+.grp summary{display:flex;align-items:center;gap:10px;padding:11px 0;cursor:pointer;list-style:none;font-size:13px}
+.grp summary::-webkit-details-marker{display:none}
+.grp summary .caret{color:var(--text-faint);transition:transform .15s;font-size:10px}
+.grp[open] summary .caret{transform:rotate(90deg)}
+.grp summary .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grp-items{padding:0 0 10px 22px}
+.grp-item{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:12.5px;border-top:1px dashed var(--border)}
+.grp-item .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grp-item .dt{color:var(--text-faint);font-size:11px;width:56px}
+.grp-item button{color:var(--text-faint);padding:2px 6px;border-radius:6px}
+.grp-item button:hover{background:var(--surface-2);color:var(--text)}
+
 /* Rebalanceo */
 .reb-row{display:grid;grid-template-columns:120px 1fr 92px;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--border)}
 .reb-row:first-child{border-top:none}
@@ -280,6 +312,8 @@ tr:hover .row-actions{opacity:1}
   font-size:10.5px;color:var(--text-faint);font-weight:500}
 .bottom-nav button svg{width:20px;height:20px}
 .bottom-nav button[aria-selected="true"]{color:var(--accent)}
+
+@keyframes girar{to{transform:rotate(360deg)}}
 
 /* Toast */
 .toast{position:fixed;left:50%;transform:translateX(-50%) translateY(20px);bottom:calc(var(--nav-h) + 18px);z-index:100;
@@ -355,10 +389,14 @@ tr:hover .row-actions{opacity:1}
 
       <nav class="tabs" role="tablist" aria-label="Secciones">
         <button role="tab" data-view="overview" aria-selected="true">Resumen</button>
+        <button role="tab" data-view="mes" aria-selected="false">Mes a mes</button>
         <button role="tab" data-view="invest" aria-selected="false">Inversiones</button>
         <button role="tab" data-view="cash" aria-selected="false">Flujo de caja</button>
       </nav>
 
+      <button class="icon-btn" id="btnSync" title="Sincronizar con Notion" aria-label="Sincronizar con Notion" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 01-15.3 6.4L3 16"/><path d="M3 12a9 9 0 0115.3-6.4L21 8"/><path d="M3 21v-5h5"/><path d="M21 3v5h-5"/></svg>
+      </button>
       <button class="btn btn-primary" id="btnQuickAdd" title="Agregar movimiento o posición">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         <span class="hide-sm">Agregar</span>
@@ -462,6 +500,72 @@ tr:hover .row-actions{opacity:1}
         </table>
       </article>
     </div>
+  </section>
+
+  <!-- ====================== MES A MES (personal) ====================== -->
+  <section id="view-mes" data-view="mes" hidden>
+    <div class="month-bar">
+      <button class="icon-btn" id="mesPrev" aria-label="Mes anterior">‹</button>
+      <div class="month-label"><b id="mesTitulo">—</b><small id="mesSub"></small></div>
+      <button class="icon-btn" id="mesNext" aria-label="Mes siguiente">›</button>
+      <button class="btn btn-sm btn-ghost" id="mesHoy">Hoy</button>
+      <span class="spacer" style="flex:1"></span>
+      <button class="btn btn-sm" id="btnAddGasto">+ Gasto</button>
+      <button class="btn btn-sm" id="btnAddIngreso">+ Ingreso</button>
+    </div>
+
+    <div class="grid g-kpi">
+      <article class="card kpi">
+        <div class="kpi-label">Ingresos del mes</div>
+        <div class="kpi-value num sm pos" id="mesIngresos">—</div>
+        <div class="kpi-foot"><span class="chip" id="mesIngresosChip">—</span><span>vs. mes anterior</span></div>
+      </article>
+      <article class="card kpi">
+        <div class="kpi-label">Gastos del mes</div>
+        <div class="kpi-value num sm neg" id="mesGastos">—</div>
+        <div class="kpi-foot"><span class="chip" id="mesGastosChip">—</span><span>vs. mes anterior</span></div>
+      </article>
+      <article class="card kpi">
+        <div class="kpi-label">Balance del mes</div>
+        <div class="kpi-value num sm" id="mesBalance">—</div>
+        <div class="kpi-foot"><span id="mesBalanceSub">—</span></div>
+      </article>
+      <article class="card kpi">
+        <div class="kpi-label">Tasa de ahorro</div>
+        <div class="kpi-value num sm" id="mesTasa">—</div>
+        <div class="kpi-foot"><span id="mesTasaSub">—</span></div>
+        <div class="bar"><i id="mesTasaBar" style="width:0%"></i></div>
+      </article>
+    </div>
+
+    <div class="grid g-2 g-top" style="margin-top:14px">
+      <article class="card">
+        <div class="card-head"><h3>Gasto acumulado del mes</h3><span class="spacer"></span>
+          <span class="sub" id="mesProyeccion"></span></div>
+        <div class="chart-wrap sm"><canvas id="chartAcumulado"></canvas></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><h3>Presupuesto por categoría</h3><span class="spacer"></span>
+          <button class="btn btn-sm" id="btnEditBudget">Editar</button></div>
+        <div id="budgetList"></div>
+      </article>
+    </div>
+
+    <div class="grid g-2e g-top" style="margin-top:14px">
+      <article class="card">
+        <div class="card-head"><h3>Fijos vs. variables</h3><span class="spacer"></span><span class="sub" id="fijosSub"></span></div>
+        <div class="chart-wrap xs"><canvas id="chartFijos"></canvas></div>
+        <div class="legend" id="fijosLegend"></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><h3>De dónde vino la plata</h3><span class="spacer"></span><span class="sub" id="ingresosSub"></span></div>
+        <div id="ingresosMes"></div>
+      </article>
+    </div>
+
+    <div class="section-title"><h2>Movimientos del mes</h2><span class="line"></span>
+      <span class="sub" id="mesCantidad"></span></div>
+    <article class="card" id="mesMovimientos"></article>
   </section>
 
   <!-- ============================ INVERSIONES ============================ -->
@@ -641,8 +745,10 @@ tr:hover .row-actions{opacity:1}
   <div>
     <button data-view="overview" aria-selected="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Resumen</button>
+    <button data-view="mes" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>Mes</button>
     <button data-view="invest" aria-selected="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Inversiones</button>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Cartera</button>
     <button data-view="cash" aria-selected="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="3"/><circle cx="12" cy="12" r="2.5"/></svg>Flujo</button>
   </div>
@@ -840,6 +946,25 @@ tr:hover .row-actions{opacity:1}
       </div>
 
       <h4 style="font-size:12px;color:var(--text-dim);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.06em">
+        Sincronización con Notion</h4>
+      <div class="field">
+        <label for="stSyncToken">Token de acceso del dashboard</label>
+        <input id="stSyncToken" type="password" autocomplete="off" placeholder="el valor de FINANZAS_TOKEN del servidor" />
+        <div class="hint">Lo definís en el servidor (variable <code>FINANZAS_TOKEN</code>). El token de Notion
+          nunca sale del servidor: el navegador sólo manda y recibe movimientos.</div>
+      </div>
+      <div class="field">
+        <label><input type="checkbox" id="stSyncAuto" style="width:auto;margin-right:7px" />Sincronizar automáticamente al cargar o editar</label>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" id="btnSyncNow">Sincronizar ahora</button>
+        <button class="btn" id="btnSyncDown">Bajar de Notion</button>
+        <button class="btn" id="btnSyncUp">Subir a Notion</button>
+        <button class="btn btn-ghost btn-sm" id="btnSyncTest">Probar conexión</button>
+      </div>
+      <div class="note" id="syncEstado" style="margin-top:12px">Sin configurar.</div>
+
+      <h4 style="font-size:12px;color:var(--text-dim);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.06em">
         Carga rápida desde el iPhone (Action Button / Atajos)</h4>
       <div class="note">
         El dashboard acepta datos por URL. Creá un Atajo de iOS con la acción <b>“Abrir URL”</b> y esta dirección
@@ -856,6 +981,30 @@ tr:hover .row-actions{opacity:1}
     <div class="modal-foot">
       <button class="btn" data-close>Cerrar</button>
       <button class="btn btn-primary" id="btnSaveSettings">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- Presupuesto mensual por categoría -->
+<div class="overlay" id="ovBudget" data-close>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="bgTitle">
+    <div class="modal-head"><h3 id="bgTitle">Presupuesto mensual</h3>
+      <button class="icon-btn" data-close aria-label="Cerrar">✕</button></div>
+    <div class="modal-body">
+      <div class="note" style="margin-bottom:14px">
+        Cuánto pensás gastar por mes en cada categoría. Se usa para las barras de avance y las
+        alertas de sobregiro. Dejalo en 0 para no controlar esa categoría.
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <button class="btn btn-sm" id="btnBudgetAuto">Autocompletar con el promedio de 3 meses</button>
+        <button class="btn btn-sm btn-ghost" id="btnBudgetClear">Vaciar</button>
+      </div>
+      <div id="budgetFields"></div>
+      <div class="note" id="budgetSum"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" data-close>Cancelar</button>
+      <button class="btn btn-primary" id="btnSaveBudget">Guardar</button>
     </div>
   </div>
 </div>
@@ -1065,12 +1214,19 @@ const Store = (() => {
     }
 
     return {
-      version: 1,
-      settings: { display: "USD", localCode: "ARS", fx: 1465, theme: "dark" },
+      version: 2,
+      settings: {
+        display: "USD", localCode: "ARS", fx: 1465, theme: "dark",
+        // Sincronizacion con Notion (el token de Notion vive en el servidor)
+        sync: { token: "", auto: false, last: null },
+      },
       targets: { cash: 10, fixed: 20, equity: 35, crypto: 10, real: 25 },
+      // Presupuesto mensual por categoria (0 = no se controla)
+      budgets: { Vivienda: 1000, Comida: 600, Servicios: 200, Transporte: 170, Ocio: 260, Suscripciones: 60, Salud: 170, Otros: 150 },
       holdings, liabilities,
       transactions: txs.sort((a, b) => b.date.localeCompare(a.date)),
       navHistory: [], // se completa en migrate() a partir del patrimonio actual
+      trash: [],      // bajas pendientes de avisarle a Notion
       demo: true,
     };
   }
@@ -1098,7 +1254,10 @@ const Store = (() => {
     const base = demoData();
     const s = Object.assign({}, base, raw || {});
     s.settings = Object.assign({}, base.settings, raw?.settings || {});
+    s.settings.sync = Object.assign({ token: "", auto: false, last: null }, raw?.settings?.sync || {});
     s.targets = Object.assign({}, base.targets, raw?.targets || {});
+    s.budgets = Object.assign({}, raw?.budgets || base.budgets);
+    s.trash = Array.isArray(raw?.trash) ? raw.trash.slice(0, 500) : [];
     s.holdings = (s.holdings || []).map(h => ({
       id: h.id || uid(), ticker: String(h.ticker || "?").toUpperCase(), name: h.name || "",
       cls: CFG.classById(h.cls).id, qty: +h.qty || 0, avg: +h.avg || 0, price: +h.price || 0,
@@ -1110,6 +1269,8 @@ const Store = (() => {
       id: t.id || uid(), date: (t.date || Fmt.todayISO()).slice(0, 10),
       type: t.type === "income" ? "income" : "expense", desc: t.desc || "Sin descripción",
       cat: t.cat || "Otros", amount: Math.abs(+t.amount) || 0, account: t.account || "", recurrent: !!t.recurrent,
+      // Campos de sincronizacion: notionId empareja con la pagina, updatedAt resuelve conflictos
+      notionId: t.notionId || null, updatedAt: t.updatedAt || null,
     })).sort((a, b) => b.date.localeCompare(a.date));
     if (!Array.isArray(s.navHistory) || !s.navHistory.length) s.navHistory = buildHistory(s);
     return s;
@@ -1141,6 +1302,8 @@ const Store = (() => {
     save();
     UI.renderAll();
     if (msg) UI.toast(msg);
+    // Si el auto-sync esta prendido, los cambios viajan a Notion unos segundos despues.
+    try { Sync.programarAuto(); } catch (_) { /* todavia no se inicializo */ }
   }
   /** El último punto del histórico siempre refleja el patrimonio actual. */
   function syncTodayHistory() {
@@ -1157,7 +1320,15 @@ const Store = (() => {
     if (i >= 0) state[list][i] = Object.assign({}, state[list][i], item);
     else state[list].unshift(Object.assign({ id: uid() }, item));
   };
-  const remove = (list, id) => { state[list] = state[list].filter(x => x.id !== id); };
+  const remove = (list, id) => {
+    if (list === "transactions") {
+      const tx = state.transactions.find(x => x.id === id);
+      // Sin lapida, Notion volveria a bajar el movimiento en la proxima sincronizacion.
+      if (tx) state.trash.push({ id: tx.id, notionId: tx.notionId || null, at: new Date().toISOString() });
+      if (state.trash.length > 500) state.trash = state.trash.slice(-500);
+    }
+    state[list] = state[list].filter(x => x.id !== id);
+  };
 
   /* --- Backup --- */
   function exportJSON() {
@@ -1336,7 +1507,96 @@ const Calc = (() => {
     return { abs: cur - prev, pct: prev ? ((cur - prev) / Math.abs(prev)) * 100 : 0 };
   }
 
-  return { enrichedHoldings, totals, allocation, groupBy, rangeBounds, txInRange, cashflowMonthly, cashflowSummary, categories, netWorthSeries, netWorthChange };
+  /* ---- Finanzas personales: todo lo que necesita la vista "Mes a mes" ---- */
+
+  const mesAnterior = key => {
+    const [y, m] = key.split("-").map(Number);
+    const d = new Date(y, m - 2, 1);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  };
+  const diasDelMes = key => {
+    const [y, m] = key.split("-").map(Number);
+    return new Date(y, m, 0).getDate();
+  };
+
+  /** Resumen de un mes puntual (ingresos, gastos, fijos/variables, categorias). */
+  function mes(state, key) {
+    const tx = state.transactions.filter(t => t.date.startsWith(key));
+    const ingresos = tx.filter(t => t.type === "income");
+    const gastos = tx.filter(t => t.type === "expense");
+    const sum = l => l.reduce((a, t) => a + t.amount, 0);
+    const income = sum(ingresos), expense = sum(gastos);
+    const agrupar = lista => {
+      const m = new Map();
+      lista.forEach(t => m.set(t.cat, (m.get(t.cat) || 0) + t.amount));
+      return [...m.entries()].map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
+    };
+    return {
+      key, tx, ingresos, gastos, income, expense,
+      net: income - expense,
+      rate: income > 0 ? ((income - expense) / income) * 100 : 0,
+      fijos: sum(gastos.filter(t => t.recurrent)),
+      variables: sum(gastos.filter(t => !t.recurrent)),
+      porCategoria: agrupar(gastos),
+      ingresosPorCategoria: agrupar(ingresos),
+    };
+  }
+
+  /** Gasto acumulado dia a dia (para comparar el mes actual contra el anterior). */
+  function acumuladoDiario(state, key) {
+    const dias = diasDelMes(key);
+    const serie = new Array(dias).fill(0);
+    state.transactions
+      .filter(t => t.type === "expense" && t.date.startsWith(key))
+      .forEach(t => { const d = Number(t.date.slice(8, 10)) - 1; if (serie[d] != null) serie[d] += t.amount; });
+    let acum = 0;
+    return serie.map(v => (acum += v));
+  }
+
+  /** Promedio mensual por categoria de los ultimos N meses cerrados. */
+  function promedioCategorias(state, meses = 3) {
+    const hoy = new Date();
+    const claves = [];
+    for (let i = 1; i <= meses; i++) {
+      const d = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1);
+      claves.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
+    }
+    const acum = new Map();
+    state.transactions
+      .filter(t => t.type === "expense" && claves.includes(t.date.slice(0, 7)))
+      .forEach(t => acum.set(t.cat, (acum.get(t.cat) || 0) + t.amount));
+    const out = {};
+    acum.forEach((v, k) => { out[k] = Math.round(v / meses); });
+    return out;
+  }
+
+  /** Presupuesto vs. gasto real del mes, ordenado por urgencia. */
+  function presupuesto(state, key) {
+    const m = mes(state, key);
+    const gastado = new Map(m.porCategoria.map(c => [c.label, c.value]));
+    const cats = new Set([...Object.keys(state.budgets || {}), ...gastado.keys()]);
+    return [...cats].map(label => {
+      const budget = Number(state.budgets?.[label]) || 0;
+      const spent = gastado.get(label) || 0;
+      return { label, budget, spent, rest: budget - spent, pct: budget > 0 ? (spent / budget) * 100 : 0 };
+    }).filter(r => r.budget > 0 || r.spent > 0)
+      .sort((a, b) => (b.budget ? b.pct : -1) - (a.budget ? a.pct : -1) || b.spent - a.spent);
+  }
+
+  /** Proyeccion de cierre: gasto diario promedio × días del mes (sólo mes en curso). */
+  function proyeccion(state, key) {
+    const hoy = new Date();
+    const actual = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, "0")}`;
+    if (key !== actual) return null;
+    const dias = diasDelMes(key);
+    const transcurridos = Math.max(1, hoy.getDate());
+    const gastado = mes(state, key).expense;
+    return { proyectado: (gastado / transcurridos) * dias, transcurridos, dias };
+  }
+
+  return { enrichedHoldings, totals, allocation, groupBy, rangeBounds, txInRange, cashflowMonthly,
+           cashflowSummary, categories, netWorthSeries, netWorthChange,
+           mes, mesAnterior, diasDelMes, acumuladoDiario, promedioCategorias, presupuesto, proyeccion };
 })();
 
 /* ------------------------------------------------------------- Charts ---- */
@@ -1476,9 +1736,28 @@ const Charts = (() => {
     });
   }
 
+  /** Gasto acumulado del mes vs. el mes anterior (y el presupuesto si existe). */
+  function lineAcumulado(actual, anterior, presupuestoTotal, etiquetaAnterior) {
+    const o = baseOpts();
+    o.plugins.legend = { display: true, labels: { color: V("--text-dim"), boxWidth: 10, boxHeight: 10, font: { size: 11 } } };
+    o.scales.x.ticks.maxTicksLimit = 8;
+    const labels = Array.from({ length: Math.max(actual.length, anterior.length) }, (_, i) => String(i + 1));
+    const datasets = [
+      { label: "Este mes", data: actual, borderColor: V("--accent"), backgroundColor: V("--accent-soft"),
+        fill: true, tension: .25, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 },
+      { label: etiquetaAnterior || "Mes anterior", data: anterior, borderColor: V("--text-faint"),
+        borderDash: [5, 4], borderWidth: 1.6, pointRadius: 0, fill: false, tension: .25 },
+    ];
+    if (presupuestoTotal > 0) {
+      datasets.push({ label: "Presupuesto", data: labels.map(() => presupuestoTotal), borderColor: V("--warn"),
+        borderDash: [2, 4], borderWidth: 1.4, pointRadius: 0, fill: false });
+    }
+    make("chartAcumulado", { type: "line", data: { labels, datasets }, options: o });
+  }
+
   const destroyAll = () => Object.keys(instances).forEach(k => { instances[k].destroy(); delete instances[k]; });
 
-  return { lineNetWorth, sparkline, doughnut, barsRebalance, barsCashflow, barsSimple, destroyAll };
+  return { lineNetWorth, sparkline, doughnut, barsRebalance, barsCashflow, barsSimple, lineAcumulado, destroyAll };
 })();
 
 /* ----------------------------------------------------------------- UI ---- */
@@ -1497,6 +1776,7 @@ const UI = (() => {
     tSearch: "", tType: "", tCat: "",
     tSort: { key: "date", dir: -1 },
     tPage: 1,
+    mes: null, // clave YYYY-MM de la vista mensual
   };
 
   const signClass = v => (v > 0 ? "pos" : v < 0 ? "neg" : "dim");
@@ -1779,6 +2059,127 @@ const UI = (() => {
     markSort("#tablaTx", ui.tSort);
   }
 
+  /* ---------------------------- MES A MES ------------------------------- */
+  function claveMesActual() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  }
+  function nombreMes(key) {
+    const [y, m] = key.split("-").map(Number);
+    // es-AR devuelve "septiembre de 2026": sacamos el "de" y ponemos mayuscula inicial.
+    const mes = new Intl.DateTimeFormat(Fmt.LOCALE, { month: "long" }).format(new Date(y, m - 1, 1));
+    return mes.charAt(0).toUpperCase() + mes.slice(1) + " " + y;
+  }
+  const delta = (hoy, antes) => (antes > 0 ? ((hoy - antes) / antes) * 100 : hoy > 0 ? 100 : 0);
+
+  function renderMes() {
+    const st = Store.state;
+    const key = ui.mes || (ui.mes = claveMesActual());
+    const prevKey = Calc.mesAnterior(key);
+    const m = Calc.mes(st, key);
+    const prev = Calc.mes(st, prevKey);
+    const proy = Calc.proyeccion(st, key);
+
+    $("#mesTitulo").textContent = nombreMes(key);
+    $("#mesSub").textContent = m.tx.length ? `${m.tx.length} movimientos` : "sin movimientos";
+    $("#mesNext").disabled = key >= claveMesActual();
+    $("#mesNext").style.opacity = key >= claveMesActual() ? .35 : 1;
+
+    // KPIs con comparacion contra el mes anterior
+    const dIng = delta(m.income, prev.income), dGas = delta(m.expense, prev.expense);
+    $("#mesIngresos").textContent = Fmt.money(m.income);
+    $("#mesIngresosChip").className = "chip " + (dIng > 0 ? "up" : dIng < 0 ? "down" : "");
+    $("#mesIngresosChip").textContent = Fmt.pct(dIng);
+    $("#mesGastos").textContent = Fmt.money(m.expense);
+    // En gastos, subir es malo: el color va al reves.
+    $("#mesGastosChip").className = "chip " + (dGas > 0 ? "down" : dGas < 0 ? "up" : "");
+    $("#mesGastosChip").textContent = Fmt.pct(dGas);
+    $("#mesBalance").textContent = Fmt.money(m.net, { signed: true });
+    $("#mesBalance").className = "kpi-value num sm " + signClass(m.net);
+    $("#mesBalanceSub").innerHTML = `Mes anterior: <span class="${signClass(prev.net)}">${Fmt.money(prev.net, { signed: true })}</span>`;
+    $("#mesTasa").textContent = Fmt.pct(m.rate, 1, false);
+    $("#mesTasa").className = "kpi-value num sm " + (m.rate >= 20 ? "pos" : m.rate > 0 ? "" : "neg");
+    $("#mesTasaSub").innerHTML = `${Fmt.money(m.net)} guardados · <span class="faint">meta 20%</span>`;
+    const tb = $("#mesTasaBar");
+    tb.style.width = Math.max(0, Math.min(100, m.rate)) + "%";
+    tb.style.background = m.rate >= 20 ? V("--pos") : m.rate > 0 ? V("--warn") : V("--neg");
+
+    // Acumulado diario + proyeccion de cierre
+    const presu = Calc.presupuesto(st, key);
+    const totalPresu = presu.reduce((a, r) => a + r.budget, 0);
+    Charts.lineAcumulado(Calc.acumuladoDiario(st, key), Calc.acumuladoDiario(st, prevKey), totalPresu, nombreMes(prevKey).split(" ")[0]);
+    $("#mesProyeccion").innerHTML = proy
+      ? `Proyección de cierre: <b class="${proy.proyectado > (totalPresu || Infinity) ? "neg" : ""}">${Fmt.money(proy.proyectado)}</b> (día ${proy.transcurridos}/${proy.dias})`
+      : `Cerrado: ${Fmt.money(m.expense)} gastados`;
+
+    // Presupuesto por categoria
+    $("#budgetList").innerHTML = presu.length ? presu.map(r => {
+      const pct = r.budget > 0 ? Math.min(100, r.pct) : 0;
+      const color = !r.budget ? V("--text-faint") : r.pct > 100 ? V("--neg") : r.pct > 80 ? V("--warn") : V("--pos");
+      return `<div class="bud-row">
+        <div class="bud-top">
+          <span class="nm">${esc(r.label)}</span>
+          <span class="vl">${Fmt.money(r.spent)}</span>
+          <span class="rest">${r.budget ? `de ${Fmt.money(r.budget)}` : "sin presupuesto"}</span>
+        </div>
+        <div class="bud-bar"><i style="width:${pct}%;background:${color}"></i></div>
+        ${r.budget ? `<div class="bud-top" style="margin:5px 0 0">
+          <span class="nm faint" style="font-size:11px">${Fmt.pct(r.pct, 0, false)} usado</span>
+          <span style="font-size:11px" class="${r.rest < 0 ? "neg" : "faint"}">${r.rest >= 0
+            ? `quedan ${Fmt.money(r.rest)}` : `excedido por ${Fmt.money(Math.abs(r.rest))}`}</span></div>` : ""}
+      </div>`;
+    }).join("") : `<div class="empty">Definí un presupuesto por categoría para seguir tus gastos mes a mes.</div>`;
+
+    // Fijos vs variables
+    const fv = [{ label: "Gastos fijos", value: m.fijos }, { label: "Gastos variables", value: m.variables }].filter(x => x.value > 0);
+    Charts.doughnut("chartFijos", fv, [V("--c1"), V("--c5")]);
+    $("#fijosSub").textContent = m.expense ? `${Fmt.pct((m.fijos / m.expense) * 100, 0, false)} son fijos` : "";
+    $("#fijosLegend").innerHTML = fv.map((x, i) => `
+      <div class="legend-row">
+        <span class="legend-dot" style="background:${[V("--c1"), V("--c5")][i]}"></span>
+        <span class="nm">${x.label}</span>
+        <span class="vl num">${Fmt.money(x.value)}</span>
+        <span class="pc num">${Fmt.pct((x.value / (m.expense || 1)) * 100, 0, false)}</span>
+      </div>`).join("") || `<div class="empty" style="padding:14px">Sin gastos este mes.</div>`;
+
+    // Ingresos del mes por categoria
+    $("#ingresosSub").textContent = m.income ? Fmt.money(m.income) : "";
+    $("#ingresosMes").innerHTML = m.ingresosPorCategoria.length ? m.ingresosPorCategoria.map(c => `
+      <div class="bud-row"><div class="bud-top">
+        <span class="legend-dot" style="background:var(--pos)"></span>
+        <span class="nm">${esc(c.label)}</span>
+        <span class="vl pos">${Fmt.money(c.value)}</span>
+        <span class="rest">${Fmt.pct((c.value / m.income) * 100, 0, false)} del total</span>
+      </div>
+      <div class="bud-bar"><i style="width:${(c.value / m.income) * 100}%;background:var(--pos)"></i></div></div>`).join("")
+      : `<div class="empty">No hay ingresos cargados en ${nombreMes(key)}.</div>`;
+
+    // Movimientos agrupados por categoria
+    $("#mesCantidad").textContent = `${m.tx.length} registros`;
+    const grupos = [...m.porCategoria, ...m.ingresosPorCategoria.map(c => ({ ...c, ingreso: true }))];
+    $("#mesMovimientos").innerHTML = grupos.length ? grupos.map(g => {
+      const items = m.tx.filter(t => t.cat === g.label && (g.ingreso ? t.type === "income" : t.type === "expense"))
+        .sort((a, b) => b.date.localeCompare(a.date));
+      return `<details class="grp">
+        <summary>
+          <span class="caret">▶</span>
+          <span class="legend-dot" style="background:${g.ingreso ? "var(--pos)" : "var(--neg)"}"></span>
+          <span class="nm">${esc(g.label)}</span>
+          <span class="faint" style="font-size:11px">${items.length}</span>
+          <span class="num ${g.ingreso ? "pos" : ""}"><b>${Fmt.money(g.value)}</b></span>
+        </summary>
+        <div class="grp-items">
+          ${items.map(t => `<div class="grp-item">
+            <span class="dt num">${Fmt.date(t.date)}</span>
+            <span class="nm">${esc(t.desc)}${t.recurrent ? ' <span class="faint">· fijo</span>' : ""}</span>
+            <span class="num ${t.type === "income" ? "pos" : "neg"}">${t.type === "income" ? "+" : "−"}${Fmt.money(t.amount)}</span>
+            <button data-edit-tx="${t.id}" aria-label="Editar">✎</button>
+          </div>`).join("")}
+        </div>
+      </details>`;
+    }).join("") : `<div class="empty">Todavía no cargaste nada en ${nombreMes(key)}.<br>Usá los botones “+ Gasto” o “+ Ingreso” de arriba.</div>`;
+  }
+
   /* ------------------------------ HELPERS ------------------------------- */
   function fillSelect(sel, pairs, current, placeholder) {
     const el = $(sel);
@@ -1810,6 +2211,7 @@ const UI = (() => {
     $("#brandSub").textContent = st.demo ? "Datos demo · editá o importá los tuyos" : "Dashboard personal · datos locales";
 
     if (ui.view === "overview") renderOverview();
+    else if (ui.view === "mes") renderMes();
     else if (ui.view === "invest") renderInvest();
     else renderCash();
   }
@@ -1822,7 +2224,8 @@ const UI = (() => {
     renderAll();
   }
 
-  return { $, $$, esc, ui, toast, renderAll, setView, fillSelect, toggleSort, signClass, esCelular };
+  return { $, $$, esc, ui, toast, renderAll, setView, fillSelect, toggleSort, signClass, esCelular,
+           claveMesActual, nombreMes };
 })();
 
 /* --------------------------------------------------------------- Modal ---- */
@@ -1879,6 +2282,8 @@ const Modal = (() => {
       cat: ($("#txCat").value.trim() || "Otros"),
       account: $("#txAccount").value.trim(),
       recurrent: $("#txRecurrent").checked,
+      notionId: id ? (Store.state.transactions.find(x => x.id === id)?.notionId || null) : null,
+      updatedAt: new Date().toISOString(), // sello para que la sincronizacion sepa quien gana
     };
     Store.commit(s => {
       const i = s.transactions.findIndex(x => x.id === item.id);
@@ -1990,6 +2395,9 @@ const Modal = (() => {
     const s = Store.state.settings, t = Store.state.targets;
     $("#stLocalCode").value = s.localCode;
     $("#stFx").value = s.fx;
+    $("#stSyncToken").value = s.sync?.token || "";
+    $("#stSyncAuto").checked = !!s.sync?.auto;
+    Sync.pintarEstado();
     $("#targetFields").innerHTML = CFG.CLASSES.map(c => `
       <div class="field" style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
         <span class="legend-dot" style="background:var(${c.varName})"></span>
@@ -2014,13 +2422,179 @@ const Modal = (() => {
     const fx = parseFloat($("#stFx").value) || 1;
     const targets = {};
     UI.$$("#targetFields input[data-target]").forEach(i => { targets[i.dataset.target] = parseFloat(i.value) || 0; });
-    Store.commit(s => { s.settings.localCode = code; s.settings.fx = fx; s.targets = targets; }, "Configuración guardada");
+    const token = $("#stSyncToken").value.trim();
+    const auto = $("#stSyncAuto").checked;
+    Store.commit(s => {
+      s.settings.localCode = code; s.settings.fx = fx; s.targets = targets;
+      s.settings.sync = Object.assign({}, s.settings.sync, { token, auto });
+    }, "Configuración guardada");
+    Sync.actualizarBoton();
     close("#ovSettings");
   }
 
-  return { open, close, closeAll, openTx, openHolding, openLiab, openSettings, setTxKind,
+  /* --- Presupuesto mensual por categoria --- */
+  function openBudget() {
+    pintarBudget(Store.state.budgets || {});
+    open("#ovBudget");
+  }
+  function pintarBudget(valores) {
+    // Categorias del presupuesto + las que aparecen en los gastos reales
+    const usadas = [...new Set(Store.state.transactions.filter(t => t.type === "expense").map(t => t.cat))];
+    const cats = [...new Set([...Object.keys(valores), ...usadas])].sort((a, b) => a.localeCompare(b));
+    $("#budgetFields").innerHTML = cats.map(c => `
+      <div class="field" style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+        <label for="bg-${UI.esc(c)}" style="flex:1;margin:0">${UI.esc(c)}</label>
+        <input id="bg-${UI.esc(c)}" data-budget="${UI.esc(c)}" type="number" min="0" step="10"
+               value="${Number(valores[c]) || 0}" style="width:110px" inputmode="decimal" />
+        <span class="dim">USD</span>
+      </div>`).join("") +
+      `<div class="field" style="display:flex;align-items:center;gap:10px;margin-top:12px">
+        <input id="bgNueva" type="text" placeholder="Agregar otra categoría…" style="flex:1" />
+        <button type="button" class="btn btn-sm" id="btnBudgetAdd">Agregar</button>
+      </div>`;
+    $("#btnBudgetAdd").addEventListener("click", () => {
+      const nombre = $("#bgNueva").value.trim();
+      if (!nombre) return;
+      pintarBudget({ ...leerBudget(), [nombre]: 0 });
+      updateBudgetSum();
+    });
+    updateBudgetSum();
+  }
+  const leerBudget = () => {
+    const out = {};
+    UI.$$("#budgetFields input[data-budget]").forEach(i => { out[i.dataset.budget] = parseFloat(i.value) || 0; });
+    return out;
+  };
+  function updateBudgetSum() {
+    const total = Object.values(leerBudget()).reduce((a, v) => a + v, 0);
+    const m = Calc.mes(Store.state, UI.ui.mes || UI.claveMesActual());
+    $("#budgetSum").innerHTML = `Presupuesto total: <b>${Fmt.money(total)}</b> por mes · ` +
+      `gasto real de ${UI.nombreMes(m.key)}: <b class="${m.expense > total && total ? "neg" : ""}">${Fmt.money(m.expense)}</b>`;
+  }
+  function saveBudget() {
+    const budgets = leerBudget();
+    Store.commit(s => { s.budgets = budgets; }, "Presupuesto guardado");
+    close("#ovBudget");
+  }
+
+  return { open, close, closeAll, openTx, openHolding, openLiab, openSettings, openBudget,
+           pintarBudget, leerBudget, updateBudgetSum, saveBudget, setTxKind,
            saveTx, deleteTx, saveHolding, deleteHolding, saveLiab, deleteLiab, saveSettings,
            updateTxHint, updateHoldingPreview, updateTargetSum };
+})();
+
+/* ---------------------------------------------------------------- Sync ---- */
+/* Puente con Notion. El navegador nunca ve el token de Notion: habla con el
+   servidor del proyecto (/api/finanzas), que es el que tiene las credenciales.  */
+const Sync = (() => {
+  const { $ } = UI;
+  let corriendo = false;
+  let autoTimer = null;
+
+  const cfg = () => Store.state.settings.sync || {};
+  const activo = () => !!cfg().token;
+  const base = () => (cfg().api || "").replace(/\/$/, "");
+
+  async function pedir(ruta, opciones = {}) {
+    const res = await fetch(base() + "/api/finanzas" + ruta, {
+      ...opciones,
+      headers: { "Content-Type": "application/json", "x-finanzas-token": cfg().token, ...(opciones.headers || {}) },
+    });
+    let data = {};
+    try { data = await res.json(); } catch (_) { /* respuesta sin json */ }
+    if (!res.ok) throw new Error(data.error || `El servidor respondió ${res.status}`);
+    return data;
+  }
+
+  /** Cartel de estado dentro de Configuración. */
+  async function pintarEstado(mensaje) {
+    const el = $("#syncEstado");
+    if (!el) return;
+    if (mensaje) { el.innerHTML = mensaje; return; }
+    if (!activo()) {
+      el.innerHTML = "Sin configurar. Cargá el token y guardá para habilitar la sincronización.";
+      return;
+    }
+    const ultima = cfg().last ? new Date(cfg().last).toLocaleString(Fmt.LOCALE) : "nunca";
+    el.innerHTML = `Última sincronización: <b>${ultima}</b>. Verificando conexión…`;
+    try {
+      const est = await pedir("/estado");
+      el.innerHTML = est.conectado
+        ? `Conectado a la base <b>${UI.esc(est.base.titulo)}</b> de Notion. Última sincronización: <b>${ultima}</b>.`
+        : `<span class="neg">No conectado:</span> ${UI.esc(est.motivo || "revisá la configuración del servidor")}`;
+    } catch (err) {
+      el.innerHTML = `<span class="neg">No se pudo consultar el estado:</span> ${UI.esc(err.message)}`;
+    }
+  }
+
+  /** Muestra u oculta el botón de la barra superior y su animación. */
+  function actualizarBoton() {
+    const b = $("#btnSync");
+    if (!b) return;
+    b.hidden = !activo();
+    b.style.animation = corriendo ? "girar 1s linear infinite" : "";
+    b.title = corriendo ? "Sincronizando…" : cfg().last
+      ? `Sincronizar con Notion (última: ${new Date(cfg().last).toLocaleString(Fmt.LOCALE)})`
+      : "Sincronizar con Notion";
+  }
+
+  /**
+   * @param {"merge"|"subir"|"bajar"} modo
+   * @param {boolean} silencioso  true = sin avisos salvo error (lo usa el auto-sync)
+   */
+  async function sincronizar(modo = "merge", silencioso = false) {
+    if (!activo()) { UI.toast("Primero cargá el token en Configuración"); return; }
+    if (corriendo) return;
+
+    // Guarda: no queremos que los datos de demostración terminen en Notion.
+    if (Store.state.demo && modo !== "bajar" &&
+        !confirm("Todavía estás con los datos de demostración. Si sincronizás, se van a subir a Notion.\n\n¿Seguir igual? (Cancelá y usá \"Bajar de Notion\" si querés empezar con lo que ya tenés allá).")) return;
+    if (modo === "bajar" && !confirm("Se reemplazan los movimientos locales por los de Notion. ¿Seguir?")) return;
+    if (modo === "subir" && !confirm("Notion queda igual que este dashboard: lo que no esté acá se archiva allá. ¿Seguir?")) return;
+
+    corriendo = true; actualizarBoton();
+    if (!silencioso) UI.toast("Sincronizando con Notion…");
+    try {
+      const data = await pedir("/sync", {
+        method: "POST",
+        body: JSON.stringify({ transactions: Store.state.transactions, papelera: Store.state.trash, modo }),
+      });
+      Store.commit(s => {
+        s.transactions = (data.transactions || []).map(t => ({
+          id: t.id, date: String(t.date).slice(0, 10),
+          type: t.type === "income" ? "income" : "expense",
+          desc: t.desc || "Sin descripción", cat: t.cat || "Otros",
+          amount: Math.abs(Number(t.amount)) || 0, account: t.account || "",
+          recurrent: !!t.recurrent, notionId: t.notionId || null, updatedAt: t.updatedAt || null,
+        })).sort((a, b) => b.date.localeCompare(a.date));
+        s.trash = [];
+        s.settings.sync.last = data.sincronizado;
+      });
+      const r = data.resumen || {};
+      const partes = [];
+      if (r.creados) partes.push(`${r.creados} subidos`);
+      if (r.actualizados) partes.push(`${r.actualizados} actualizados en Notion`);
+      if (r.bajados) partes.push(`${r.bajados} bajados`);
+      if (r.archivados) partes.push(`${r.archivados} archivados`);
+      if (r.borradosLocal) partes.push(`${r.borradosLocal} borrados acá`);
+      if (!silencioso || partes.length) UI.toast(partes.length ? `Notion: ${partes.join(" · ")}` : "Todo sincronizado, sin cambios");
+      pintarEstado();
+    } catch (err) {
+      UI.toast("Notion: " + err.message);
+      pintarEstado(`<span class="neg">Último intento falló:</span> ${UI.esc(err.message)}`);
+    } finally {
+      corriendo = false; actualizarBoton();
+    }
+  }
+
+  /** Auto-sync con freno: junta los cambios de unos segundos en una sola llamada. */
+  function programarAuto() {
+    if (!activo() || !cfg().auto || corriendo) return;
+    clearTimeout(autoTimer);
+    autoTimer = setTimeout(() => sincronizar("merge", true), 4000);
+  }
+
+  return { sincronizar, pintarEstado, actualizarBoton, programarAuto, activo };
 })();
 
 /* ----------------------------------------------------------------- App ---- */
@@ -2044,6 +2618,8 @@ const App = (() => {
       cat: p.get("cat") || p.get("categoria") || "Otros",
       account: p.get("cuenta") || "",
       recurrent: false,
+      notionId: null,
+      updatedAt: new Date().toISOString(),
     };
     Store.commit(s => {
       s.transactions.unshift(item);
@@ -2193,6 +2769,55 @@ const App = (() => {
       if (row && esCelular()) Modal.openTx(row.dataset.rowTx);
     });
 
+    /* Vista mensual: navegación y altas rápidas */
+    const irAlMes = (paso) => {
+      const [y, m] = (ui.mes || UI.claveMesActual()).split("-").map(Number);
+      const d = new Date(y, m - 1 + paso, 1);
+      const nueva = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      if (nueva > UI.claveMesActual()) return; // no navegamos al futuro
+      ui.mes = nueva;
+      UI.renderAll();
+    };
+    $("#mesPrev").addEventListener("click", () => irAlMes(-1));
+    $("#mesNext").addEventListener("click", () => irAlMes(1));
+    $("#mesHoy").addEventListener("click", () => { ui.mes = UI.claveMesActual(); UI.renderAll(); });
+    $("#btnAddGasto").addEventListener("click", () => Modal.openTx(null, { type: "expense" }));
+    $("#btnAddIngreso").addEventListener("click", () => Modal.openTx(null, { type: "income" }));
+    $("#mesMovimientos").addEventListener("click", e => {
+      const ed = e.target.closest("[data-edit-tx]");
+      if (ed) { e.preventDefault(); Modal.openTx(ed.dataset.editTx); }
+    });
+
+    /* Presupuesto */
+    $("#btnEditBudget").addEventListener("click", Modal.openBudget);
+    $("#btnSaveBudget").addEventListener("click", Modal.saveBudget);
+    $("#budgetFields").addEventListener("input", Modal.updateBudgetSum);
+    $("#btnBudgetAuto").addEventListener("click", () => {
+      Modal.pintarBudget(Calc.promedioCategorias(Store.state, 3));
+      UI.toast("Cargado con el promedio de los últimos 3 meses");
+    });
+    $("#btnBudgetClear").addEventListener("click", () => {
+      const vacio = {};
+      Object.keys(Modal.leerBudget()).forEach(k => { vacio[k] = 0; });
+      Modal.pintarBudget(vacio);
+    });
+
+    /* Notion */
+    $("#btnSync").addEventListener("click", () => Sync.sincronizar("merge"));
+    $("#btnSyncNow").addEventListener("click", () => Sync.sincronizar("merge"));
+    $("#btnSyncDown").addEventListener("click", () => Sync.sincronizar("bajar"));
+    $("#btnSyncUp").addEventListener("click", () => Sync.sincronizar("subir"));
+    $("#btnSyncTest").addEventListener("click", () => {
+      // Probar usa lo que hay escrito en el campo, sin obligar a guardar antes.
+      const escrito = $("#stSyncToken").value.trim();
+      if (escrito && escrito !== (Store.state.settings.sync?.token || "")) {
+        Store.state.settings.sync.token = escrito;
+        Store.save();
+        Sync.actualizarBoton();
+      }
+      Sync.pintarEstado();
+    });
+
     /* Balance: editar / borrar pasivos */
     $("#balanceBody").addEventListener("click", e => {
       const ed = e.target.closest("[data-edit-liab]");
@@ -2214,9 +2839,16 @@ const App = (() => {
     UI.$$("#segCurrency button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.cur === Store.state.settings.display)));
     UI.$$("#segRange button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.range === ui.range)));
     bind();
+    ui.mes = UI.claveMesActual();
+    Sync.actualizarBoton();
     const vista = new URLSearchParams(location.search).get("vista");
-    quickAddFromURL();
-    UI.setView(["overview", "invest", "cash"].includes(vista) ? vista : "overview");
+    const cargadoPorURL = quickAddFromURL();
+    UI.setView(["overview", "mes", "invest", "cash"].includes(vista) ? vista : "overview");
+    // Con auto-sync prendido, al abrir el dashboard bajamos lo que haya en Notion.
+    // Si la apertura vino de un Atajo, el movimiento recién cargado ya viaja en el mismo envío.
+    if (Sync.activo() && Store.state.settings.sync.auto) {
+      setTimeout(() => Sync.sincronizar("merge", !cargadoPorURL), cargadoPorURL ? 800 : 400);
+    }
   }
 
   return { init };
