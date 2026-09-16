@@ -2,7 +2,7 @@
 <html lang="es" data-theme="dark">
 <head>
 <meta charset="utf-8" />
-<title>Patrimonio — Dashboard Financiero</title>
+<title>Patrimonio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="description" content="Dashboard personal de finanzas e inversiones. Todos los datos viven en este dispositivo." />
 <meta name="color-scheme" content="dark light" />
@@ -329,8 +329,8 @@ tr:hover .row-actions{opacity:1}
   .g-3{grid-template-columns:1fr 1fr}
 }
 @media (max-width:720px){
-  .app{padding:0 14px calc(var(--nav-h) + 20px)}
-  .topbar{margin:0 -14px 14px;padding-left:14px;padding-right:14px}
+  .app{padding:0 16px calc(var(--nav-h) + 20px)}
+  .topbar{margin:0 -16px 14px;padding-left:16px;padding-right:16px}
   .tabs{display:none}
   .hide-sm{display:none}
   .g-3{grid-template-columns:1fr}
@@ -341,7 +341,7 @@ tr:hover .row-actions{opacity:1}
   .kpi-value.sm{font-size:18px}
   .kpi-hero .kpi-value{font-size:28px}
   .kpi-hero{grid-column:1/-1}
-  .table-scroll{margin:0 -14px;padding:0 14px}
+  .table-scroll{margin:0 -16px;padding:0 16px}
   .fab{display:grid}
   .bottom-nav{display:block}
   .chart-wrap{height:220px}
@@ -954,6 +954,12 @@ tr:hover .row-actions{opacity:1}
           nunca sale del servidor: el navegador sólo manda y recibe movimientos.</div>
       </div>
       <div class="field">
+        <label for="stSyncApi">Dirección del servidor</label>
+        <input id="stSyncApi" type="url" autocomplete="off" placeholder="https://tu-dominio.com" />
+        <div class="hint">Dejalo vacío si abrís el dashboard desde el mismo servidor. Completalo si lo
+          abrís desde otro lado (por ejemplo, la versión publicada como página).</div>
+      </div>
+      <div class="field">
         <label><input type="checkbox" id="stSyncAuto" style="width:auto;margin-right:7px" />Sincronizar automáticamente al cargar o editar</label>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -1218,7 +1224,7 @@ const Store = (() => {
       settings: {
         display: "USD", localCode: "ARS", fx: 1465, theme: "dark",
         // Sincronizacion con Notion (el token de Notion vive en el servidor)
-        sync: { token: "", auto: false, last: null },
+        sync: { token: "", api: "", auto: false, last: null },
       },
       targets: { cash: 10, fixed: 20, equity: 35, crypto: 10, real: 25 },
       // Presupuesto mensual por categoria (0 = no se controla)
@@ -1254,7 +1260,7 @@ const Store = (() => {
     const base = demoData();
     const s = Object.assign({}, base, raw || {});
     s.settings = Object.assign({}, base.settings, raw?.settings || {});
-    s.settings.sync = Object.assign({ token: "", auto: false, last: null }, raw?.settings?.sync || {});
+    s.settings.sync = Object.assign({ token: "", api: "", auto: false, last: null }, raw?.settings?.sync || {});
     s.targets = Object.assign({}, base.targets, raw?.targets || {});
     s.budgets = Object.assign({}, raw?.budgets || base.budgets);
     s.trash = Array.isArray(raw?.trash) ? raw.trash.slice(0, 500) : [];
@@ -2396,6 +2402,7 @@ const Modal = (() => {
     $("#stLocalCode").value = s.localCode;
     $("#stFx").value = s.fx;
     $("#stSyncToken").value = s.sync?.token || "";
+    $("#stSyncApi").value = s.sync?.api || "";
     $("#stSyncAuto").checked = !!s.sync?.auto;
     Sync.pintarEstado();
     $("#targetFields").innerHTML = CFG.CLASSES.map(c => `
@@ -2423,10 +2430,11 @@ const Modal = (() => {
     const targets = {};
     UI.$$("#targetFields input[data-target]").forEach(i => { targets[i.dataset.target] = parseFloat(i.value) || 0; });
     const token = $("#stSyncToken").value.trim();
+    const api = $("#stSyncApi").value.trim().replace(/\/$/, "");
     const auto = $("#stSyncAuto").checked;
     Store.commit(s => {
       s.settings.localCode = code; s.settings.fx = fx; s.targets = targets;
-      s.settings.sync = Object.assign({}, s.settings.sync, { token, auto });
+      s.settings.sync = Object.assign({}, s.settings.sync, { token, api, auto });
     }, "Configuración guardada");
     Sync.actualizarBoton();
     close("#ovSettings");
@@ -2810,8 +2818,9 @@ const App = (() => {
     $("#btnSyncTest").addEventListener("click", () => {
       // Probar usa lo que hay escrito en el campo, sin obligar a guardar antes.
       const escrito = $("#stSyncToken").value.trim();
-      if (escrito && escrito !== (Store.state.settings.sync?.token || "")) {
-        Store.state.settings.sync.token = escrito;
+      const api = $("#stSyncApi").value.trim().replace(/\/$/, "");
+      if (escrito !== (Store.state.settings.sync?.token || "") || api !== (Store.state.settings.sync?.api || "")) {
+        Object.assign(Store.state.settings.sync, { token: escrito, api });
         Store.save();
         Sync.actualizarBoton();
       }

@@ -10,6 +10,19 @@ import { crearCliente, sincronizar } from "./notionFinanzas.js";
 
 const router = express.Router();
 
+// El dashboard puede estar servido desde otro dominio (por ejemplo publicado como
+// pagina aparte), asi que habilitamos CORS. Lo que protege la API no es el origen
+// sino FINANZAS_TOKEN, que viaja en un header propio.
+router.use((req, res, next) => {
+  res.set("Access-Control-Allow-Origin", req.get("origin") || "*");
+  res.set("Vary", "Origin");
+  res.set("Access-Control-Allow-Headers", "content-type, x-finanzas-token");
+  res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.set("Access-Control-Max-Age", "600");
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
+
 function comparar(a, b) {
   const bufA = Buffer.from(String(a || ""));
   const bufB = Buffer.from(String(b || ""));
