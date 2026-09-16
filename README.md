@@ -135,3 +135,56 @@ npm start
 Abrí `http://localhost:3000` para ver la web. Para probar el webhook de WhatsApp desde tu compu
 vas a necesitar exponerla a internet temporalmente (por ejemplo con `ngrok http 3000`) porque
 Meta necesita una URL pública para mandar los mensajes.
+
+---
+
+## 6. Dashboard de finanzas personales e inversiones (`/finanzas`)
+
+Es un extra que vive en el mismo proyecto pero **no tiene nada que ver con los turnos**: un
+dashboard privado para seguir el patrimonio, la cartera de inversiones y el flujo de caja.
+
+- **Un solo archivo**: `finanzas/index.html` (HTML + CSS + JS adentro, sin build ni dependencias
+  que instalar; sólo usa Chart.js por CDN).
+- **Los datos no salen del dispositivo**: todo se guarda en el `localStorage` del navegador. El
+  servidor sirve el archivo y nada más — no ve ni guarda ningún dato financiero.
+- Arranca con **datos de demostración realistas** para que se entienda al instante; se borran con
+  el primer cambio que hagas, o con "Restaurar datos demo" en Configuración.
+
+### Qué trae
+
+| Sección | Qué muestra |
+| --- | --- |
+| Resumen | Patrimonio neto (activos − pasivos), liquidez inmediata y meses de gastos cubiertos, capital invertido con ROI, cash flow del período, tasa de ahorro, evolución del patrimonio, asignación de activos y balance general |
+| Inversiones | Portfolio tracker (ticker, cantidad, PPC, precio actual, valor, P&L $ y %, peso), rebalanceo actual vs. objetivo con el monto exacto a comprar/vender, rendimiento anualizado, diversificación por sector y geografía, y dividendos/cupones proyectados |
+| Flujo de caja | Ingresos vs. gastos mes a mes, gastos por categoría, tasa de ahorro, gasto promedio, runway y la lista completa de movimientos |
+
+Filtros: período (Este mes / YTD / 1 año / Todo), moneda (USD o local con el tipo de cambio que
+cargues), clase de activo, sector, y buscador en vivo por ticker, nombre, categoría o descripción.
+
+### Cómo verlo en el celular
+
+1. Desplegado, entrá a `https://tu-dominio.com/finanzas` desde el celular.
+2. **iPhone**: botón Compartir → "Agregar a inicio". **Android**: menú ⋮ → "Agregar a pantalla
+   principal". Queda con ícono propio y abre a pantalla completa, como una app.
+3. Los datos quedan en ese dispositivo. Para pasarlos a otro: Configuración → Exportar JSON, y en
+   el otro → Importar JSON.
+
+### Cargar un gasto con el Action Button del iPhone (sin abrir nada)
+
+El dashboard acepta datos por URL, así que un Atajo de iOS alcanza:
+
+1. App Atajos → nuevo atajo → acción **"Pedir entrada"** (Número, pregunta: "¿Cuánto gastaste?").
+2. Acción **"Abrir URL"** con:
+   `https://tu-dominio.com/finanzas/?tipo=gasto&monto=[Entrada proporcionada]&cat=Comida&desc=Gasto%20rapido`
+3. Ajustes → Botón de Acción → Atajo → elegí ese atajo.
+
+Parámetros: `tipo` (`gasto` o `ingreso`), `monto`, `cat`, `desc` y `fecha` (opcional, `AAAA-MM-DD`).
+Al abrirse, el movimiento queda cargado, se recalculan los KPIs y aparece el aviso de confirmación.
+La URL exacta, lista para copiar, está dentro del dashboard en Configuración.
+
+### Notion (si más adelante lo querés)
+
+Hoy el puente es manual pero sirve: **Exportar CSV (Notion/Excel)** genera un archivo con todos los
+movimientos y posiciones que Notion importa como base de datos. Una sincronización automática de
+ida y vuelta necesita una integración de Notion con token y un endpoint en el servidor; se puede
+agregar después sin tocar nada de lo que ya está.

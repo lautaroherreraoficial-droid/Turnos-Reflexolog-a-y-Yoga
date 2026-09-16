@@ -23,6 +23,11 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "..", "frontend")));
 
+// Dashboard personal de finanzas e inversiones (/finanzas).
+// Es un unico archivo HTML que guarda todo en el localStorage del navegador: el
+// servidor solo lo sirve, nunca ve ni almacena los datos financieros.
+app.use("/finanzas", express.static(path.join(__dirname, "..", "finanzas")));
+
 // Panel privado para el negocio (usuario/contrasena definidos en .env)
 app.use("/admin", requireAdminAuth, express.static(path.join(__dirname, "..", "admin")));
 
