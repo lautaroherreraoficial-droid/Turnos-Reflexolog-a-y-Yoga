@@ -3,9 +3,10 @@
 #
 # Queda en https://lautaroherreraoficial-droid.github.io/Turnos-Reflexolog-a-y-Yoga/
 #
-# La primera corrida prende Pages sola (enablement: true). Si la organizacion no
-# se lo permite al workflow, alcanza con ir una vez a Settings > Pages y elegir
-# "Source: GitHub Actions".
+# IMPORTANTE (una sola vez): hay que prender Pages a mano en
+# Settings > Pages > Source: "GitHub Actions". El token de Actions puede publicar
+# pero no puede CREAR el sitio (responde "Resource not accessible by
+# integration"), asi que hasta ese click el workflow falla en configure-pages.
 name: Publicar dashboard en GitHub Pages
 
 on:
