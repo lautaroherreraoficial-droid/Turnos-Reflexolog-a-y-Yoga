@@ -171,10 +171,11 @@ de usarlo, de la más simple a la más completa:
 
 1. **Bajarlo y abrirlo**: descargá el archivo y hacé doble clic. Funciona entero (necesita internet
    sólo para levantar Chart.js del CDN). Los datos quedan en ese navegador.
-2. **GitHub Pages** (gratis, sin servidor): ya está el workflow `.github/workflows/pages.yml`. En
-   cuanto `finanzas/index.html` esté en `main`, GitHub lo publica solo en
+2. **GitHub Pages** (gratis, sin servidor): ya está el workflow `.github/workflows/pages.yml`.
+   Requiere un paso manual **una sola vez**: Settings → Pages → *Source: **GitHub Actions***
+   (el token de Actions puede publicar, pero no puede crear el sitio). Después de ese click, cada
+   push a `main` que toque `finanzas/` republica solo, y el dashboard queda en
    `https://lautaroherreraoficial-droid.github.io/Turnos-Reflexolog-a-y-Yoga/`.
-   Si la primera corrida no lo habilita sola: Settings → Pages → *Source: GitHub Actions*.
    Ojo: en Pages no corre el servidor de Node, así que para sincronizar con Notion hay que cargar
    la dirección del servidor en Configuración → *Dirección del servidor*.
 3. **Servido por el proyecto** (`/finanzas`): es la opción completa, porque en el mismo dominio
