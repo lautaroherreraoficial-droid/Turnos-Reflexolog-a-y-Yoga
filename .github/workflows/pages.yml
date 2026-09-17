@@ -1,0 +1,48 @@
+# Publica el dashboard de finanzas (carpeta finanzas/) como sitio estatico en
+# GitHub Pages. Es HTML puro: no necesita servidor ni build.
+#
+# Queda en https://lautaroherreraoficial-droid.github.io/Turnos-Reflexolog-a-y-Yoga/
+#
+# La primera corrida prende Pages sola (enablement: true). Si la organizacion no
+# se lo permite al workflow, alcanza con ir una vez a Settings > Pages y elegir
+# "Source: GitHub Actions".
+name: Publicar dashboard en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "finanzas/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch: # tambien se puede correr a mano desde la pestana Actions
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Si se acumulan varios deploys, gana el ultimo (no cancelamos el que esta en curso).
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      # Solo se sube la carpeta del dashboard: asi index.html queda en la raiz del sitio.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./finanzas
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -8,6 +8,7 @@ import { appendRow, readRows } from "./google.js";
 import { requireAdminAuth } from "./adminAuth.js";
 import { confirmarTurno } from "./turnos.js";
 import { SERVICIOS, LUGARES, FORMAS_DE_PAGO } from "./config.js";
+import finanzasApi from "./finanzasApi.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -22,6 +23,15 @@ app.use(
 );
 
 app.use(express.static(path.join(__dirname, "..", "frontend")));
+
+// Dashboard personal de finanzas e inversiones (/finanzas).
+// Es un unico archivo HTML que guarda todo en el localStorage del navegador: el
+// servidor solo lo sirve, nunca ve ni almacena los datos financieros.
+app.use("/finanzas", express.static(path.join(__dirname, "..", "finanzas")));
+
+// Sincronizacion del dashboard con Notion (opcional: solo funciona si estan
+// cargadas FINANZAS_TOKEN, NOTION_TOKEN y NOTION_DB_MOVIMIENTOS).
+app.use("/api/finanzas", finanzasApi);
 
 // Panel privado para el negocio (usuario/contrasena definidos en .env)
 app.use("/admin", requireAdminAuth, express.static(path.join(__dirname, "..", "admin")));
