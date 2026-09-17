@@ -164,6 +164,22 @@ dashboard privado para seguir el patrimonio, la cartera de inversiones y el fluj
 Filtros: período (Este mes / YTD / 1 año / Todo), moneda (USD o local con el tipo de cambio que
 cargues), clase de activo, sector, y buscador en vivo por ticker, nombre, categoría o descripción.
 
+### Dónde vive el archivo y cómo publicarlo
+
+El dashboard es un archivo HTML común dentro del repo: **`finanzas/index.html`**. Hay tres formas
+de usarlo, de la más simple a la más completa:
+
+1. **Bajarlo y abrirlo**: descargá el archivo y hacé doble clic. Funciona entero (necesita internet
+   sólo para levantar Chart.js del CDN). Los datos quedan en ese navegador.
+2. **GitHub Pages** (gratis, sin servidor): ya está el workflow `.github/workflows/pages.yml`. En
+   cuanto `finanzas/index.html` esté en `main`, GitHub lo publica solo en
+   `https://lautaroherreraoficial-droid.github.io/Turnos-Reflexolog-a-y-Yoga/`.
+   Si la primera corrida no lo habilita sola: Settings → Pages → *Source: GitHub Actions*.
+   Ojo: en Pages no corre el servidor de Node, así que para sincronizar con Notion hay que cargar
+   la dirección del servidor en Configuración → *Dirección del servidor*.
+3. **Servido por el proyecto** (`/finanzas`): es la opción completa, porque en el mismo dominio
+   quedan el dashboard y la API de sincronización con Notion, sin configurar nada extra.
+
 ### Cómo verlo en el celular
 
 1. Desplegado, entrá a `https://tu-dominio.com/finanzas` desde el celular.
