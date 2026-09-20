@@ -1,0 +1,1533 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Mesa de Análisis</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="description" content="Documento vivo para auditar, mejorar y seguir el análisis del negocio de reflexología, masajes y yoga." />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232a78d6'/%3E%3Cpath d='M16 44V26M28 44V18M40 44V32M52 44V22' fill='none' stroke='white' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" />
+<style>
+/* ===========================================================================
+   1. TOKENS — todo el color vive acá. Claro por defecto; oscuro redefine lo mismo.
+   =========================================================================== */
+:root{
+  color-scheme: light;
+  --bg:#f6f6f4;
+  --surface:#fcfcfb;
+  --surface-2:#f0efec;
+  --border:#e0dfda;
+  --border-strong:#c9c8c1;
+  --text:#0b0b0b;
+  --text-2:#52514e;
+  --text-3:#7b7a74;
+  --accent:#2a78d6;
+  --accent-soft:rgba(42,120,214,.10);
+  --s1:#2a78d6;   /* categórico 1 */
+  --s2:#eb6834;   /* categórico 2 */
+  --s3:#1baf7a;   /* categórico 3 */
+  --ok:#1baf7a;
+  --warn:#eda100;
+  --bad:#e34948;
+  --ok-soft:rgba(27,175,122,.12);
+  --warn-soft:rgba(237,161,0,.14);
+  --bad-soft:rgba(227,73,72,.12);
+  --grid:rgba(0,0,0,.09);
+  --shadow:0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.06);
+  --r-sm:8px; --r-md:12px; --r-lg:16px;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --bg:#121211; --surface:#1a1a19; --surface-2:#232321;
+    --border:#31312e; --border-strong:#46453f;
+    --text:#ffffff; --text-2:#c3c2b7; --text-3:#908f86;
+    --accent:#3987e5; --accent-soft:rgba(57,135,229,.16);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+    --ok:#199e70; --warn:#c98500; --bad:#e66767;
+    --ok-soft:rgba(25,158,112,.16); --warn-soft:rgba(201,133,0,.18); --bad-soft:rgba(230,103,103,.15);
+    --grid:rgba(255,255,255,.10);
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#121211; --surface:#1a1a19; --surface-2:#232321;
+  --border:#31312e; --border-strong:#46453f;
+  --text:#ffffff; --text-2:#c3c2b7; --text-3:#908f86;
+  --accent:#3987e5; --accent-soft:rgba(57,135,229,.16);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+  --ok:#199e70; --warn:#c98500; --bad:#e66767;
+  --ok-soft:rgba(25,158,112,.16); --warn-soft:rgba(201,133,0,.18); --bad-soft:rgba(230,103,103,.15);
+  --grid:rgba(255,255,255,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.35);
+}
+
+/* ===========================================================================
+   2. BASE
+   =========================================================================== */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--text); font-family:var(--font);
+  font-size:15px; line-height:1.55; -webkit-text-size-adjust:100%;
+}
+h1,h2,h3{margin:0; line-height:1.25; font-weight:650; letter-spacing:-.01em}
+p{margin:0 0 .7em}
+ul,ol{margin:.2em 0 .7em; padding-left:1.25em}
+li{margin:.25em 0}
+a{color:var(--accent)}
+button{font:inherit; color:inherit; cursor:pointer}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px}
+
+/* ===========================================================================
+   3. LAYOUT
+   =========================================================================== */
+.app{display:grid; grid-template-columns:250px minmax(0,1fr); min-height:100vh}
+.app > *{min-width:0}
+.side{
+  position:sticky; top:0; height:100vh; overflow-y:auto; min-width:0;
+  background:var(--surface); border-right:1px solid var(--border); padding:16px 12px;
+}
+.main{min-width:0; padding:0 16px 120px}
+.wrap{max-width:900px; margin:0 auto}
+
+.brand{display:flex; gap:10px; align-items:center; padding:4px 8px 14px}
+.brand-mark{width:30px;height:30px;border-radius:9px;background:var(--s1);flex:0 0 auto;display:grid;place-items:center}
+.brand-mark svg{display:block}
+.brand-name{font-weight:700; font-size:14.5px; letter-spacing:-.01em}
+.brand-sub{font-size:11.5px; color:var(--text-3)}
+
+.nav{display:flex; flex-direction:column; gap:1px; min-width:0}
+.nav button{
+  display:flex; gap:9px; align-items:center; width:100%; text-align:left;
+  background:none; border:0; padding:7px 9px; border-radius:var(--r-sm);
+  color:var(--text-2); font-size:13.5px;
+}
+.nav button:hover{background:var(--surface-2); color:var(--text)}
+.nav button[aria-current="true"]{background:var(--accent-soft); color:var(--accent); font-weight:600}
+.nav .ico{width:18px; text-align:center; flex:0 0 auto; font-size:13px}
+.nav .badge{margin-left:auto; font-size:10.5px; color:var(--text-3); font-variant-numeric:tabular-nums}
+
+.side-foot{margin-top:18px; padding:12px 9px 0; border-top:1px solid var(--border); font-size:11.5px; color:var(--text-3)}
+
+/* Barra superior */
+.top{
+  position:sticky; top:0; z-index:30; background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:saturate(1.6) blur(10px); border-bottom:1px solid var(--border);
+  margin:0 -16px 20px; padding:9px 16px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+}
+.top .grow{flex:1 1 auto; min-width:60px}
+.btn{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--r-sm);
+  padding:6px 11px; font-size:13px; font-weight:500; white-space:nowrap;
+  display:inline-flex; gap:6px; align-items:center;
+}
+.btn:hover{border-color:var(--border-strong); background:var(--surface-2)}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.ghost{background:none; border-color:transparent; color:var(--text-2); padding:6px 8px}
+.btn.ghost:hover{background:var(--surface-2); color:var(--text)}
+.btn.sm{padding:3px 8px; font-size:12px}
+.btn.danger:hover{color:var(--bad); border-color:var(--bad)}
+.search{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--r-sm);
+  padding:6px 10px; font-size:13px; color:var(--text); width:190px; max-width:40vw;
+}
+.saved{font-size:11.5px; color:var(--text-3); white-space:nowrap}
+.saved.on{color:var(--ok)}
+
+/* ===========================================================================
+   4. SECCIONES Y BLOQUES
+   =========================================================================== */
+.sec{margin:0 0 42px; scroll-margin-top:70px; min-width:0}
+.sec-head{display:flex; gap:10px; align-items:baseline; margin:0 0 4px}
+.sec-head h2{font-size:21px}
+.sec-kicker{font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--text-3); font-weight:600; margin-bottom:6px}
+.sec-desc{color:var(--text-2); font-size:13.5px; margin:0 0 16px; max-width:70ch}
+.sec-tools{margin-left:auto; display:flex; gap:4px; opacity:0; transition:opacity .12s}
+.sec:hover .sec-tools, .sec:focus-within .sec-tools{opacity:1}
+
+.card{
+  min-width:0; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg);
+  padding:16px 18px; margin:0 0 14px; box-shadow:var(--shadow); position:relative;
+}
+.card > h3{font-size:15.5px; margin:0 0 10px}
+.card-tools{position:absolute; top:9px; right:9px; display:flex; gap:2px; opacity:0; transition:opacity .12s}
+.card:hover .card-tools, .card:focus-within .card-tools{opacity:1}
+.card-tools button{
+  background:var(--surface-2); border:1px solid var(--border); border-radius:6px;
+  width:24px; height:24px; display:grid; place-items:center; font-size:12px; color:var(--text-3); padding:0;
+}
+.card-tools button:hover{color:var(--text); border-color:var(--border-strong)}
+.card-tools button.x:hover{color:var(--bad); border-color:var(--bad)}
+
+.edit{outline:none; border-radius:6px; padding:1px 3px; margin:-1px -3px; min-height:1.4em}
+.edit:hover{background:var(--surface-2)}
+.edit:focus{background:var(--surface-2); box-shadow:inset 0 0 0 1px var(--border-strong)}
+.edit:empty::before{content:attr(data-ph); color:var(--text-3)}
+
+/* Callouts */
+.nota{border-left:3px solid var(--accent); background:var(--accent-soft); padding:11px 14px; border-radius:0 var(--r-md) var(--r-md) 0}
+.nota[data-tipo="riesgo"]{border-color:var(--bad); background:var(--bad-soft)}
+.nota[data-tipo="ok"]{border-color:var(--ok); background:var(--ok-soft)}
+.nota[data-tipo="ojo"]{border-color:var(--warn); background:var(--warn-soft)}
+.nota-tag{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:700; color:var(--text-2); display:block; margin-bottom:3px}
+
+/* Checklists */
+.chk{list-style:none; padding:0; margin:0}
+.chk li{display:flex; gap:9px; align-items:flex-start; padding:5px 0; border-bottom:1px solid var(--border)}
+.chk li:last-child{border-bottom:0}
+.chk input[type=checkbox]{margin-top:4px; width:16px; height:16px; accent-color:var(--accent); flex:0 0 auto; cursor:pointer}
+.chk .txt{flex:1 1 auto; min-width:0}
+.chk li.done .txt{color:var(--text-3); text-decoration:line-through}
+.chk .kill{opacity:0; background:none; border:0; color:var(--text-3); padding:0 4px; font-size:14px}
+.chk li:hover .kill{opacity:1}
+.chk .kill:hover{color:var(--bad)}
+.prog{height:5px; background:var(--surface-2); border-radius:99px; overflow:hidden; margin:10px 0 0}
+.prog i{display:block; height:100%; background:var(--ok); border-radius:99px; transition:width .25s}
+.prog-lbl{font-size:11.5px; color:var(--text-3); margin-top:5px; font-variant-numeric:tabular-nums}
+
+/* Tablas */
+.tbl-wrap{overflow-x:auto; margin:0 -4px}
+table.t{border-collapse:collapse; width:100%; font-size:13.5px}
+table.t th, table.t td{border-bottom:1px solid var(--border); padding:7px 9px; text-align:left; vertical-align:top}
+table.t th{font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-3); font-weight:650; white-space:nowrap}
+table.t td.num, table.t th.num{text-align:right; font-variant-numeric:tabular-nums}
+table.t tr:hover td{background:var(--surface-2)}
+table.t input{
+  background:none; border:0; color:inherit; font:inherit; width:100%; padding:2px 3px; border-radius:5px;
+  font-variant-numeric:tabular-nums;
+}
+table.t input:focus{outline:none; background:var(--surface-2); box-shadow:inset 0 0 0 1px var(--border-strong)}
+table.t input[type=number]{text-align:right}
+
+/* Campos */
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px}
+.f{display:flex; flex-direction:column; gap:3px}
+.f label{font-size:11.5px; color:var(--text-2); font-weight:550}
+.f .hint{font-size:11px; color:var(--text-3)}
+.f input, .f select, .f textarea{
+  background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-sm);
+  padding:7px 9px; color:var(--text); font:inherit; font-size:13.5px; width:100%;
+  font-variant-numeric:tabular-nums;
+}
+.f input:focus, .f select:focus, .f textarea:focus{outline:none; border-color:var(--accent)}
+textarea.big{min-height:190px; resize:vertical; line-height:1.5; font-size:13px}
+
+/* KPI tiles */
+.tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr)); gap:10px; margin:2px 0 14px}
+.tile{background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-md); padding:11px 13px}
+.tile .k{font-size:11px; color:var(--text-2); font-weight:550; display:block; margin-bottom:3px}
+.tile .v{font-size:21px; white-space:nowrap; font-weight:680; letter-spacing:-.02em; font-variant-numeric:tabular-nums; display:block; line-height:1.15}
+.tile .s{font-size:11.5px; color:var(--text-3); display:block; margin-top:2px}
+.tile.good .v{color:var(--ok)} .tile.bad .v{color:var(--bad)} .tile.warn .v{color:var(--warn)}
+
+/* Charts */
+.chart{position:relative; margin:6px 0 2px}
+.chart svg{display:block; width:100%; overflow:visible}
+.legend{display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--text-2); margin:8px 0 0}
+.legend span{display:inline-flex; gap:6px; align-items:center}
+.legend i{width:10px; height:10px; border-radius:3px; display:inline-block}
+.tip{
+  position:absolute; pointer-events:none; background:var(--surface); border:1px solid var(--border-strong);
+  border-radius:var(--r-sm); padding:6px 9px; font-size:12px; box-shadow:var(--shadow); opacity:0;
+  transition:opacity .1s; white-space:nowrap; z-index:5; transform:translate(-50%,-115%);
+}
+.tip.on{opacity:1}
+.tip b{font-variant-numeric:tabular-nums}
+.ax{font-size:10.5px; fill:var(--text-3)}
+.barras{display:flex; flex-direction:column; gap:11px}
+.barra-top{display:flex; gap:10px; align-items:baseline; margin-bottom:4px}
+.barra-lbl{flex:1 1 auto; min-width:0; font-size:13px; color:var(--text-2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.barra-val{font-size:12.5px; font-weight:650; font-variant-numeric:tabular-nums}
+.barra-val.sin{color:var(--text-3); font-weight:400}
+.barra-pista{height:7px; background:var(--grid); border-radius:4px; overflow:hidden}
+.barra-pista i{display:block; height:100%; background:var(--s1); border-radius:4px; transition:width .25s}
+.bar-lbl{font-size:11.5px; fill:var(--text-2)}
+.bar-val{font-size:11.5px; fill:var(--text); font-variant-numeric:tabular-nums; font-weight:600}
+
+/* Score segmentado */
+.score{display:inline-flex; gap:2px}
+.score button{
+  width:26px; height:24px; border:1px solid var(--border); background:var(--surface-2);
+  font-size:11.5px; color:var(--text-3); padding:0; border-radius:5px;
+}
+.score button[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600}
+
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.88em;
+  background:var(--surface-2); border:1px solid var(--border); border-radius:5px; padding:.5px 4px}
+.muted{color:var(--text-2)}
+.small{font-size:12.5px}
+.pill{display:inline-block; font-size:10.5px; font-weight:650; letter-spacing:.05em; text-transform:uppercase;
+  padding:2px 7px; border-radius:99px; background:var(--surface-2); color:var(--text-2); border:1px solid var(--border)}
+.pill.ok{background:var(--ok-soft); color:var(--ok); border-color:transparent}
+.pill.bad{background:var(--bad-soft); color:var(--bad); border-color:transparent}
+.pill.warn{background:var(--warn-soft); color:var(--warn); border-color:transparent}
+.row{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.hide{display:none !important}
+.hl{background:var(--warn-soft); border-radius:3px}
+
+/* ===========================================================================
+   5. MÓVIL
+   =========================================================================== */
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{
+    position:static; height:auto; border-right:0; border-bottom:1px solid var(--border);
+    padding:12px 16px;
+  }
+  .nav{flex-direction:row; overflow-x:auto; gap:4px; padding-bottom:4px}
+  .nav button{white-space:nowrap; width:auto; padding:6px 10px; flex:0 0 auto}
+  .nav .badge{display:none}
+  .side-foot{display:none}
+  .main{padding:0 16px 90px}
+  .top{margin:0 -16px 16px}
+  .sec-head{flex-wrap:wrap}
+  .sec-tools{margin-left:0; opacity:1; width:100%; overflow-x:auto; padding-bottom:2px}
+}
+/* En pantallas táctiles no hay hover: los controles quedan siempre visibles. */
+@media (hover:none){
+  .card-tools, .sec-tools, .chk .kill{opacity:1}
+}
+@media print{
+  .side,.top,.card-tools,.sec-tools,.chk .kill,.no-print{display:none !important}
+  .app{display:block}
+  body{background:#fff}
+  .card{break-inside:avoid; box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <span class="brand-mark"><svg width="16" height="16" viewBox="0 0 64 64"><path d="M16 46V28M28 46V16M40 46V34M52 46V22" fill="none" stroke="white" stroke-width="7" stroke-linecap="round"/></svg></span>
+      <span>
+        <span class="brand-name">Mesa de Análisis</span><br>
+        <span class="brand-sub">Reflexología · Masajes · Yoga</span>
+      </span>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      Se guarda solo en este navegador.<br>
+      <span id="foot-estado">—</span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="top no-print">
+      <input class="search" id="q" type="search" placeholder="Buscar en todo…" aria-label="Buscar" />
+      <span class="grow"></span>
+      <span class="saved" id="saved">Guardado</span>
+      <button class="btn sm ghost" id="btn-tema" title="Cambiar tema">◐</button>
+      <button class="btn sm ghost" id="btn-json" title="Exportar/importar datos">Datos ▾</button>
+      <button class="btn sm ghost" id="btn-md" title="Bajar como texto Markdown">.md</button>
+      <button class="btn sm ghost" id="btn-print" title="Imprimir o guardar como PDF">Imprimir</button>
+      <button class="btn sm primary" id="btn-copia" title="Bajar este archivo con todo lo que escribiste adentro">⤓ Guardar copia</button>
+    </div>
+    <div class="wrap" id="doc"></div>
+  </main>
+</div>
+
+<input type="file" id="file-json" accept="application/json,.json" class="hide">
+
+<script id="estado-embebido" type="application/json">null</script>
+<script>
+"use strict";
+/* ===========================================================================
+   MESA DE ANÁLISIS — archivo único, sin dependencias, funciona offline.
+   Todo lo que escribís vive en localStorage de este navegador + en la copia
+   que bajes con "Guardar copia" (ese .html lleva los datos adentro).
+   =========================================================================== */
+
+const CLAVE = "mesa-analisis-turnos-v1";
+const $  = (s,r)=> (r||document).querySelector(s);
+const $$ = (s,r)=> Array.from((r||document).querySelectorAll(s));
+const uid = ()=> Math.random().toString(36).slice(2,9);
+const esc = (s)=> String(s==null?"":s).replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+/* ------------------------------------------------------------------ ESTADO */
+function contenidoInicial(){ return {
+  meta:{
+    titulo:"Análisis del negocio de tu mamá",
+    subtitulo:"Versión mejorada del análisis de ChatGPT — auditada, con números y con plan.",
+    creado:new Date().toISOString()
+  },
+  secciones:[
+
+  /* ---------------------------------------------------------------- INICIO */
+  { id:"inicio", ico:"◎", titulo:"Cómo usar esto", kicker:"Empezá acá",
+    desc:"Este archivo es un documento vivo: todo lo que ves es editable, se guarda solo y lo podés ir agregando con el tiempo.",
+    bloques:[
+      { id:uid(), tipo:"nota", variante:"ok", tag:"Guardalo en el escritorio",
+        html:"Apretá <b>⤓ Guardar copia</b> arriba a la derecha: baja un <code>.html</code> con todo lo que escribiste <b>adentro del archivo</b>. Arrastralo al Escritorio y doble clic cuando quieras. No necesita internet ni instalar nada. Cada tanto volvé a bajar una copia: es tu respaldo." },
+      { id:uid(), tipo:"texto", html:
+        "<p><b>Qué hace cada cosa:</b></p><ul>"+
+        "<li>Cualquier texto con fondo gris al pasar el mouse se edita haciendo clic. Se guarda solo.</li>"+
+        "<li>El botón <b>+</b> de cada sección agrega tarjetas nuevas (texto, checklist, tabla o recuadro).</li>"+
+        "<li>Los íconos de cada tarjeta (arriba a la derecha) la suben, la bajan o la borran.</li>"+
+        "<li><b>Datos ▾</b> exporta/importa un JSON, por si querés pasarlo a otra compu o al celular.</li>"+
+        "<li>El buscador de arriba filtra todo el documento en vivo.</li></ul>" },
+      { id:uid(), tipo:"nota", variante:"ojo", tag:"Nota honesta",
+        html:"El link de ChatGPT que pasaste <b>no se pudo abrir desde acá</b> (la red de esta sesión bloquea <code>chatgpt.com</code>). Así que el análisis original no está transcripto: pegalo vos en la sección <b>“El original”</b> y el archivo lo trocea en tarjetas para compararlo lado a lado. Todo lo demás (la auditoría, el diagnóstico, los números y el plan) es análisis propio hecho sobre el negocio y sobre el código del proyecto, no un resumen del texto de ChatGPT." }
+    ]},
+
+  /* -------------------------------------------------------------- ORIGINAL */
+  { id:"original", ico:"❝", titulo:"El original", kicker:"Materia prima",
+    desc:"Pegá acá el texto que te dio ChatGPT. Queda guardado, y con un botón se parte en tarjetas para poder marcarlo y comentarlo.",
+    bloques:[
+      { id:uid(), tipo:"modulo", modulo:"original" }
+    ]},
+
+  /* ------------------------------------------------------------- AUDITORÍA */
+  { id:"auditoria", ico:"⚖", titulo:"Auditoría", kicker:"Qué le falta",
+    desc:"Las 10 fallas que casi siempre tiene un análisis genérico de IA sobre un negocio de servicios chico. Puntuá el original de 0 a 3 en cada una y mirá dónde se cae.",
+    bloques:[
+      { id:uid(), tipo:"modulo", modulo:"auditoria" },
+      { id:uid(), tipo:"texto", titulo:"Lo que estos análisis suelen hacer bien (rescatalo, no lo tires)", html:
+        "<ul>"+
+        "<li><b>La estructura.</b> Ordenar el problema en secciones (servicios, precios, clientes, canales) ya es la mitad del trabajo. Sirve como índice.</li>"+
+        "<li><b>El inventario de canales e ideas.</b> Como lluvia de ideas es útil: te acordás de opciones que no se te habían ocurrido.</li>"+
+        "<li><b>Los packs / bonos de sesiones.</b> Si lo propuso, es correcto y es la palanca #1 de este negocio (ver Estrategia).</li>"+
+        "<li><b>El recordatorio previo al turno.</b> También correcto: es la forma más barata de bajar los ausentes.</li>"+
+        "<li><b>El tono ejecutable.</b> Listas cortas y accionables se leen; los ensayos no.</li>"+
+        "</ul><p class='small muted'>Editá esta lista marcando cuáles de estas efectivamente aparecen en tu texto original.</p>" }
+    ]},
+
+  /* ----------------------------------------------------------- DIAGNÓSTICO */
+  { id:"diagnostico", ico:"◆", titulo:"Diagnóstico", kicker:"La versión mejorada",
+    desc:"Si tuviera que quedarme con una sola página, es esta.",
+    bloques:[
+      { id:uid(), tipo:"nota", variante:"riesgo", tag:"El punto que casi nadie dice",
+        html:"Este negocio <b>no tiene un problema de demanda ni de tecnología: tiene un techo de horas</b>. Con la agenda actual (lunes y miércoles 9–13 en el consultorio, martes y jueves 18–21 en el estudio) son <b>14 horas semanales</b> de capacidad máxima. Con turnos de 60 minutos, el techo absoluto es ~<b>56 sesiones al mes</b>, y en la vida real nunca se llena al 100%. Cualquier recomendación que hable de “crecer” sin decir qué hace con esas 14 horas es decorativa." },
+      { id:uid(), tipo:"texto", titulo:"Las cuatro palancas, en orden de impacto real", html:
+        "<ol>"+
+        "<li><b>Precio y mix de servicios.</b> Es la única palanca que actúa el día 1, no cuesta plata y no consume horas. Subir 15% el precio de la sesión suelta con la misma agenda vale más que tres meses de Instagram.</li>"+
+        "<li><b>Ocupación de los huecos que ya existen.</b> Cada hora vacía en la agenda es plata que ya se perdió y no vuelve: es inventario perecedero, como el asiento de un avión. Antes de buscar clientes nuevos hay que llenar lo que hoy queda vacío.</li>"+
+        "<li><b>Recurrencia.</b> Que el cliente que ya vino vuelva. Cuesta $0 y es donde está toda la ganancia: conseguir un cliente nuevo cuesta tiempo y plata; que el de hoy agende la próxima antes de irse, cuesta una frase.</li>"+
+        "<li><b>Captación de clientes nuevos.</b> Recién cuarta. Es la más cara, la más lenta y la que todos los análisis ponen primera.</li>"+
+        "</ol>" },
+      { id:uid(), tipo:"texto", titulo:"La métrica madre", html:
+        "<p>No es “cuántos clientes tengo” ni “cuántos turnos hice”. Es <b>ingreso por hora disponible</b>: lo que facturaste en el mes dividido las horas que tuviste abierta la agenda (no las que trabajaste). Esa sola división ordena todas las decisiones:</p>"+
+        "<ul>"+
+        "<li>Si es baja porque hay huecos → problema de <b>ocupación</b>.</li>"+
+        "<li>Si es baja con la agenda llena → problema de <b>precio</b>.</li>"+
+        "<li>Si sube el ingreso pero baja esta métrica → estás trabajando más para ganar lo mismo.</li>"+
+        "</ul>" },
+      { id:uid(), tipo:"texto", titulo:"Yoga y masajes no son el mismo negocio", html:
+        "<p>Es el error de fondo más común. Son dos modelos económicos distintos y conviene tratarlos así:</p>"+
+        "<ul>"+
+        "<li><b>Masajes y reflexología = 1 a 1.</b> El ingreso está topeado por el reloj. Se mejora sólo con precio, ocupación y recurrencia.</li>"+
+        "<li><b>Yoga = 1 a muchos.</b> La misma hora rinde 6 u 8 veces más si el grupo se llena. Acá el crecimiento es real, no lineal: el esfuerzo de sumar la 5ª alumna es casi el mismo que el de la 4ª.</li>"+
+        "</ul>"+
+        "<p>Conclusión práctica: <b>el yoga grupal es la palanca de margen y el 1 a 1 es la palanca de precio</b>. Y el yoga es además el mejor canal de captación para los masajes (ya está el vínculo, ya está la confianza), no al revés.</p>" },
+      { id:uid(), tipo:"texto", titulo:"El tiempo que no se factura (y que ningún análisis descuenta)", html:
+        "<p>Entre los dos lugares hay traslado. Además hay: preparar la sala, limpiar, contestar WhatsApp, cobrar, llevar las cuentas. Es fácil que por cada hora facturada haya <b>20–30 minutos no facturados</b>. Esto significa dos cosas concretas:</p>"+
+        "<ul>"+
+        "<li>La ganancia real por hora es bastante menor que <em>precio − insumos</em>. Metelo en la calculadora (campo “horas no facturables”).</li>"+
+        "<li><b>Los turnos hay que agruparlos.</b> Un turno suelto un viernes a las 11 en el otro lugar puede costar más de lo que deja. Bloques compactos, no turnos desparramados.</li>"+
+        "</ul>" },
+      { id:uid(), tipo:"nota", variante:"ojo", tag:"Sobre el ausente (no-show)",
+        html:"Un turno que no se presenta no es “mala suerte”: es una hora vendida que se cobró $0 y que ya no se puede revender. Con 10% de ausentes, el negocio regala el equivalente a <b>media semana de trabajo por mes</b>. Es el agujero más grande y el más barato de tapar — está resuelto en el plan de 90 días." }
+    ]},
+
+  /* ------------------------------------------------------------ ESTRATEGIA */
+  { id:"estrategia", ico:"◈", titulo:"Estrategia", kicker:"Qué hacer",
+    desc:"Posicionamiento, precios, recurrencia y captación. Los números son de ejemplo: cambialos por los tuyos.",
+    bloques:[
+      { id:uid(), tipo:"texto", titulo:"1. Posicionamiento: vender el problema resuelto, no la hora de masaje", html:
+        "<p>“Masaje relajante” compite por precio contra cualquiera. <b>“Plan de 4 sesiones para el dolor de espalda de quien trabaja sentado”</b> no compite con nadie, y además se vende de a 4 en lugar de a 1.</p>"+
+        "<p>Elegí 2 o 3 <b>objetivos</b> y que toda la comunicación hable de eso:</p>"+
+        "<ul>"+
+        "<li>Dolor de espalda / cuello / contracturas de oficina.</li>"+
+        "<li>Estrés y problemas para dormir (acá pega fuerte la reflexología).</li>"+
+        "<li>Movilidad y equilibrio en adultos mayores (yoga suave) — es un público fiel, paga por mes y falta poco.</li>"+
+        "</ul>"+
+        "<p class='small muted'>Ojo: hablar de objetivos, no de curas. Nada de prometer resultados médicos ni de tratar enfermedades — eso además te expone legalmente.</p>" },
+      { id:uid(), tipo:"tabla", titulo:"2. Arquitectura de precios sugerida",
+        cols:["Producto","Para qué está","Precio","Regla"],
+        filas:[
+          ["Sesión suelta","Ser el precio ancla: existe para que el bono parezca barato","100 (base)","El más caro por sesión. Nunca se descuenta."],
+          ["Bono de 4 sesiones","El producto principal. Es lo que se ofrece por defecto","360 (−10%)","Vence a los 2 meses. Sin vencimiento no genera hábito."],
+          ["Bono de 8 sesiones","Para el cliente ya convencido","680 (−15%)","Vence a los 4 meses."],
+          ["Yoga: clase suelta","Puerta de entrada / prueba","35","Igual o un poco más cara que el prorrateo mensual."],
+          ["Yoga: mensual (8 clases)","El producto real del yoga","220","Se cobra del 1 al 5. Ingreso previsible."],
+          ["A domicilio","Sólo si el traslado está pago","+30%","Mínimo 2 sesiones o no sale."]
+        ],
+        nota:"Los valores son relativos (sesión suelta = 100) para que la estructura se entienda sin importar la inflación. Pasalos a tu moneda en la calculadora." },
+      { id:uid(), tipo:"texto", titulo:"3. Tres reglas de precio que valen más que el número", html:
+        "<ul>"+
+        "<li><b>No regales descuento en la primera sesión.</b> El descuento atrae al que busca precio y ese no vuelve. Regalá <b>valor</b>: 15 minutos extra de evaluación y un plan escrito de 4 sesiones. Cuesta lo mismo y trae al cliente que sí vuelve.</li>"+
+        "<li><b>Subí el precio a los clientes nuevos primero.</b> A los de siempre avisales con un mes de anticipación y ofreceles congelar el precio viejo comprando un bono ahora. El aumento se convierte en caja inmediata.</li>"+
+        "<li><b>Un precio por servicio, no uno por cliente.</b> La excepción negociada caso por caso se cuenta sola y termina siendo la regla.</li>"+
+        "</ul>" },
+      { id:uid(), tipo:"texto", titulo:"4. Recurrencia: la frase que más plata hace", html:
+        "<p>Al terminar cada sesión, antes de que el cliente se vaya: <b>“¿Te agendo la próxima para dentro de dos semanas?”</b> — y se agenda ahí mismo, en el celular, en el momento.</p>"+
+        "<p>Es la única acción de este documento que no cuesta nada, no lleva tiempo y sube la facturación de forma medible. Un cliente que agenda al salir vuelve muchísimo más que uno al que “le escriben después”.</p>"+
+        "<p>Complementos, en orden:</p>"+
+        "<ol>"+
+        "<li>Mensaje de seguimiento a las 48hs: “¿cómo anduvo la espalda?”. Es cuidado, no venta — y es la mejor venta.</li>"+
+        "<li>Lista de <b>dormidos</b>: quien no viene hace 60 días. Una vez por mes, un mensaje personal. Es la fuente de turnos más barata que existe.</li>"+
+        "<li>Los bonos con vencimiento hacen el trabajo solos.</li>"+
+        "</ol>" },
+      { id:uid(), tipo:"tabla", titulo:"5. Captación, ordenada por lo que rinde de verdad",
+        cols:["Canal","Costo","Cuánto tarda","Qué tan bueno es el cliente","Prioridad"],
+        filas:[
+          ["Referidos de clientes actuales (con incentivo a los dos)","$0","Inmediato","Altísima: llega con confianza prestada","1"],
+          ["Alianzas locales: kinesiólogo, podólogo, gimnasio, peluquería, farmacia","$0 o canje","2–6 semanas","Muy alta: viene derivado por un profesional","2"],
+          ["Perfil de Google (Google Business Profile) con reseñas","$0","2–8 semanas","Alta: busca activamente y está cerca","3"],
+          ["Clientes de yoga → masajes y viceversa","$0","Inmediato","Alta: ya te conoce","4"],
+          ["Instagram / Facebook orgánico","Tiempo (mucho)","3–6 meses","Media","5"],
+          ["Publicidad paga","$$","Rápido pero se corta al dejar de pagar","Baja si no hay marca","6"]
+        ],
+        nota:"El error clásico del análisis genérico es poner “hacer contenido en redes” arriba de todo. Para un negocio local de servicios con agenda chica, las redes son prueba social (el que te googlea confirma que existís), no un canal de venta." },
+      { id:uid(), tipo:"nota", variante:"ok", tag:"La acción más rentable de toda esta página",
+        html:"<b>Google Business Profile</b> cargado, con fotos reales, horarios, servicios y 10 reseñas. Es gratis, tarda una tarde, y hace que “reflexología cerca mío” te encuentre. Para un negocio local rinde más que un año de Instagram." }
+    ]},
+
+  /* --------------------------------------------------------------- NÚMEROS */
+  { id:"numeros", ico:"∑", titulo:"Los números", kicker:"Techo y punto de equilibrio",
+    desc:"Poné tus valores reales. Calcula el techo de facturación, el punto de equilibrio y qué pasa si movés el precio o la ocupación.",
+    bloques:[
+      { id:uid(), tipo:"modulo", modulo:"calculadora" }
+    ]},
+
+  /* ------------------------------------------------------------------ PLAN */
+  { id:"plan", ico:"✓", titulo:"Plan de 90 días", kicker:"Con fechas",
+    desc:"Ordenado por retorno sobre esfuerzo. Nada de esto requiere invertir plata.",
+    bloques:[
+      { id:uid(), tipo:"lista", titulo:"Días 1 a 30 — tapar agujeros y ordenar la base", items:[
+        {id:uid(), t:"Fijar la lista de precios definitiva (sesión, bono 4, bono 8, mensual de yoga) y escribirla en un solo lugar.", ok:false},
+        {id:uid(), t:"Política de cancelación escrita y avisada: se avisa con 12hs; si no, se pierde la sesión del bono. Decirla de entrada, amablemente, una sola vez.", ok:false},
+        {id:uid(), t:"Recordatorio 24hs antes de cada turno por WhatsApp (hoy el bot NO lo hace — ver Pendientes técnicos).", ok:false},
+        {id:uid(), t:"Armar la lista de dormidos: todos los clientes que no vienen hace más de 60 días.", ok:false},
+        {id:uid(), t:"Mandarles un mensaje personal, de a uno, sin cartel de promoción.", ok:false},
+        {id:uid(), t:"Empezar a preguntar SIEMPRE al cerrar: “¿te agendo la próxima?”.", ok:false},
+        {id:uid(), t:"Crear el perfil de Google Business Profile con fotos reales y horarios.", ok:false},
+        {id:uid(), t:"Pedirle reseña a los 10 clientes más fieles (con el link directo, por WhatsApp).", ok:false},
+        {id:uid(), t:"Cargar en el dashboard los números de los últimos 3 meses para tener línea de base.", ok:false}
+      ]},
+      { id:uid(), tipo:"lista", titulo:"Días 31 a 60 — subir el valor de cada hora", items:[
+        {id:uid(), t:"Lanzar el bono de 4 sesiones como oferta por defecto (que sea lo que se ofrece primero, no la sesión suelta).", ok:false},
+        {id:uid(), t:"Aplicar el precio nuevo a clientes nuevos; avisar a los actuales con un mes de anticipación.", ok:false},
+        {id:uid(), t:"Ofrecer congelar precio viejo comprando bono ahora (trae caja inmediata).", ok:false},
+        {id:uid(), t:"Programa de referidos: quien trae a alguien, los dos reciben algo (sesión extra o descuento en el próximo bono).", ok:false},
+        {id:uid(), t:"Visitar 5 comercios/profesionales del barrio con una propuesta concreta de derivación mutua.", ok:false},
+        {id:uid(), t:"Reagrupar la agenda en bloques compactos para no pagar traslados por un turno suelto.", ok:false},
+        {id:uid(), t:"Probar una clase de yoga grupal más (es donde el margen crece de verdad).", ok:false}
+      ]},
+      { id:uid(), tipo:"lista", titulo:"Días 61 a 90 — medir, corregir y automatizar", items:[
+        {id:uid(), t:"Revisar el tablero de KPIs: ¿subió el ingreso por hora disponible?", ok:false},
+        {id:uid(), t:"Calcular el % de ausentes: ¿bajó con el recordatorio y la política de cancelación?", ok:false},
+        {id:uid(), t:"Calcular el % de clientes que vuelven: si no subió, el problema está en el cierre de la sesión, no en la captación.", ok:false},
+        {id:uid(), t:"Cortar el canal de captación que no trajo nada en 90 días (probablemente redes).", ok:false},
+        {id:uid(), t:"Pasar el bot de WhatsApp al número real y al token permanente.", ok:false},
+        {id:uid(), t:"Definir el siguiente objetivo de 90 días con un solo número.", ok:false}
+      ]}
+    ]},
+
+  /* ------------------------------------------------------------------ KPIS */
+  { id:"kpis", ico:"◔", titulo:"Tablero", kicker:"Medir para corregir",
+    desc:"Seis números por mes. Si un plan no se mide, no es un plan.",
+    bloques:[
+      { id:uid(), tipo:"modulo", modulo:"kpis" }
+    ]},
+
+  /* --------------------------------------------------------------- RIESGOS */
+  { id:"riesgos", ico:"⚠", titulo:"Riesgos y pendientes", kicker:"Lo que puede salir mal",
+    desc:"Lo que un análisis optimista se saltea, más lo que falta en el sistema que ya está programado.",
+    bloques:[
+      { id:uid(), tipo:"texto", titulo:"Riesgos del negocio", html:
+        "<ul>"+
+        "<li><b>Todo depende de un cuerpo.</b> El activo del negocio es la salud y las manos de tu mamá. Si se enferma una semana, la facturación de esa semana es cero y no se recupera. Mitigación real: que el <b>yoga grupal y los bonos prepagos</b> sean una parte creciente del ingreso — el bono ya está cobrado, la clase se puede correr.</li>"+
+        "<li><b>Estacionalidad.</b> Enero y las vacaciones pegan fuerte. Hay que preverlo en la caja, no descubrirlo en enero.</li>"+
+        "<li><b>Los dos lugares.</b> Si el estudio de yoga cambia condiciones o cierra, se va la mitad de la capacidad. Conviene no depender de un solo espacio alquilado.</li>"+
+        "<li><b>Concentración de clientes.</b> Si 5 clientes son la mitad de la facturación, cualquiera de ellos que se vaya duele mucho.</li>"+
+        "<li><b>Informalidad / impuestos.</b> Monotributo, comprobantes y un seguro de responsabilidad civil para la práctica. No es glamoroso y casi nunca aparece en estos análisis, pero un problema acá se lleva puesto todo lo demás.</li>"+
+        "</ul>" },
+      { id:uid(), tipo:"nota", variante:"riesgo", tag:"Datos de clientes",
+        html:"La planilla de turnos y comentarios guarda <b>nombre, teléfono y motivo de consulta</b>. El motivo de consulta de un masaje o reflexología es, en la práctica, <b>información de salud</b>: el dato más sensible que existe. Consecuencias concretas: no compartir esa planilla con link público, no mandarla por mail, tener contraseña fuerte en el panel <code>/admin</code>, y no escribir diagnósticos en los comentarios." },
+      { id:uid(), tipo:"lista", titulo:"Pendientes técnicos del sistema que ya está programado", items:[
+        {id:uid(), t:"El bot NO manda recordatorios todavía: no hay ningún envío programado en el código. Es la mejora #1 del sistema, porque ataca directo a los ausentes.", ok:false},
+        {id:uid(), t:"No hay flujo de cancelar ni reprogramar por WhatsApp: hoy el cliente tiene que escribir suelto y alguien lo resuelve a mano.", ok:false},
+        {id:uid(), t:"No hay seña ni cobro anticipado. Con seña del 30% por transferencia, los ausentes se desploman.", ok:false},
+        {id:uid(), t:"El token de WhatsApp de prueba dura 24hs: si el bot “se muere”, casi seguro es eso. Hay que pasar a token permanente antes de usarlo en serio.", ok:false},
+        {id:uid(), t:"src/config.js sigue con datos de ejemplo (“Consultorio Centro”, “Dirección 1, Ciudad”, nombre entre corchetes). Hay que poner los reales antes de mostrárselo a nadie.", ok:false},
+        {id:uid(), t:"frontend/script.js necesita el número de WhatsApp real en NUMERO_WHATSAPP.", ok:false},
+        {id:uid(), t:"La duración de turno está fija en 60 minutos para todos los servicios: si el yoga o la reflexología duran distinto, la agenda va a ofrecer horarios que no existen.", ok:false},
+        {id:uid(), t:"Contraseña del panel /admin: que no sea algo adivinable, y que no se comparta por WhatsApp.", ok:false}
+      ]}
+    ]},
+
+  /* ----------------------------------------------------------------- NOTAS */
+  { id:"notas", ico:"✎", titulo:"Notas", kicker:"Tu espacio",
+    desc:"Lo que vayas viendo, preguntas, ideas sueltas. Agregá las tarjetas que quieras con el botón +.",
+    bloques:[
+      { id:uid(), tipo:"texto", titulo:"Ideas sueltas", html:"<p></p>" }
+    ]}
+  ]
+};}
+
+const CRITERIOS = [
+  ["techo","No calcula el techo de facturación","Capacidad horaria × precio × ocupación. Sin eso, todo lo demás es opinión."],
+  ["ocupacion","No distingue hora vacía de hora vendida","La hora que pasó vacía no se recupera nunca. Es inventario perecedero."],
+  ["noshow","Ignora los ausentes y las cancelaciones tardías","Suele ser el 10–20% del ingreso, invisible en toda planilla."],
+  ["recurrencia","No separa cliente nuevo de cliente que vuelve","La ganancia está en el que vuelve, no en el que llega."],
+  ["costos","Precios “de mercado” sin anclar en costos reales","Insumos, alquiler del espacio, traslado, impuestos, tiempo muerto."],
+  ["notime","No descuenta el tiempo no facturable","Traslados, limpieza, contestar WhatsApp, cobrar, llevar cuentas."],
+  ["mix","Trata yoga (1 a muchos) y masajes (1 a 1) como lo mismo","Son dos modelos económicos distintos; se gestionan distinto."],
+  ["kpi","No propone cómo medir","Sin KPIs no hay forma de saber si la recomendación sirvió."],
+  ["plazo","Recomendaciones sin plazo ni orden de prioridad","Una lista de 20 ideas sin orden equivale a ninguna idea."],
+  ["legal","No menciona lo legal, lo impositivo ni los datos sensibles","Monotributo, seguro, y datos de salud de los clientes."]
+];
+
+const KPI_COLS = [
+  {k:"mes",   t:"Mes",                  tipo:"text"},
+  {k:"hrs",   t:"Horas disponibles",    tipo:"number"},
+  {k:"ses",   t:"Sesiones hechas",      tipo:"number"},
+  {k:"ing",   t:"Ingreso",              tipo:"number"},
+  {k:"nue",   t:"Clientes nuevos",      tipo:"number"},
+  {k:"vol",   t:"Volvieron",            tipo:"number"},
+  {k:"aus",   t:"Ausentes",             tipo:"number"}
+];
+
+function estadoInicial(){ return {
+  contenido: contenidoInicial(),
+  original: "",
+  auditoria: Object.fromEntries(CRITERIOS.map(c=>[c[0],{p:null,nota:""}])),
+  calc: {
+    moneda:"$",
+    hSem:14, semanas:4.3, dur:60, ocup:65, precio:20000,
+    yogaClases:8, yogaAlumnos:5, yogaPrecio:4000,
+    insumos:900, espacio:25, traslado:12000, fijos:35000, noFact:20, ausentes:10, objetivo:400000
+  },
+  kpis: [],
+  tema: null,
+  v:1
+};}
+
+/* --------------------------------------------------------- persistencia */
+let S = cargar();
+let guardarTimer = null;
+
+function cargar(){
+  try{
+    const raw = localStorage.getItem(CLAVE);
+    if(raw) return migrar(JSON.parse(raw));
+  }catch(e){ console.warn("No se pudo leer el guardado:", e); }
+  try{
+    const emb = JSON.parse($("#estado-embebido").textContent);
+    if(emb) return migrar(emb);
+  }catch(e){}
+  return estadoInicial();
+}
+function migrar(s){
+  const base = estadoInicial();
+  const out = Object.assign({}, base, s);
+  out.calc = Object.assign({}, base.calc, s.calc||{});
+  out.auditoria = Object.assign({}, base.auditoria, s.auditoria||{});
+  if(!out.contenido || !Array.isArray(out.contenido.secciones)) out.contenido = base.contenido;
+  if(!Array.isArray(out.kpis)) out.kpis = [];
+  return out;
+}
+function guardar(){
+  clearTimeout(guardarTimer);
+  marcarGuardando();
+  guardarTimer = setTimeout(()=>{
+    try{
+      localStorage.setItem(CLAVE, JSON.stringify(S));
+      marcarGuardado();
+    }catch(e){
+      $("#saved").textContent = "No se pudo guardar (¿modo privado?)";
+      $("#saved").classList.remove("on");
+    }
+  }, 350);
+}
+function marcarGuardando(){ const n=$("#saved"); n.textContent="Guardando…"; n.classList.remove("on"); }
+function marcarGuardado(){
+  const n=$("#saved"); n.textContent="Guardado"; n.classList.add("on");
+  $("#foot-estado").textContent = "Último cambio: " + new Date().toLocaleString("es-AR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+}
+
+/* ---------------------------------------------------------------- formato */
+const nfNum = new Intl.NumberFormat("es-AR",{maximumFractionDigits:0});
+const nf1   = new Intl.NumberFormat("es-AR",{maximumFractionDigits:1});
+function money(v){ const m = (S.calc.moneda||"$"); return m + "\u00a0" + nfNum.format(Math.round(v||0)); }
+function pct(v){ return nf1.format(v||0) + "%"; }
+
+/* ===========================================================================
+   RENDER
+   =========================================================================== */
+function render(){
+  const doc = $("#doc");
+  doc.innerHTML = "";
+
+  // Encabezado del documento
+  const head = document.createElement("header");
+  head.className = "sec";
+  head.innerHTML =
+    '<div class="sec-kicker">Documento vivo · '+new Date(S.contenido.meta.creado||Date.now()).getFullYear()+'</div>'+
+    '<h1 class="edit" contenteditable="true" data-meta="titulo" style="font-size:29px;margin-bottom:6px">'+esc(S.contenido.meta.titulo)+'</h1>'+
+    '<p class="edit muted" contenteditable="true" data-meta="subtitulo" style="max-width:68ch">'+esc(S.contenido.meta.subtitulo)+'</p>';
+  doc.appendChild(head);
+
+  S.contenido.secciones.forEach(sec=> doc.appendChild(renderSeccion(sec)));
+  renderNav();
+  aplicarBusqueda();
+}
+
+function renderNav(){
+  const nav = $("#nav");
+  nav.innerHTML = "";
+  S.contenido.secciones.forEach(sec=>{
+    const b = document.createElement("button");
+    b.type="button";
+    let badge = "";
+    const tareas = contarTareas(sec);
+    if(tareas.total) badge = '<span class="badge">'+tareas.ok+'/'+tareas.total+'</span>';
+    b.innerHTML = '<span class="ico">'+sec.ico+'</span><span>'+esc(sec.titulo)+'</span>'+badge;
+    b.onclick = ()=>{
+      const el = document.getElementById("sec-"+sec.id);
+      if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+    };
+    nav.appendChild(b);
+  });
+  observarSecciones();
+}
+function contarTareas(sec){
+  let ok=0,total=0;
+  (sec.bloques||[]).forEach(b=>{ if(b.tipo==="lista") (b.items||[]).forEach(i=>{ total++; if(i.ok) ok++; }); });
+  return {ok,total};
+}
+
+function renderSeccion(sec){
+  const el = document.createElement("section");
+  el.className="sec"; el.id="sec-"+sec.id;
+  const head = document.createElement("div");
+  head.innerHTML =
+    '<div class="sec-kicker">'+esc(sec.kicker||"")+'</div>'+
+    '<div class="sec-head"><h2 class="edit" contenteditable="true" data-sec="'+sec.id+'" data-campo="titulo">'+esc(sec.titulo)+'</h2>'+
+    '<div class="sec-tools no-print"></div></div>'+
+    '<p class="sec-desc edit" contenteditable="true" data-sec="'+sec.id+'" data-campo="desc">'+esc(sec.desc||"")+'</p>';
+  el.appendChild(head);
+
+  const tools = $(".sec-tools", head);
+  [["+ Texto","texto"],["+ Lista","lista"],["+ Tabla","tabla"],["+ Recuadro","nota"]].forEach(([lbl,tipo])=>{
+    const b=document.createElement("button"); b.className="btn sm ghost"; b.textContent=lbl;
+    b.onclick=()=> agregarBloque(sec.id, tipo);
+    tools.appendChild(b);
+  });
+
+  (sec.bloques||[]).forEach(bl=> el.appendChild(renderBloque(sec, bl)));
+  return el;
+}
+
+function renderBloque(sec, bl){
+  const card = document.createElement("article");
+  card.className="card"; card.dataset.bloque = bl.id;
+
+  if(bl.tipo!=="modulo"){
+    const tools=document.createElement("div"); tools.className="card-tools no-print";
+    tools.innerHTML='<button title="Subir">↑</button><button title="Bajar">↓</button><button class="x" title="Borrar">✕</button>';
+    const [up,down,kill]=$$("button",tools);
+    up.onclick   = ()=> moverBloque(sec.id, bl.id, -1);
+    down.onclick = ()=> moverBloque(sec.id, bl.id, +1);
+    kill.onclick = ()=>{ if(confirm("¿Borrar esta tarjeta?")) borrarBloque(sec.id, bl.id); };
+    card.appendChild(tools);
+  }
+
+  if(bl.titulo!=null && bl.tipo!=="nota" && bl.tipo!=="modulo"){
+    const h=document.createElement("h3");
+    h.className="edit"; h.contentEditable="true"; h.dataset.bl=bl.id; h.dataset.campo="titulo";
+    h.textContent = bl.titulo; card.appendChild(h);
+  }
+
+  if(bl.tipo==="texto"){
+    const d=document.createElement("div");
+    d.className="edit"; d.contentEditable="true"; d.dataset.bl=bl.id; d.dataset.campo="html";
+    d.dataset.ph="Escribí acá…";
+    d.innerHTML = bl.html||"";
+    card.appendChild(d);
+  }
+
+  else if(bl.tipo==="nota"){
+    const n=document.createElement("div");
+    n.className="nota"; n.dataset.tipo = bl.variante||"idea";
+    const tag=document.createElement("span"); tag.className="nota-tag edit"; tag.contentEditable="true";
+    tag.dataset.bl=bl.id; tag.dataset.campo="tag"; tag.textContent = bl.tag||"Nota";
+    const body=document.createElement("div");
+    body.className="edit"; body.contentEditable="true"; body.dataset.bl=bl.id; body.dataset.campo="html";
+    body.innerHTML = bl.html||"";
+    n.appendChild(tag); n.appendChild(body);
+    const sel=document.createElement("select");
+    sel.className="no-print";
+    sel.style.cssText="margin-top:9px;font-size:11.5px;background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-3);padding:2px 5px";
+    [["idea","Idea"],["ok","Bueno"],["ojo","Ojo"],["riesgo","Riesgo"]].forEach(([v,t])=>{
+      const o=document.createElement("option"); o.value=v; o.textContent=t;
+      if((bl.variante||"idea")===v) o.selected=true; sel.appendChild(o);
+    });
+    sel.onchange=()=>{ bl.variante=sel.value; n.dataset.tipo=sel.value; guardar(); };
+    n.appendChild(sel);
+    card.appendChild(n);
+  }
+
+  else if(bl.tipo==="lista"){
+    const ul=document.createElement("ul"); ul.className="chk";
+    (bl.items||[]).forEach(it=> ul.appendChild(itemLista(bl,it)));
+    card.appendChild(ul);
+    const prog=document.createElement("div"); prog.className="prog"; prog.innerHTML="<i></i>";
+    const lbl=document.createElement("div"); lbl.className="prog-lbl";
+    card.appendChild(prog); card.appendChild(lbl);
+    const add=document.createElement("button");
+    add.className="btn sm ghost no-print"; add.textContent="+ Agregar ítem";
+    add.style.marginTop="8px";
+    add.onclick=()=>{
+      const it={id:uid(),t:"",ok:false}; bl.items=bl.items||[]; bl.items.push(it);
+      const li=itemLista(bl,it); ul.appendChild(li); guardar(); actualizarProgreso(card,bl);
+      const tx=$(".txt",li); tx.focus();
+    };
+    card.appendChild(add);
+    actualizarProgreso(card, bl);
+  }
+
+  else if(bl.tipo==="tabla"){
+    const wrap=document.createElement("div"); wrap.className="tbl-wrap";
+    wrap.appendChild(tablaEditable(bl));
+    card.appendChild(wrap);
+    if(bl.nota){
+      const p=document.createElement("p");
+      p.className="small muted edit"; p.contentEditable="true"; p.dataset.bl=bl.id; p.dataset.campo="nota";
+      p.style.marginTop="10px"; p.textContent=bl.nota; card.appendChild(p);
+    }
+    const add=document.createElement("button");
+    add.className="btn sm ghost no-print"; add.textContent="+ Fila"; add.style.marginTop="8px";
+    add.onclick=()=>{ bl.filas.push(bl.cols.map(()=>"")); guardar(); render(); };
+    card.appendChild(add);
+  }
+
+  else if(bl.tipo==="modulo"){
+    card.classList.add("mod");
+    if(bl.modulo==="original")    modOriginal(card);
+    if(bl.modulo==="auditoria")   modAuditoria(card);
+    if(bl.modulo==="calculadora") modCalculadora(card);
+    if(bl.modulo==="kpis")        modKpis(card);
+  }
+
+  return card;
+}
+
+function itemLista(bl, it){
+  const li=document.createElement("li");
+  if(it.ok) li.classList.add("done");
+  const cb=document.createElement("input"); cb.type="checkbox"; cb.checked=!!it.ok;
+  const tx=document.createElement("div");
+  tx.className="txt edit"; tx.contentEditable="true"; tx.dataset.ph="Nueva tarea…"; tx.textContent=it.t;
+  const kill=document.createElement("button"); kill.className="kill no-print"; kill.textContent="✕"; kill.title="Borrar";
+  cb.onchange=()=>{
+    it.ok=cb.checked; li.classList.toggle("done",it.ok); guardar();
+    actualizarProgreso(li.closest(".card"), bl); renderNav();
+  };
+  tx.oninput=()=>{ it.t=tx.textContent; guardar(); };
+  kill.onclick=()=>{
+    bl.items=bl.items.filter(x=>x.id!==it.id); const card=li.closest(".card");
+    li.remove(); guardar(); actualizarProgreso(card,bl); renderNav();
+  };
+  li.append(cb,tx,kill);
+  return li;
+}
+function actualizarProgreso(card, bl){
+  if(!card) return;
+  const items=bl.items||[]; const ok=items.filter(i=>i.ok).length;
+  const p = items.length ? Math.round(ok/items.length*100) : 0;
+  const bar=$(".prog i",card), lbl=$(".prog-lbl",card);
+  if(bar) bar.style.width=p+"%";
+  if(lbl) lbl.textContent = ok+" de "+items.length+" hechas · "+p+"%";
+}
+
+function tablaEditable(bl){
+  const t=document.createElement("table"); t.className="t";
+  const thead=document.createElement("thead"); const trh=document.createElement("tr");
+  bl.cols.forEach(c=>{ const th=document.createElement("th"); th.textContent=c; trh.appendChild(th); });
+  const thx=document.createElement("th"); thx.className="no-print"; thx.style.width="26px"; trh.appendChild(thx);
+  thead.appendChild(trh); t.appendChild(thead);
+  const tb=document.createElement("tbody");
+  (bl.filas||[]).forEach((fila,fi)=>{
+    const tr=document.createElement("tr");
+    fila.forEach((celda,ci)=>{
+      const td=document.createElement("td");
+      td.className="edit"; td.contentEditable="true"; td.textContent=celda;
+      td.oninput=()=>{ bl.filas[fi][ci]=td.textContent; guardar(); };
+      tr.appendChild(td);
+    });
+    const tdx=document.createElement("td"); tdx.className="no-print";
+    const k=document.createElement("button");
+    k.className="kill"; k.textContent="✕"; k.style.cssText="background:none;border:0;color:var(--text-3);cursor:pointer";
+    k.onclick=()=>{ bl.filas.splice(fi,1); guardar(); render(); };
+    tdx.appendChild(k); tr.appendChild(tdx);
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb);
+  return t;
+}
+
+/* ===========================================================================
+   MÓDULO · EL ORIGINAL
+   =========================================================================== */
+function modOriginal(card){
+  card.innerHTML =
+    '<h3>Texto original de ChatGPT</h3>'+
+    '<p class="small muted">Copialo completo desde el chat y pegalo acá. Queda guardado en este archivo.</p>'+
+    '<div class="f"><textarea class="big" id="orig" placeholder="Pegá acá el análisis que te dio ChatGPT…"></textarea></div>'+
+    '<div class="row no-print" style="margin-top:9px">'+
+      '<button class="btn sm" id="orig-trocear">Trocear en tarjetas</button>'+
+      '<span class="small muted" id="orig-info"></span>'+
+    '</div>'+
+    '<div id="orig-cards" style="margin-top:12px"></div>';
+  const ta=$("#orig",card);
+  ta.value = S.original||"";
+  const info=()=> $("#orig-info",card).textContent =
+    (S.original? (S.original.trim().split(/\s+/).length+" palabras · "+S.original.length+" caracteres") : "Todavía no pegaste nada.");
+  info();
+  ta.oninput=()=>{ S.original=ta.value; guardar(); info(); };
+  $("#orig-trocear",card).onclick=()=>{
+    const partes = (S.original||"").split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean);
+    if(!partes.length){ alert("Primero pegá el texto."); return; }
+    const cont=$("#orig-cards",card); cont.innerHTML="";
+    partes.forEach((p,i)=>{
+      const d=document.createElement("div");
+      d.className="nota"; d.dataset.tipo="idea"; d.style.margin="0 0 8px";
+      d.innerHTML='<span class="nota-tag">Fragmento '+(i+1)+'</span>'+
+        '<div style="white-space:pre-wrap">'+esc(p)+'</div>'+
+        '<div class="row no-print" style="margin-top:7px"></div>';
+      const row=$(".row",d);
+      [["Rescatable","ok"],["Flojo","ojo"],["Mal","riesgo"]].forEach(([lbl,v])=>{
+        const b=document.createElement("button"); b.className="btn sm"; b.textContent=lbl;
+        b.onclick=()=>{ d.dataset.tipo=v; };
+        row.appendChild(b);
+      });
+      cont.appendChild(d);
+    });
+  };
+}
+
+/* ===========================================================================
+   MÓDULO · AUDITORÍA
+   =========================================================================== */
+function modAuditoria(card){
+  card.innerHTML =
+    '<h3>Las 10 falencias típicas</h3>'+
+    '<p class="small muted">0 = no lo menciona · 1 = lo nombra al pasar · 2 = lo trabaja · 3 = lo resuelve con números.</p>'+
+    '<div class="tbl-wrap"><table class="t" id="aud-t"><thead><tr>'+
+      '<th style="width:30%">Qué debería tener</th><th>Por qué importa</th><th class="no-print" style="width:120px">Puntaje</th>'+
+    '</tr></thead><tbody></tbody></table></div>'+
+    '<div class="tiles" id="aud-tiles" style="margin-top:16px"></div>'+
+    '<div class="chart" id="aud-chart"></div>';
+
+  const tb=$("#aud-t tbody",card);
+  CRITERIOS.forEach(([k,titulo,por])=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML='<td><b>'+esc(titulo)+'</b></td><td class="muted">'+esc(por)+'</td>';
+    const td=document.createElement("td"); td.className="no-print";
+    const sc=document.createElement("div"); sc.className="score";
+    [0,1,2,3].forEach(n=>{
+      const b=document.createElement("button"); b.type="button"; b.textContent=n;
+      b.setAttribute("aria-pressed", String(S.auditoria[k] && S.auditoria[k].p===n));
+      b.onclick=()=>{
+        S.auditoria[k] = S.auditoria[k]||{p:null,nota:""};
+        S.auditoria[k].p = (S.auditoria[k].p===n? null : n);
+        $$("button",sc).forEach((x,i)=> x.setAttribute("aria-pressed", String(S.auditoria[k].p===i)));
+        guardar(); pintarAuditoria(card);
+      };
+      sc.appendChild(b);
+    });
+    td.appendChild(sc); tr.appendChild(td); tb.appendChild(tr);
+  });
+  pintarAuditoria(card);
+}
+
+function pintarAuditoria(card){
+  const datos = CRITERIOS.map(([k,t])=>({k, label:t, v: (S.auditoria[k]&&S.auditoria[k].p!=null)? S.auditoria[k].p : null}));
+  const puntuados = datos.filter(d=>d.v!=null);
+  const total = puntuados.reduce((a,d)=>a+d.v,0);
+  const max = puntuados.length*3;
+  const porc = max? Math.round(total/max*100) : 0;
+  let veredicto="Sin puntuar", clase="";
+  if(puntuados.length){
+    if(porc>=70){veredicto="Sólido"; clase="good";}
+    else if(porc>=40){veredicto="A medias"; clase="warn";}
+    else {veredicto="Superficial"; clase="bad";}
+  }
+  $("#aud-tiles",card).innerHTML =
+    '<div class="tile"><span class="k">Criterios puntuados</span><span class="v">'+puntuados.length+'<span style="font-size:14px;color:var(--text-3)">/10</span></span></div>'+
+    '<div class="tile"><span class="k">Puntaje</span><span class="v">'+total+'<span style="font-size:14px;color:var(--text-3)">/'+(max||30)+'</span></span><span class="s">'+porc+'% del máximo</span></div>'+
+    '<div class="tile '+clase+'"><span class="k">Veredicto</span><span class="v" style="font-size:19px">'+veredicto+'</span><span class="s">Lo que quede en 0 o 1 es tu lista de mejoras</span></div>';
+
+  // Barras horizontales, un solo tono (magnitud sobre categorías) + banda de referencia
+  const cont = $("#aud-chart",card);
+  const items = datos.map(d=>({label:d.label, v:d.v==null?0:d.v, sin:d.v==null}));
+  barrasH(cont, items, {max:3, unidad:"/3", alturaFila:26, formato:(v,it)=> it.sin? "sin puntuar" : v+"/3"});
+}
+
+/* ===========================================================================
+   MÓDULO · CALCULADORA
+   =========================================================================== */
+function modCalculadora(card){
+  const c=S.calc;
+  const campo=(k,label,hint,attrs)=>
+    '<div class="f"><label for="c-'+k+'">'+label+'</label>'+
+    '<input id="c-'+k+'" data-c="'+k+'" '+(attrs||'type="number" min="0" step="any"')+' value="'+esc(c[k])+'">'+
+    (hint?'<span class="hint">'+hint+'</span>':'')+'</div>';
+
+  card.innerHTML =
+    '<h3>Calculadora de techo y punto de equilibrio</h3>'+
+    '<p class="small muted">Todo se recalcula solo. Los valores iniciales son de ejemplo — cambialos por los tuyos.</p>'+
+
+    '<p class="pill" style="margin:14px 0 8px">Capacidad</p>'+
+    '<div class="grid2">'+
+      campo("hSem","Horas por semana con agenda abierta","Hoy: 8 en el consultorio + 6 de yoga = 14")+
+      campo("dur","Duración del turno (minutos)")+
+      campo("ocup","Ocupación esperada (%)","Qué porcentaje de esas horas se vende de verdad")+
+      campo("semanas","Semanas por mes","4,3 es el promedio real")+
+    '</div>'+
+
+    '<p class="pill" style="margin:18px 0 8px">Precios</p>'+
+    '<div class="grid2">'+
+      campo("precio","Precio de la sesión 1 a 1")+
+      campo("moneda","Símbolo de moneda","", 'type="text" maxlength="4"')+
+      campo("yogaClases","Clases de yoga por mes")+
+      campo("yogaAlumnos","Alumnos promedio por clase")+
+      campo("yogaPrecio","Lo que paga cada alumno por clase")+
+    '</div>'+
+
+    '<p class="pill" style="margin:18px 0 8px">Costos y fugas</p>'+
+    '<div class="grid2">'+
+      campo("insumos","Insumos por sesión","Aceites, toallas, sábanas descartables")+
+      campo("espacio","Alquiler del espacio (% del ingreso)","Si pagás monto fijo, poné 0 y sumalo en gastos fijos")+
+      campo("traslado","Traslados por mes")+
+      campo("fijos","Gastos fijos mensuales","Teléfono, seguro, monotributo, web")+
+      campo("noFact","Tiempo no facturable (%)","Traslado, limpieza, WhatsApp, cobrar")+
+      campo("ausentes","Ausentes / cancelaciones tardías (%)")+
+      campo("objetivo","Objetivo de ganancia mensual")+
+    '</div>'+
+
+    '<div class="tiles" id="calc-tiles" style="margin-top:20px"></div>'+
+    '<div id="calc-out"></div>';
+
+  $$("input[data-c]",card).forEach(inp=>{
+    inp.oninput=()=>{
+      const k=inp.dataset.c;
+      S.calc[k] = inp.type==="number" ? (parseFloat(inp.value)||0) : inp.value;
+      guardar(); pintarCalc(card);
+    };
+  });
+  pintarCalc(card);
+}
+
+function calcular(){
+  const c=S.calc;
+  const dur = c.dur>0? c.dur : 60;
+  const sesionesTecho = (c.hSem * c.semanas) * (60/dur);
+  const sesionesVendidas = sesionesTecho * (c.ocup/100);
+  const sesionesCobradas = sesionesVendidas * (1 - c.ausentes/100);
+
+  const ingMasajes = sesionesCobradas * c.precio;
+  const ingYoga    = c.yogaClases * c.yogaAlumnos * c.yogaPrecio;
+  const ingreso    = ingMasajes + ingYoga;
+
+  const costoInsumos = sesionesCobradas * c.insumos;
+  const costoEspacio = ingreso * (c.espacio/100);
+  const costos = costoInsumos + costoEspacio + c.traslado + c.fijos;
+  const ganancia = ingreso - costos;
+
+  const horasMes = c.hSem * c.semanas;
+  const horasReales = horasMes * (1 + c.noFact/100);
+  const ingHoraDisp = horasMes? ingreso/horasMes : 0;
+  const ganHoraReal = horasReales? ganancia/horasReales : 0;
+
+  // Punto de equilibrio: cuántas sesiones 1 a 1 hacen falta para cubrir costos,
+  // contando que el yoga ya aporta y que el alquiler se lleva un % del ingreso.
+  const margenSesion = c.precio*(1-c.espacio/100) - c.insumos;
+  const aCubrir = c.traslado + c.fijos - (ingYoga*(1-c.espacio/100));
+  const equilibrio = margenSesion>0 ? Math.max(0, Math.ceil(aCubrir/margenSesion)) : Infinity;
+
+  // Precio que haría falta para llegar al objetivo, con la misma agenda
+  const precioObjetivo = sesionesCobradas>0 && (1-c.espacio/100)>0
+    ? (c.objetivo + c.traslado + c.fijos + sesionesCobradas*c.insumos - ingYoga*(1-c.espacio/100)) / (sesionesCobradas*(1-c.espacio/100))
+    : 0;
+
+  const perdidoAusentes = (sesionesVendidas - sesionesCobradas) * c.precio;
+  const techoIngreso = sesionesTecho*c.precio + ingYoga;
+
+  return {sesionesTecho,sesionesVendidas,sesionesCobradas,ingMasajes,ingYoga,ingreso,
+          costoInsumos,costoEspacio,costos,ganancia,horasMes,horasReales,ingHoraDisp,ganHoraReal,
+          equilibrio,precioObjetivo,perdidoAusentes,techoIngreso};
+}
+
+function pintarCalc(card){
+  const r=calcular(), c=S.calc;
+  const okGan = r.ganancia>=c.objetivo;
+  $("#calc-tiles",card).innerHTML =
+    '<div class="tile"><span class="k">Techo de facturación</span><span class="v">'+money(r.techoIngreso)+'</span><span class="s">Agenda 100% llena y sin ausentes. No existe, pero es el límite.</span></div>'+
+    '<div class="tile"><span class="k">Ingreso realista</span><span class="v">'+money(r.ingreso)+'</span><span class="s">'+nf1.format(r.sesionesCobradas)+' sesiones cobradas + yoga</span></div>'+
+    '<div class="tile '+(okGan?"good":"warn")+'"><span class="k">Ganancia del mes</span><span class="v">'+money(r.ganancia)+'</span><span class="s">Objetivo: '+money(c.objetivo)+'</span></div>'+
+    '<div class="tile"><span class="k">Ingreso por hora disponible</span><span class="v">'+money(r.ingHoraDisp)+'</span><span class="s">La métrica madre</span></div>'+
+    '<div class="tile"><span class="k">Ganancia por hora real</span><span class="v">'+money(r.ganHoraReal)+'</span><span class="s">Contando el '+nf1.format(c.noFact)+'% de tiempo no facturable</span></div>'+
+    '<div class="tile '+(r.perdidoAusentes>0?"bad":"")+'"><span class="k">Se pierde por ausentes</span><span class="v">'+money(r.perdidoAusentes)+'</span><span class="s">Por mes, sólo por no presentarse</span></div>';
+
+  const out=$("#calc-out",card);
+  out.innerHTML =
+    '<h3 style="margin-top:22px;font-size:14px">A dónde va cada peso que entra</h3>'+
+    '<div class="chart" id="calc-barra"></div>'+
+    '<h3 style="margin-top:22px;font-size:14px">Cuánto cambia la ganancia si movés el precio</h3>'+
+    '<div class="chart" id="calc-sens"></div>'+
+    '<div class="grid2" style="margin-top:18px">'+
+      '<div class="tile"><span class="k">Punto de equilibrio</span><span class="v">'+(isFinite(r.equilibrio)? r.equilibrio : "—")+'</span>'+
+        '<span class="s">'+(r.equilibrio===0
+          ? 'el yoga ya cubre solo todos los costos fijos: cada masaje es ganancia'
+          : (isFinite(r.equilibrio)
+              ? 'sesiones 1 a 1 por mes para no perder plata · hoy hacés '+nf1.format(r.sesionesCobradas)
+              : 'con estos costos, la sesión no deja margen: revisá insumos y alquiler'))+'</span></div>'+
+      '<div class="tile"><span class="k">Precio para llegar al objetivo</span><span class="v">'+money(r.precioObjetivo)+'</span>'+
+        '<span class="s">con la misma agenda de hoy'+(c.precio>0? ' · '+(r.precioObjetivo>=c.precio?'+':'')+nf1.format((r.precioObjetivo/c.precio-1)*100)+'% sobre el actual':'')+'</span></div>'+
+    '</div>';
+
+  // Composición del ingreso: 2 series → leyenda + etiquetas directas
+  barraApilada($("#calc-barra",out), [
+    {label:"Costos", v:r.costos,   color:"var(--s2)"},
+    {label:"Ganancia", v:Math.max(0,r.ganancia), color:"var(--s1)"}
+  ], r.ingreso);
+
+  // Sensibilidad al precio: una sola serie → sin leyenda, el título la nombra
+  const pasos=[-20,-10,0,10,20,30];
+  const base=S.calc.precio;
+  const puntos = pasos.map(p=>{
+    const guardado=S.calc.precio;
+    S.calc.precio = base*(1+p/100);
+    const g=calcular().ganancia;
+    S.calc.precio=guardado;
+    return {x:(p>0?"+":"")+p+"%", y:g, sub:money(base*(1+p/100))+" por sesión"};
+  });
+  lineaSimple($("#calc-sens",out), puntos, {objetivo:c.objetivo});
+}
+
+/* ===========================================================================
+   MÓDULO · KPIS
+   =========================================================================== */
+function modKpis(card){
+  card.innerHTML =
+    '<h3>Tablero mensual</h3>'+
+    '<p class="small muted">Cargá un renglón por mes. Con tres meses ya se ve la tendencia; con seis, se puede decidir.</p>'+
+    '<div class="tbl-wrap"><table class="t" id="kpi-t"><thead><tr></tr></thead><tbody></tbody></table></div>'+
+    '<div class="row no-print" style="margin-top:9px">'+
+      '<button class="btn sm" id="kpi-add">+ Mes</button>'+
+      '<span class="small muted">Los derivados se calculan solos.</span>'+
+    '</div>'+
+    '<div id="kpi-out" style="margin-top:18px"></div>';
+
+  const trh=$("#kpi-t thead tr",card);
+  KPI_COLS.forEach(c=>{ const th=document.createElement("th");
+    th.textContent=c.t; if(c.tipo==="number") th.className="num"; trh.appendChild(th); });
+  ["$/hora disp.","% vuelven","% ausentes",""].forEach((t,i)=>{
+    const th=document.createElement("th");
+    th.textContent=t; if(i<3) th.className="num"; else th.className="no-print";
+    trh.appendChild(th);
+  });
+
+  $("#kpi-add",card).onclick=()=>{
+    const d=new Date(); const prev=S.kpis[S.kpis.length-1];
+    let mes = d.toLocaleDateString("es-AR",{month:"short",year:"2-digit"});
+    S.kpis.push({id:uid(), mes, hrs:prev?prev.hrs:60, ses:0, ing:0, nue:0, vol:0, aus:0});
+    guardar(); pintarKpis(card);
+  };
+  pintarKpis(card);
+}
+
+function pintarKpis(card){
+  const tb=$("#kpi-t tbody",card);
+  tb.innerHTML="";
+  S.kpis.forEach((row,ri)=>{
+    const tr=document.createElement("tr");
+    KPI_COLS.forEach(col=>{
+      const td=document.createElement("td");
+      if(col.tipo==="number") td.className="num";
+      const inp=document.createElement("input");
+      inp.type = col.tipo; inp.value = row[col.k]==null? "" : row[col.k];
+      if(col.tipo==="number"){ inp.min="0"; inp.step="any"; }
+      inp.oninput=()=>{
+        row[col.k] = col.tipo==="number" ? (parseFloat(inp.value)||0) : inp.value;
+        guardar(); pintarDerivados(card);
+      };
+      td.appendChild(inp); tr.appendChild(td);
+    });
+    ["d1","d2","d3"].forEach(k=>{
+      const td=document.createElement("td"); td.className="num muted"; td.dataset.d=k+"-"+ri; tr.appendChild(td);
+    });
+    const tdx=document.createElement("td"); tdx.className="no-print";
+    const k=document.createElement("button");
+    k.textContent="✕"; k.style.cssText="background:none;border:0;color:var(--text-3);cursor:pointer";
+    k.onclick=()=>{ S.kpis.splice(ri,1); guardar(); pintarKpis(card); };
+    tdx.appendChild(k); tr.appendChild(tdx);
+    tb.appendChild(tr);
+  });
+  pintarDerivados(card);
+}
+
+function pintarDerivados(card){
+  S.kpis.forEach((r,ri)=>{
+    const ipd = r.hrs? r.ing/r.hrs : 0;
+    const totalClientes = (r.nue||0)+(r.vol||0);
+    const pVuelven = totalClientes? (r.vol/totalClientes*100) : 0;
+    const pAus = (r.ses+ (r.aus||0))? (r.aus/(r.ses+r.aus)*100) : 0;
+    const set=(k,v)=>{ const td=$('[data-d="'+k+'-'+ri+'"]',card); if(td) td.textContent=v; };
+    set("d1", r.hrs? money(ipd) : "—");
+    set("d2", totalClientes? pct(pVuelven) : "—");
+    set("d3", (r.ses||r.aus)? pct(pAus) : "—");
+  });
+
+  const out=$("#kpi-out",card);
+  if(S.kpis.length<2){
+    out.innerHTML='<p class="small muted">Cargá al menos dos meses para ver la evolución.</p>';
+    return;
+  }
+  out.innerHTML =
+    '<h3 style="font-size:14px;margin-bottom:2px">Ingreso por hora disponible, mes a mes</h3>'+
+    '<p class="small muted" style="margin-bottom:4px">Es el número que resume si el negocio mejora.</p>'+
+    '<div class="chart" id="kpi-chart"></div>';
+  const puntos = S.kpis.map(r=>({
+    x: r.mes||"—",
+    y: r.hrs? r.ing/r.hrs : 0,
+    sub: nfNum.format(r.ses||0)+" sesiones · "+money(r.ing||0)
+  }));
+  lineaSimple($("#kpi-chart",out), puntos, {});
+}
+
+/* ===========================================================================
+   GRÁFICOS — SVG a mano, sin librerías.
+   Reglas: marcas finas, grilla discreta, texto con color de texto (nunca el de
+   la serie), leyenda cuando hay 2+ series, tooltip siempre.
+   =========================================================================== */
+function tooltipDe(cont){
+  let tip=$(".tip",cont);
+  if(!tip){ tip=document.createElement("div"); tip.className="tip"; cont.appendChild(tip); }
+  return tip;
+}
+
+/** Barras horizontales, una sola serie (magnitud sobre categorías). */
+function barrasH(cont, items, opts){
+  opts=opts||{};
+  const max = opts.max || Math.max(1,...items.map(i=>i.v));
+  const tip = tooltipDe(cont);
+  const txt = (it)=> opts.formato? opts.formato(it.v,it) : String(it.v);
+  let html='<div class="barras">';
+  items.forEach((it,i)=>{
+    const pc = Math.max(0, Math.min(100, (it.v/max)*100));
+    html+='<div class="barra-fila">'+
+      '<div class="barra-top"><span class="barra-lbl">'+esc(it.label)+'</span>'+
+      '<span class="barra-val'+(it.sin?" sin":"")+'">'+esc(txt(it))+'</span></div>'+
+      '<div class="barra-pista"><i data-i="'+i+'" style="width:'+pc.toFixed(1)+'%"></i></div>'+
+    '</div>';
+  });
+  html+='</div>';
+  cont.innerHTML=html;
+  cont.appendChild(tip);
+  $$(".barra-pista",cont).forEach((pista,i)=>{
+    pista.addEventListener("mousemove",(e)=>{
+      const it=items[i], b=cont.getBoundingClientRect();
+      tip.innerHTML=esc(it.label)+' · <b>'+esc(txt(it))+'</b>';
+      tip.style.left=(e.clientX-b.left)+"px"; tip.style.top=(e.clientY-b.top)+"px"; tip.classList.add("on");
+    });
+    pista.addEventListener("mouseleave",()=> tip.classList.remove("on"));
+  });
+}
+
+/** Una barra apilada horizontal: costos + ganancia sobre el ingreso. */
+function barraApilada(cont, partes, total){
+  const tip=tooltipDe(cont);
+  const t = total>0? total : 1;
+  let html='<div style="position:relative;display:flex;height:34px;border-radius:9px;overflow:hidden;background:var(--surface-2);gap:2px">';
+  partes.forEach((p,i)=>{
+    const pc = Math.max(0,(p.v/t)*100);
+    html+='<div class="seg" data-i="'+i+'" style="width:'+pc+'%;background:'+p.color+';min-width:2px"></div>';
+  });
+  html+='</div><div class="legend">';
+  partes.forEach(p=>{
+    const pc = t? (p.v/t*100) : 0;
+    html+='<span><i style="background:'+p.color+'"></i>'+esc(p.label)+' · <b style="font-variant-numeric:tabular-nums">'+money(p.v)+'</b> <span style="color:var(--text-3)">('+nf1.format(pc)+'%)</span></span>';
+  });
+  html+='</div>';
+  cont.innerHTML=html; cont.appendChild(tip);
+  $$(".seg",cont).forEach(s=>{
+    s.addEventListener("mousemove",(e)=>{
+      const p=partes[+s.dataset.i]; const b=cont.getBoundingClientRect();
+      tip.innerHTML=esc(p.label)+' · <b>'+money(p.v)+'</b>';
+      tip.style.left=(e.clientX-b.left)+"px"; tip.style.top=(e.clientY-b.top)+"px"; tip.classList.add("on");
+    });
+    s.addEventListener("mouseleave",()=> tip.classList.remove("on"));
+  });
+}
+
+/** Línea de una sola serie con puntos, grilla suave y tooltip con cruz. */
+function lineaSimple(cont, puntos, opts){
+  opts=opts||{};
+  if(!puntos.length){ cont.innerHTML=""; return; }
+  const W=720, H=210, mL=56, mR=14, mT=14, mB=28;
+  const vals=puntos.map(p=>p.y).concat(opts.objetivo!=null?[opts.objetivo]:[]);
+  let min=Math.min(0,...vals), max=Math.max(...vals);
+  if(max===min) max=min+1;
+  const pad=(max-min)*0.12; max+=pad; if(min<0) min-=pad;
+  const X=i=> mL + (puntos.length===1? (W-mL-mR)/2 : i*(W-mL-mR)/(puntos.length-1));
+  const Y=v=> mT + (1-(v-min)/(max-min))*(H-mT-mB);
+
+  const ticks=4;
+  let g="";
+  for(let i=0;i<=ticks;i++){
+    const v=min+(max-min)*i/ticks, y=Y(v);
+    g+='<line x1="'+mL+'" x2="'+(W-mR)+'" y1="'+y+'" y2="'+y+'" stroke="var(--grid)" stroke-width="1"/>'+
+       '<text class="ax" x="'+(mL-8)+'" y="'+(y+3.5)+'" text-anchor="end">'+esc(nfNum.format(Math.round(v)))+'</text>';
+  }
+  if(opts.objetivo!=null){
+    const y=Y(opts.objetivo);
+    g+='<line x1="'+mL+'" x2="'+(W-mR)+'" y1="'+y+'" y2="'+y+'" stroke="var(--text-3)" stroke-width="1.5" stroke-dasharray="5 4"/>'+
+       '<text class="ax" x="'+(W-mR)+'" y="'+(y-6)+'" text-anchor="end">objetivo</text>';
+  }
+  const d=puntos.map((p,i)=> (i?"L":"M")+X(i).toFixed(1)+" "+Y(p.y).toFixed(1)).join(" ");
+  let marks='<path d="'+d+'" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+  puntos.forEach((p,i)=>{
+    marks+='<circle cx="'+X(i)+'" cy="'+Y(p.y)+'" r="4.5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2"/>';
+    marks+='<text class="ax" x="'+X(i)+'" y="'+(H-8)+'" text-anchor="middle">'+esc(p.x)+'</text>';
+  });
+  // Etiqueta directa sólo en el último punto (nunca un número en cada punto)
+  const ult=puntos[puntos.length-1];
+  marks+='<text class="bar-val" x="'+(X(puntos.length-1)-6)+'" y="'+(Y(ult.y)-11)+'" text-anchor="end">'+esc(money(ult.y))+'</text>';
+
+  const tip=tooltipDe(cont);
+  cont.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="height:'+H+'px" role="img" aria-label="Evolución">'+
+    g+marks+'<rect id="cap" x="'+mL+'" y="'+mT+'" width="'+(W-mL-mR)+'" height="'+(H-mT-mB)+'" fill="transparent"/></svg>';
+  cont.appendChild(tip);
+  const svg=$("svg",cont), cap=$("#cap",cont);
+  cap.addEventListener("mousemove",(e)=>{
+    const b=svg.getBoundingClientRect();
+    const rel=(e.clientX-b.left)/b.width*W;
+    let idx=0, best=1e9;
+    puntos.forEach((p,i)=>{ const d2=Math.abs(X(i)-rel); if(d2<best){best=d2; idx=i;} });
+    const p=puntos[idx], cb=cont.getBoundingClientRect();
+    tip.innerHTML='<b>'+esc(p.x)+'</b> · '+esc(money(p.y))+(p.sub?'<br><span style="color:var(--text-3)">'+esc(p.sub)+'</span>':'');
+    tip.style.left=((X(idx)/W)*b.width + (b.left-cb.left))+"px";
+    tip.style.top=((Y(p.y)/H)*b.height + (b.top-cb.top))+"px";
+    tip.classList.add("on");
+  });
+  cap.addEventListener("mouseleave",()=> tip.classList.remove("on"));
+}
+
+/* ===========================================================================
+   EDICIÓN DE BLOQUES / SECCIONES
+   =========================================================================== */
+function buscarBloque(id){
+  for(const sec of S.contenido.secciones){
+    const b=(sec.bloques||[]).find(x=>x.id===id);
+    if(b) return {sec,b};
+  }
+  return null;
+}
+function agregarBloque(secId, tipo){
+  const sec=S.contenido.secciones.find(s=>s.id===secId); if(!sec) return;
+  const nuevo={id:uid(), tipo};
+  if(tipo==="texto") Object.assign(nuevo,{titulo:"Nuevo bloque", html:"<p></p>"});
+  if(tipo==="nota")  Object.assign(nuevo,{variante:"idea", tag:"Nota", html:"<p></p>"});
+  if(tipo==="lista") Object.assign(nuevo,{titulo:"Nueva lista", items:[{id:uid(),t:"",ok:false}]});
+  if(tipo==="tabla") Object.assign(nuevo,{titulo:"Nueva tabla", cols:["Columna 1","Columna 2","Columna 3"], filas:[["","",""],["","",""]]});
+  sec.bloques.push(nuevo); guardar(); render();
+  const el=document.querySelector('[data-bloque="'+nuevo.id+'"]');
+  if(el){ el.scrollIntoView({behavior:"smooth",block:"center"}); const e=$(".edit",el); if(e) e.focus(); }
+}
+function borrarBloque(secId, blId){
+  const sec=S.contenido.secciones.find(s=>s.id===secId); if(!sec) return;
+  sec.bloques=sec.bloques.filter(b=>b.id!==blId); guardar(); render();
+}
+function moverBloque(secId, blId, delta){
+  const sec=S.contenido.secciones.find(s=>s.id===secId); if(!sec) return;
+  const i=sec.bloques.findIndex(b=>b.id===blId); const j=i+delta;
+  if(i<0||j<0||j>=sec.bloques.length) return;
+  const [x]=sec.bloques.splice(i,1); sec.bloques.splice(j,0,x);
+  guardar(); render();
+}
+
+document.addEventListener("input",(e)=>{
+  const t=e.target;
+  if(!t.classList || !t.classList.contains("edit")) return;
+  if(t.dataset.meta){ S.contenido.meta[t.dataset.meta]=t.textContent; guardar(); return; }
+  if(t.dataset.sec){
+    const sec=S.contenido.secciones.find(s=>s.id===t.dataset.sec);
+    if(sec){ sec[t.dataset.campo]=t.textContent; guardar(); if(t.dataset.campo==="titulo") renderNav(); }
+    return;
+  }
+  if(t.dataset.bl){
+    const found=buscarBloque(t.dataset.bl);
+    if(found){
+      const campo=t.dataset.campo;
+      found.b[campo] = (campo==="html") ? t.innerHTML : t.textContent;
+      guardar();
+    }
+  }
+},true);
+
+// Pegar siempre como texto plano: evita que se cuele formato raro de otra página.
+document.addEventListener("paste",(e)=>{
+  const t=e.target;
+  if(!t.classList || !t.classList.contains("edit")) return;
+  e.preventDefault();
+  const txt=(e.clipboardData||window.clipboardData).getData("text/plain");
+  document.execCommand("insertText", false, txt);
+});
+
+/* ===========================================================================
+   NAVEGACIÓN, BÚSQUEDA
+   =========================================================================== */
+let obs=null;
+function observarSecciones(){
+  if(obs) obs.disconnect();
+  obs=new IntersectionObserver((entradas)=>{
+    entradas.forEach(en=>{
+      if(!en.isIntersecting) return;
+      const id=en.target.id.replace("sec-","");
+      const i=S.contenido.secciones.findIndex(s=>s.id===id);
+      $$("#nav button").forEach((b,j)=> b.setAttribute("aria-current", String(j===i)));
+    });
+  },{rootMargin:"-10% 0px -75% 0px"});
+  $$(".sec[id]").forEach(s=> obs.observe(s));
+}
+
+function aplicarBusqueda(){
+  const q=($("#q").value||"").trim().toLowerCase();
+  $$(".card, .sec").forEach(n=> n.classList.remove("hide"));
+  $$(".hl").forEach(n=>{ const p=n.parentNode; p.replaceChild(document.createTextNode(n.textContent),n); p.normalize(); });
+  if(!q) return;
+  S.contenido.secciones.forEach(sec=>{
+    const secEl=document.getElementById("sec-"+sec.id);
+    if(!secEl) return;
+    let algo=false;
+    $$(".card",secEl).forEach(card=>{
+      const hit=card.textContent.toLowerCase().includes(q);
+      card.classList.toggle("hide", !hit);
+      if(hit) algo=true;
+    });
+    if(sec.titulo.toLowerCase().includes(q)) algo=true;
+    secEl.classList.toggle("hide", !algo);
+  });
+}
+$("#q").addEventListener("input", aplicarBusqueda);
+
+/* ===========================================================================
+   EXPORTAR / IMPORTAR / COPIA
+   =========================================================================== */
+function bajar(nombre, contenido, tipo){
+  const blob=new Blob([contenido],{type:tipo||"text/plain;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download=nombre;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 2000);
+}
+function hoy(){ return new Date().toISOString().slice(0,10); }
+
+$("#btn-json").onclick=()=>{
+  const q = prompt("Escribí:\n  E  → exportar los datos a un archivo .json\n  I  → importar un .json guardado antes","E");
+  if(!q) return;
+  if(q.trim().toUpperCase()==="E"){
+    bajar("analisis-datos-"+hoy()+".json", JSON.stringify(S,null,2), "application/json");
+  } else {
+    $("#file-json").click();
+  }
+};
+$("#file-json").onchange=(e)=>{
+  const f=e.target.files[0]; if(!f) return;
+  const fr=new FileReader();
+  fr.onload=()=>{
+    try{
+      S=migrar(JSON.parse(fr.result)); guardar(); render();
+      alert("Datos importados.");
+    }catch(err){ alert("Ese archivo no se pudo leer: "+err.message); }
+  };
+  fr.readAsText(f);
+  e.target.value="";
+};
+
+$("#btn-copia").onclick=()=>{
+  // Deja el estado actual embebido y baja el documento entero como .html.
+  // El cuerpo se vacía antes de serializar: al abrirse, el archivo se redibuja
+  // solo desde los datos, así la copia no lleva el HTML duplicado adentro.
+  const marca=$("#estado-embebido"), previo=marca.textContent;
+  marca.textContent = JSON.stringify(S).replace(/</g,"\\u003c");
+  $("#doc").innerHTML="";
+  $("#q").setAttribute("value","");
+  const html="<!doctype html>\n"+document.documentElement.outerHTML;
+  marca.textContent=previo;
+  render();
+  bajar("analisis-"+hoy()+".html", html, "text/html;charset=utf-8");
+};
+
+$("#btn-md").onclick=()=>{
+  const L=[];
+  L.push("# "+S.contenido.meta.titulo, "", "_"+S.contenido.meta.subtitulo+"_", "");
+  const texto=(html)=> String(html||"")
+    .replace(/<li[^>]*>/gi,"\n- ").replace(/<\/li>/gi,"")
+    .replace(/<\/p>|<br\s*\/?>/gi,"\n").replace(/<[^>]+>/g,"")
+    .replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">")
+    .replace(/\n{3,}/g,"\n\n").trim();
+  S.contenido.secciones.forEach(sec=>{
+    L.push("", "## "+sec.titulo, "", sec.desc||"");
+    (sec.bloques||[]).forEach(b=>{
+      if(b.titulo && b.tipo!=="modulo") L.push("", "### "+b.titulo);
+      if(b.tipo==="texto") L.push("", texto(b.html));
+      if(b.tipo==="nota")  L.push("", "> **"+(b.tag||"Nota")+"** — "+texto(b.html));
+      if(b.tipo==="lista"){ L.push(""); (b.items||[]).forEach(i=> L.push("- ["+(i.ok?"x":" ")+"] "+i.t)); }
+      if(b.tipo==="tabla"){
+        L.push("", "| "+b.cols.join(" | ")+" |", "|"+b.cols.map(()=>"---").join("|")+"|");
+        (b.filas||[]).forEach(f=> L.push("| "+f.join(" | ")+" |"));
+        if(b.nota) L.push("", "_"+b.nota+"_");
+      }
+      if(b.tipo==="modulo" && b.modulo==="original" && S.original) L.push("", "```", S.original, "```");
+      if(b.tipo==="modulo" && b.modulo==="calculadora"){
+        const r=calcular();
+        L.push("", "- Techo de facturación: "+money(r.techoIngreso),
+                   "- Ingreso realista: "+money(r.ingreso),
+                   "- Ganancia: "+money(r.ganancia),
+                   "- Ingreso por hora disponible: "+money(r.ingHoraDisp),
+                   "- Punto de equilibrio: "+(isFinite(r.equilibrio)?r.equilibrio+" sesiones":"—"));
+      }
+      if(b.tipo==="modulo" && b.modulo==="auditoria"){
+        L.push("");
+        CRITERIOS.forEach(([k,t])=>{
+          const p=S.auditoria[k]&&S.auditoria[k].p; L.push("- "+t+": "+(p==null?"sin puntuar":p+"/3"));
+        });
+      }
+    });
+  });
+  bajar("analisis-"+hoy()+".md", L.join("\n"), "text/markdown;charset=utf-8");
+};
+
+$("#btn-print").onclick=()=> window.print();
+
+$("#btn-tema").onclick=()=>{
+  const actual = document.documentElement.getAttribute("data-theme");
+  const oscuroSO = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const nuevo = actual ? (actual==="dark"?"light":"dark") : (oscuroSO?"light":"dark");
+  document.documentElement.setAttribute("data-theme", nuevo);
+  S.tema=nuevo; guardar();
+};
+
+/* ===========================================================================
+   ARRANQUE
+   =========================================================================== */
+if(S.tema) document.documentElement.setAttribute("data-theme", S.tema);
+render();
+marcarGuardado();
+
+window.addEventListener("keydown",(e)=>{
+  if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==="s"){ e.preventDefault(); $("#btn-copia").click(); }
+  if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==="k"){ e.preventDefault(); $("#q").focus(); }
+});
+</script>
+</body>
+</html>

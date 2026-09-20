@@ -298,3 +298,33 @@ El cartel de Configuración muestra el motivo exacto. Los más comunes:
 
 Si preferís no configurar nada: **Exportar CSV (Notion/Excel)** baja todos los movimientos y
 posiciones en un archivo que Notion importa como base de datos.
+
+---
+
+## 8. Mesa de Análisis (`analisis/index.html`)
+
+Un segundo archivo HTML suelto, independiente del resto: un **documento vivo** para trabajar el
+análisis del negocio (no las finanzas personales, que van en `finanzas/`).
+
+- **Un solo archivo, sin dependencias ni internet.** Bajalo, dejalo en el Escritorio y abrilo con
+  doble clic. No usa CDN, no usa fuentes externas, no hace ningún pedido a la red.
+- **Todo es editable.** Cualquier texto se edita haciendo clic y se guarda solo en el navegador.
+  Se pueden agregar, mover y borrar tarjetas (texto, checklist, tabla, recuadro) y secciones enteras.
+- **Botón "Guardar copia"**: baja un `.html` con todos los datos embebidos adentro. Esa copia se
+  abre sola en cualquier compu y es el respaldo. También exporta JSON y Markdown, e imprime a PDF.
+
+Qué trae cargado:
+
+| Sección | Qué hay |
+| --- | --- |
+| El original | Dónde pegar el análisis de ChatGPT; lo parte en fragmentos para marcarlos uno por uno |
+| Auditoría | Las 10 falencias típicas de un análisis genérico, puntuables de 0 a 3, con veredicto |
+| Diagnóstico | El techo de horas, las cuatro palancas, la métrica madre, yoga vs. 1 a 1, tiempo no facturable |
+| Estrategia | Posicionamiento, arquitectura de precios, recurrencia y canales de captación ordenados por retorno |
+| Los números | Calculadora de techo de facturación, punto de equilibrio y sensibilidad al precio |
+| Plan de 90 días | Tres checklists con progreso |
+| Tablero | KPIs mes a mes con derivados e ingreso por hora disponible |
+| Riesgos | Riesgos del negocio, datos sensibles de clientes y pendientes técnicos del sistema |
+
+Si se quiere servir desde el proyecto, es un archivo estático más: alcanza con publicarlo como
+`/analisis`. No necesita servidor para funcionar.
