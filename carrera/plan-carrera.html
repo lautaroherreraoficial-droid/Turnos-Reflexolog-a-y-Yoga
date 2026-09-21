@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ruta de Carrera</title>
+<style>
+:root{
+  --bg:#f7f6f3; --surface:#ffffff; --surface-2:#f1efea; --border:#e0ddd5;
+  --text:#1c1b19; --muted:#6b6862; --accent:#8a5a2b; --accent-soft:#f0e4d6;
+  --ok:#2f6e4f; --warn:#9a6a10; --bad:#9c3535; --shadow:0 1px 2px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.05);
+  --radius:14px; --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131211; --surface:#1c1a18; --surface-2:#232120; --border:#33302d;
+    --text:#ece8e2; --muted:#9b958c; --accent:#d9a066; --accent-soft:#2e2620;
+    --ok:#6fbf95; --warn:#d8ab52; --bad:#e08585; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131211; --surface:#1c1a18; --surface-2:#232120; --border:#33302d;
+  --text:#ece8e2; --muted:#9b958c; --accent:#d9a066; --accent-soft:#2e2620;
+  --ok:#6fbf95; --warn:#d8ab52; --bad:#e08585; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16px}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px 96px}
+header.top{padding:40px 0 20px;border-bottom:1px solid var(--border);margin-bottom:8px}
+h1{font-size:clamp(26px,5vw,40px);line-height:1.15;margin:0 0 8px;letter-spacing:-.02em}
+.sub{color:var(--muted);font-size:15px;margin:0}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:18px}
+button,select,input,textarea{font-family:inherit;font-size:14px;color:var(--text)}
+.btn{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:7px 12px;cursor:pointer;transition:.15s;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+:root[data-theme="dark"] .btn.primary,html:not([data-theme="light"]) .btn.primary{color:#1a1512}
+.btn.primary:hover{opacity:.88;color:#fff}
+:root[data-theme="dark"] .btn.primary:hover{color:#1a1512}
+.progwrap{flex:1;min-width:160px;display:flex;align-items:center;gap:10px}
+.prog{flex:1;height:7px;background:var(--surface-2);border-radius:99px;overflow:hidden;border:1px solid var(--border)}
+.prog>i{display:block;height:100%;width:0;background:var(--accent);transition:width .35s}
+.progtxt{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--bg);display:flex;gap:4px;overflow-x:auto;padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:28px;scrollbar-width:thin}
+nav.tabs button{background:none;border:0;padding:8px 13px;border-radius:9px;cursor:pointer;color:var(--muted);white-space:nowrap;font-size:14px;font-weight:500}
+nav.tabs button:hover{background:var(--surface-2);color:var(--text)}
+nav.tabs button[aria-selected="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+section[hidden]{display:none}
+h2{font-size:23px;letter-spacing:-.01em;margin:36px 0 6px}
+h2:first-child{margin-top:0}
+h3{font-size:17px;margin:26px 0 6px}
+p{margin:0 0 14px}
+.lede{font-size:17px;color:var(--muted);margin-bottom:26px;max-width:66ch}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:14px 0;box-shadow:var(--shadow)}
+.card.flat{box-shadow:none;background:var(--surface-2)}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);vertical-align:middle}
+.tag.ok{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.tag.bad{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+.tag.warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+ul,ol{padding-left:20px;margin:0 0 14px}
+li{margin-bottom:7px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px;margin:10px 0 0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+blockquote{margin:16px 0;padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 9px 9px 0;font-size:15px}
+blockquote p:last-child{margin:0}
+code{font-family:var(--mono);font-size:.88em;background:var(--surface-2);padding:1px 5px;border-radius:5px;border:1px solid var(--border)}
+.check{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border)}
+.check:last-child{border-bottom:0}
+.check input{margin:4px 0 0;width:17px;height:17px;accent-color:var(--accent);flex:none;cursor:pointer}
+.check label{cursor:pointer;flex:1;font-size:15px}
+.check input:checked + label{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--border)}
+.phase{border-left:2px solid var(--border);padding:0 0 4px 22px;margin-left:9px;position:relative}
+.phase::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:99px;background:var(--bg);border:2px solid var(--accent)}
+.phase.done::before{background:var(--accent)}
+.phase h3{margin-top:0;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+.yr{font-family:var(--mono);font-size:13px;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:6px;font-weight:600}
+.tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th{text-align:left;padding:11px 12px;background:var(--surface-2);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);font-weight:700}
+td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td[contenteditable]:focus,.editable:focus{outline:2px solid var(--accent);outline-offset:1px;border-radius:4px}
+td select{background:var(--surface-2);border:1px solid var(--border);border-radius:7px;padding:4px 6px}
+.del{background:none;border:0;color:var(--muted);cursor:pointer;font-size:17px;line-height:1;padding:2px 6px;border-radius:6px}
+.del:hover{color:var(--bad);background:var(--surface-2)}
+textarea{width:100%;min-height:130px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px;resize:vertical;line-height:1.6}
+textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.field{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
+.field label{font-size:14px;color:var(--muted)}
+.field input[type=number],.field input[type=text]{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:7px 10px;width:130px}
+.calcout{font-family:var(--mono);font-size:clamp(22px,4vw,30px);font-weight:700;color:var(--accent);margin:6px 0 2px}
+.small{font-size:13px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);border-top:1px dashed var(--border);padding-top:12px;margin-top:20px}
+.src a{color:var(--accent)}
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+.saved{position:fixed;bottom:18px;right:18px;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:8px 14px;border-radius:99px;font-size:13px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;z-index:50}
+.saved.show{opacity:1;transform:none}
+@media print{
+  nav.tabs,.toolbar,.del,.saved{display:none!important}
+  section[hidden]{display:block!important}
+  body{background:#fff;color:#000;font-size:11pt}
+  .card{break-inside:avoid;box-shadow:none}
+}
+@media (max-width:560px){
+  .wrap{padding:0 16px 80px}
+  header.top{padding-top:26px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>De UNLaM al máster afuera</h1>
+  <p class="sub">Análisis del patrón, los mecanismos reales de financiamiento y tu ruta año por año. Todo lo que marques o escribas se guarda solo en esta computadora.</p>
+  <div class="toolbar">
+    <button class="btn" id="themeBtn" type="button">Tema</button>
+    <button class="btn" id="exportBtn" type="button">Exportar copia</button>
+    <button class="btn" id="importBtn" type="button">Importar</button>
+    <button class="btn" id="printBtn" type="button">Imprimir / PDF</button>
+    <button class="btn" id="resetBtn" type="button">Borrar todo</button>
+    <input type="file" id="fileIn" accept="application/json" hidden>
+    <div class="progwrap"><div class="prog"><i id="progBar"></i></div><span class="progtxt" id="progTxt">0 / 0</span></div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs" role="tablist">
+  <button role="tab" data-tab="diag" aria-selected="true">1 · Qué falla el análisis</button>
+  <button role="tab" data-tab="patron" aria-selected="false">2 · El patrón real</button>
+  <button role="tab" data-tab="mec" aria-selected="false">3 · Los 6 mecanismos</button>
+  <button role="tab" data-tab="ruta" aria-selected="false">4 · Tu ruta</button>
+  <button role="tab" data-tab="radar" aria-selected="false">5 · Radar de becas</button>
+  <button role="tab" data-tab="numeros" aria-selected="false">6 · Los números</button>
+  <button role="tab" data-tab="notas" aria-selected="false">7 · Notas</button>
+</nav>
+
+<!-- ========== 1 ========== -->
+<section id="diag">
+  <h2>Lo que un análisis de IA suele errar con un perfil así</h2>
+  <p class="lede">No pude abrir el link de la conversación de ChatGPT (el entorno bloquea ese dominio), así que no voy a fingir que la leí. Lo que hice fue reconstruir el análisis desde las capturas del perfil y tu pregunta, y atacar los seis errores que este tipo de análisis comete casi siempre. Si después me pegás el texto, lo contrasto línea por línea.</p>
+
+  <div class="card">
+    <span class="tag bad">Falla 1</span>
+    <h3>Confunde el CV con la causa</h3>
+    <p>El error madre. Se lista la cadena de títulos y se asume que los títulos produjeron el resultado. Mirá las fechas del perfil: la licenciatura cierra en 2002, los posgrados locales van de 2003 a 2007, y las marcas globales (Harvard, Disney, MIT, Toyota) recién aparecen a partir de 2015. Trece años después.</p>
+    <blockquote><p>Las credenciales caras no abrieron la puerta. La puerta ya abierta fue lo que permitió pagarlas.</p></blockquote>
+    <p>Leerlo al revés te lleva a la conclusión más cara posible: “tengo que ir a Harvard para arrancar”. Nadie empieza por Harvard.</p>
+  </div>
+
+  <div class="card">
+    <span class="tag bad">Falla 2</span>
+    <h3>No distingue entre cuatro cosas que en LinkedIn se ven iguales</h3>
+    <p>En la pantalla, “Massachusetts Institute of Technology” y “Universidad Católica de La Plata” ocupan el mismo renglón con la misma tipografía. No son lo mismo, y confundirlas te hace copiar lo barato de imitar en lugar de lo que sirve:</p>
+    <ul>
+      <li><strong>Grado</strong> — Lic. en Comercialización, UCALP, 1997–2002. Cinco años, título habilitante. Es la base.</li>
+      <li><strong>Posgrado académico</strong> — el doctorado en UCA, “2012 – Presente”. Catorce años en curso: funciona como posicionamiento, no como meta académica cerrada.</li>
+      <li><strong>Posgrado corto local</strong> — UNLP mercados bursátiles (2003), UCA comercio exterior (2006), UCALP habilidades gerenciales (2007). Cada uno dura meses, se cursa trabajando y cuesta poco.</li>
+      <li><strong>Programa ejecutivo de marca global</strong> — Harvard/PON vía CMI: una semana. Disney Institute: días adentro del parque. MIT Professional Education: certificado, no grado. AOTS-Toyota en Japón: cinco semanas.</li>
+    </ul>
+    <p>Nada de esto es mentira en el perfil — está declarado con precisión. El error es del que lo lee rápido y concluye “estudió en el MIT y en Harvard”.</p>
+  </div>
+
+  <div class="card">
+    <span class="tag bad">Falla 3</span>
+    <h3>Recomienda sin fechas, sin costos y sin requisitos de elegibilidad</h3>
+    <p>“Buscá un máster en el exterior y aplicá a becas” no es un plan, es un deseo con formato de consejo. Un plan dice: Chevening abre el 4 de agosto y cierra el 6 de octubre, exige 2.800 horas de trabajo <em>posteriores</em> al título y un IELTS que vence a los dos años. Eso cambia lo que hacés este mes. Lo otro no cambia nada. La pestaña 5 tiene esas fechas.</p>
+  </div>
+
+  <div class="card">
+    <span class="tag bad">Falla 4</span>
+    <h3>Ignora de dónde salís vos</h3>
+    <p>Sos ingeniero industrial en formación en una universidad pública del conurbano, no licenciado en comercialización de una privada platense en los 90 con red de empresarios alrededor. Tu perfil tiene una ventaja que el del análisis no tenía — <strong>la ingeniería industrial es una de las carreras que las becas internacionales y los programas corporativos más financian</strong>, porque es la que más se parece a un puesto concreto — y una desventaja: no tenés capital propio para autofinanciarte. Copiar la estrategia “pago yo las marcas caras” es directamente inviable. Ir por el dinero de otro no lo es.</p>
+  </div>
+
+  <div class="card">
+    <span class="tag bad">Falla 5</span>
+    <h3>Te valida en lugar de decirte cuál es el cuello de botella</h3>
+    <p>La IA tiende a devolverte tu propio plan mejor redactado. Tu cuello de botella no es elegir universidad, ni decidir el país, ni si conviene un máster de uno o de dos años. Son tres cosas aburridas y medibles:</p>
+    <ol>
+      <li>Un inglés certificado en el rango 7.0 IELTS / 95 TOEFL iBT. Sin eso no entrás a ninguna convocatoria, por más historia que tengas.</li>
+      <li>Promedio ≥ 7 con aplazos incluidos. Fulbright lo pide como piso duro y no se negocia después. Se juega ahora, en cada final.</li>
+      <li>Dos o tres años de trabajo con resultados que se puedan contar en números. Los ensayos de beca se ganan con cifras, no con adjetivos.</li>
+    </ol>
+    <p>Las tres se construyen <em>antes</em> de que exista la pregunta “¿dónde hago el máster?”. Por eso la pestaña 4 empieza antes de que te recibas.</p>
+  </div>
+
+  <div class="card">
+    <span class="tag bad">Falla 6</span>
+    <h3>Nunca pone el contrafáctico</h3>
+    <p>Qué pasa si <em>no</em> te vas. En ingeniería industrial en Argentina, tres años dentro de una buena empresa con rotación por áreas suelen rendir más que un máster genérico pagado de tu bolsillo. El máster afuera gana claramente en tres casos: cuando lo paga otro, cuando te abre un mercado laboral al que no accedés desde acá, o cuando te da una red que acá no existe. Si no se cumple ninguno de esos tres, el mejor movimiento puede ser quedarte. Esa opción también tiene que estar sobre la mesa, y casi nunca está.</p>
+  </div>
+
+  <h2>Lo que sí vale la pena rescatar</h2>
+  <div class="grid">
+    <div class="card flat"><span class="tag ok">Rescatable</span><h3>La cadencia</h3><p>Una formación relevante cada uno o dos años, sostenida veinticinco años. Esa constancia sí es causal y sí es copiable con presupuesto cero. Es probablemente lo más valioso que se lee en esas dos capturas.</p></div>
+    <div class="card flat"><span class="tag ok">Rescatable</span><h3>Diversificar el eje</h3><p>Finanzas, comercio exterior, habilidades gerenciales, negociación, liderazgo, operaciones. No es acumular lo mismo más profundo: es cubrir los costados que la carrera de base dejó abiertos. Para un ingeniero industrial, los costados son finanzas, comercial y negociación.</p></div>
+    <div class="card flat"><span class="tag ok">Rescatable</span><h3>Documentar todo</h3><p>Certificados subidos, descripciones de una línea, notas. Suena a vanidad y es infraestructura: cuando llega la convocatoria con quince días de plazo, el que tiene el historial ordenado aplica y el que no, no llega.</p></div>
+  </div>
+</section>
+
+<!-- ========== 2 ========== -->
+<section id="patron" hidden>
+  <h2>El patrón real, en orden cronológico</h2>
+  <p class="lede">Reordené las dos capturas por fecha en lugar de por prestigio. El orden temporal cuenta una historia distinta a la que cuenta el orden de la pantalla.</p>
+
+  <div class="phase done"><h3><span class="yr">1997–2002</span> Grado</h3><p>Licenciatura en Comercialización, UCALP. Cinco años. Nada exótico: el título de base que todo lo demás cuelga.</p></div>
+  <div class="phase done"><h3><span class="yr">2003–2007</span> Tres posgrados cortos, locales y baratos</h3><p>Mercados bursátiles en la UNLP (2003), negocios internacionales en la UCA (2006), habilidades gerenciales en UCALP (2007). Uno por año, cursados trabajando, todos en el país. <strong>Esta es la fase que nadie copia y es la que más rinde por peso invertido.</strong></p></div>
+  <div class="phase done"><h3><span class="yr">2012 → hoy</span> Doctorado en curso</h3><p>UCA, Administración de Empresas, “Presente” desde hace catorce años. Estar cursando un doctorado es, en sí mismo, una credencial utilizable. Cerrarlo es otro proyecto.</p></div>
+  <div class="phase done"><h3><span class="yr">2015–2023</span> Las marcas globales, y siempre cortas</h3><p>Harvard/PON una semana (2015) · Disney Institute (2017 y 2019–20) · MIT Professional Education en liderazgo e innovación (2019–20) · AOTS-Toyota en Japón, cinco semanas (nov–dic 2023). Ninguno es un grado. Todos son marcas de primer nivel mundial, compradas cuando ya había negocio que las pagara y audiencia que las valorara.</p></div>
+
+  <div class="card">
+    <h3>La lectura en una línea</h3>
+    <blockquote><p>Título barato → posgrados locales baratos mientras trabajaba → ingresos → recién después, marcas caras y cortas que refuerzan una marca personal ya existente.</p></blockquote>
+    <p>La secuencia correcta es <strong>ingreso primero, credencial después</strong>. Con una única excepción, y es toda tu jugada: <strong>cuando paga otro</strong>. Una beca o un sponsor de empresa rompe la secuencia y te deja acceder a la credencial cara sin tener todavía el ingreso. Por eso pelear por la beca a los dos o tres años de recibido no es un atajo caprichoso: es la única forma de salteártela.</p>
+  </div>
+
+  <div class="card">
+    <h3>Lo que un ingeniero industrial debe leer distinto</h3>
+    <p>Ese perfil es de alguien del palo comercial que se llenó de gestión. Vos venís al revés: vas a salir con método, números y procesos, y sin nada de comercial ni de finanzas. Aplicar su receta tal cual te sobre-forma en lo que ya vas a saber. Tu equivalente de esos tres posgrados de 2003–2007 no es “más operaciones”: es finanzas corporativas, supply chain internacional y negociación. Es la diferencia entre ser el que optimiza la planta y el que decide qué planta se construye.</p>
+  </div>
+
+  <div class="card flat">
+    <h3>El único dato del perfil que es una pista operativa directa</h3>
+    <p><strong>AOTS – Toyota – Japón, nov–dic 2023.</strong> AOTS es una organización japonesa subsidiada por el gobierno de Japón que forma cuadros gerenciales de países en desarrollo, y tiene representación en Argentina. La beca es parcial: cubre alojamiento, comidas, traslados a visitas de planta y seguro médico; el participante paga una parte del pasaje y del curso. <strong>Habitualmente se entra postulado por la empresa donde trabajás, no a título individual.</strong> Es el ejemplo más limpio de lo que hablás cuando preguntás “¿el laburo se los da el lugar?”. Sí: en este caso, el lugar. Y para un ingeniero industrial, formarse en el Toyota Production System en Japón es exactamente sobre tu eje, no un adorno.</p>
+  </div>
+</section>
+
+<!-- ========== 3 ========== -->
+<section id="mec" hidden>
+  <h2>Cómo se van de verdad: los seis mecanismos</h2>
+  <p class="lede">Tu pregunta de fondo es esta: ¿siguen laburando, renuncian, se lo paga la empresa, cómo lo encuadran? Son seis caminos distintos, con reglas distintas. Casi nadie usa uno solo.</p>
+
+  <div class="card">
+    <span class="tag">Mecanismo 1</span>
+    <h3>Beca de gobierno o fundación — “te vas solo, pero pagado”</h3>
+    <dl class="kv">
+      <dt>Quién paga</dt><dd>Un estado o una fundación. Matrícula, pasaje y estipendio de vida, según el caso.</dd>
+      <dt>Qué pasa con el laburo</dt><dd>Renunciás, o pedís licencia sin goce de sueldo. Ninguna beca te sostiene el puesto.</dd>
+      <dt>Requisito duro</dt><dd>Título terminado + dos o tres años de experiencia + inglés certificado. Casi ninguna acepta recién recibidos.</dd>
+      <dt>La letra chica</dt><dd>Chevening te obliga a volver al país por dos años. Fulbright tiene compromiso de retorno parecido. No es una vía de emigración.</dd>
+    </dl>
+    <p class="small" style="margin-top:12px">Es el camino más competitivo y el de mejor relación costo-beneficio si entrás. Fechas concretas en la pestaña 5.</p>
+  </div>
+
+  <div class="card">
+    <span class="tag">Mecanismo 2</span>
+    <h3>Sponsorship de la empresa — el caso que mencionás</h3>
+    <p>Tu intuición de Tecpetrol apunta a algo real: el grupo Techint tiene, desde 2005, un programa de educación propio (Roberto Rocca Education Program) que financia estudios de posgrado en el exterior en ingeniería y ciencias aplicadas, además de becas para estudiantes de ingeniería de grado en Argentina. Las postulaciones suelen cerrar a mediados de diciembre y los seleccionados se anuncian en abril. <strong>Y no es sólo Techint</strong>: casi toda multinacional grande tiene una partida de desarrollo con la misma lógica.</p>
+    <p>Ahora, lo importante, que es lo que casi nadie te dice:</p>
+    <blockquote><p>La empresa no te manda a estudiar porque se lo pediste. Te manda cuando ya sos alguien que no quiere perder, y cuando hay un puesto concreto esperándote del otro lado.</p></blockquote>
+    <p>Por eso volvieron ascendidos los casos que conocés. <strong>El ascenso no lo causó el posgrado.</strong> Los metieron en un pipeline de sucesión <em>antes</em> de irse; el posgrado fue el trámite de calificación, no la causa. Si mirás sólo el resultado —se fue, volvió, lo ascendieron— copiás la parte visible y equivocada de la secuencia.</p>
+    <dl class="kv">
+      <dt>Cómo se encuadra</dt><dd>Licencia con o sin goce de sueldo, o continuidad de contrato con reducción horaria. En Argentina el art. 158 de la LCT sólo obliga a dar días por examen (hasta 10 al año), que no sirven para irte: todo lo demás es convenio interno o acuerdo escrito.</dd>
+      <dt>Precio</dt><dd>Cláusula de permanencia: típicamente de dos a tres años post-regreso, o devolvés lo invertido a prorrata. Leela antes de firmar.</dd>
+      <dt>Cuándo se pide</dt><dd>Después de dos o tres ciclos de evaluación buenos. Antes de eso sos un costo, no una inversión.</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <span class="tag">Mecanismo 3</span>
+    <h3>Transferencia interna a la filial del exterior — el más subestimado</h3>
+    <p>Si trabajás en una multinacional con operación en el país al que querés ir, <strong>pedir un traslado interno es más probable que ganar una beca</strong>, y la diferencia es enorme: te vas con visa de trabajo patrocinada, cobrando un sueldo local en moneda fuerte, en lugar de un estipendio de estudiante. Y una vez adentro, muchos hacen el máster part-time o de noche, con la empresa pagándolo como beneficio de capacitación — que es la respuesta literal a tu “¿siguen laburando o se instalan allá?”. Se instalan allá <em>trabajando</em>, y estudian arriba.</p>
+    <p class="small">Costo: es más lento (dos a cuatro años dentro de la empresa antes de que te consideren) y no elegís del todo el destino. Pero el riesgo financiero es casi cero.</p>
+  </div>
+
+  <div class="card">
+    <span class="tag">Mecanismo 4</span>
+    <h3>Autofinanciado en destino barato</h3>
+    <p>La parte que sorprende: en Europa continental pública la matrícula casi no es el problema. Un máster en el Politecnico di Milano para extracomunitarios sin beneficio económico ronda los €3.900 por año. Alemania pública, prácticamente sin matrícula. El costo real es vivir: entre €800 y €1.200 por mes según la ciudad, o sea €10.000–15.000 al año.</p>
+    <p>Dos advertencias que casi siempre faltan. Primera: <strong>“máster de un año” es básicamente Reino Unido</strong>, y algunos másteres oficiales de España de 60 ECTS. En Italia, Alemania, Países Bajos y Escandinavia la laurea magistrale o MSc de ingeniería es de <strong>dos años</strong>, así que ahí tu presupuesto se duplica. Segunda: la visa de estudiante en la UE suele habilitar unas 20 horas semanales de trabajo, que ayudan a vivir pero no pagan la carrera.</p>
+  </div>
+
+  <div class="card">
+    <span class="tag">Mecanismo 5</span>
+    <h3>Programa ejecutivo corto de marca global</h3>
+    <p>Es lo que se ve en el perfil que analizamos: MIT Professional Education, Harvard PON, Disney Institute, AOTS. De una semana a seis. Entre USD 2.000 y 15.000, y muchas empresas los aprueban como capacitación —presupuesto distinto, firma distinta, mucho más fácil de conseguir que un posgrado completo—. No reemplazan a un máster en contenido, pero para la señal en LinkedIn rinden casi lo mismo por una fracción del tiempo. Herramienta legítima para los años en que todavía no podés irte.</p>
+  </div>
+
+  <div class="card">
+    <span class="tag">Mecanismo 6</span>
+    <h3>Máster local o remoto sin moverte</h3>
+    <p>Mantenés sueldo, antigüedad y red. Costo de oportunidad casi nulo, señal internacional casi nula. Sirve como plan B explícito y como plan de transición: hacés el posgrado local en finanzas o supply chain mientras juntás las horas de experiencia que las becas te piden. No es rendirse, es no quedarte quieto durante los tres años de espera.</p>
+  </div>
+
+  <h2>Respuesta directa a “¿tres años después de recibirme está bien?”</h2>
+  <div class="card">
+    <p><strong>Es exactamente la ventana correcta, y no por casualidad.</strong> Chevening pide 2.800 horas de trabajo posteriores al título —unos dieciocho meses a tiempo completo—; los MBA buenos piden de tres a cinco años; los comités de beca evalúan impacto profesional demostrable. Irte apenas recibido es el peor de los dos mundos: no calificás para el dinero ajeno, y no tenés historias con números para escribir los ensayos.</p>
+    <p>Y hay una razón menos obvia: a los tres años ya sabés qué te falta. El que se va apenas recibido elige el máster por prestigio de la universidad. El que se va a los tres años lo elige por el agujero concreto que le encontró a su propio trabajo. Es una decisión mucho mejor informada, y se nota en la carta de motivación — que es, literalmente, lo que deciden los comités.</p>
+  </div>
+</section>
+
+<!-- ========== 4 ========== -->
+<section id="ruta" hidden>
+  <h2>Tu ruta, contada desde tu año de recibido</h2>
+  <p class="lede">Poné el año en que calculás recibirte y el plan se recalcula solo. Tildá lo que vayas cumpliendo: queda guardado en esta computadora.</p>
+
+  <div class="field card flat">
+    <label for="gradYear"><strong>Me recibo de Ingeniería Industrial (UNLaM) en</strong></label>
+    <input type="number" id="gradYear" min="2026" max="2045" step="1" value="2030">
+    <span class="small">El plan 2024 está acreditado por CONEAU con una duración de seis años; ajustá el número a tu realidad.</span>
+  </div>
+
+  <div id="timeline"></div>
+
+  <div class="note">Regla de oro de todo esto: <strong>ninguna fase de abajo depende de tener plata.</strong> Cada una depende de tiempo puesto con anticipación. Ese es el único recurso en el que hoy estás igual que cualquiera que aplique desde Londres o desde Milán.</div>
+</section>
+
+<!-- ========== 5 ========== -->
+<section id="radar" hidden>
+  <h2>Radar de becas y programas</h2>
+  <p class="lede">Todas las celdas son editables: hacé clic y escribí. Agregá los programas que vayas encontrando y movelos de estado. Verificá siempre las fechas en el sitio oficial antes de aplicar — las convocatorias se corren.</p>
+  <div class="toolbar" style="margin:0 0 12px">
+    <button class="btn primary" id="addOpp" type="button">+ Agregar programa</button>
+    <button class="btn" id="restoreOpp" type="button">Restaurar lista original</button>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th style="width:20%">Programa</th><th style="width:22%">Qué cubre</th><th style="width:20%">Ventana anual</th><th style="width:24%">Requisito duro</th><th style="width:11%">Estado</th><th style="width:3%"></th></tr></thead>
+      <tbody id="oppBody"></tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:22px">
+    <h3>Dos cosas que hay que entender de estas fechas</h3>
+    <p><strong>El calendario corre un año y medio adelantado.</strong> Para cursar en septiembre de un año X, aplicás entre agosto y octubre de X-1, y el examen de inglés tenés que tenerlo <em>antes</em> de eso. Es decir: el trabajo empieza unos veinte meses antes de pisar el aula. El que se entera en marzo ya perdió el ciclo.</p>
+    <p><strong>El IELTS y el TOEFL vencen a los dos años.</strong> No lo rindas “para tenerlo”: rendilo en el año en que vas a aplicar. Pero preparate desde mucho antes — pasar de un inglés laboral a un 7.0 de IELTS lleva entre doce y dieciocho meses de trabajo sostenido, y es el filtro que más gente deja afuera.</p>
+  </div>
+
+  <div class="card src">
+    <h3>Fuentes</h3>
+    <ul class="small">
+      <li><a href="https://www.chevening.org/scholarship/argentina/" target="_blank" rel="noopener">Chevening — Argentina</a> y <a href="https://www.chevening.org/resource-hub/guidance/eligibility/" target="_blank" rel="noopener">criterios de elegibilidad</a></li>
+      <li><a href="https://fulbright.edu.ar/course/beca-master-y-doctorado/" target="_blank" rel="noopener">Fulbright Argentina — Máster y Doctorado</a> · <a href="https://www.argentina.gob.ar/educacion/campusglobal/becas-extranjero/fulbright-masterdoctorado-usa" target="_blank" rel="noopener">ficha oficial argentina.gob.ar</a></li>
+      <li><a href="https://www.fundacioncarolina.es/convocatoria-de-becas-2026-2027/" target="_blank" rel="noopener">Fundación Carolina — convocatoria</a></li>
+      <li><a href="https://www.robertorocca.org/en/scholarships.aspx" target="_blank" rel="noopener">Roberto Rocca Education Program (Techint)</a></li>
+      <li><a href="https://aotsargentina.org.ar/becas-en-japon/" target="_blank" rel="noopener">AOTS Argentina — becas en Japón</a></li>
+      <li><a href="https://www.polimi.it/en/prospective-students/how-much-does-it-cost/laurea-laurea-magistrale-and-single-cycle-programmes" target="_blank" rel="noopener">Politecnico di Milano — aranceles</a></li>
+      <li><a href="https://www.unlam.edu.ar/academicas/ingenieria-industrial/" target="_blank" rel="noopener">UNLaM — Ingeniería Industrial</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ========== 6 ========== -->
+<section id="numeros" hidden>
+  <h2>Los números que nadie te pone adelante</h2>
+  <p class="lede">La matrícula no es el costo del máster. El costo es el sueldo que no cobrás mientras estudiás. Calculalo con tus propios números.</p>
+
+  <div class="card">
+    <h3>Costo real de irte un año</h3>
+    <div class="field">
+      <label for="cSueldo">Sueldo neto mensual (USD)</label><input type="number" id="cSueldo" value="1200" min="0" step="50">
+      <label for="cMeses">Meses fuera</label><input type="number" id="cMeses" value="14" min="1" max="48">
+    </div>
+    <div class="field">
+      <label for="cMatricula">Matrícula total (USD)</label><input type="number" id="cMatricula" value="4500" min="0" step="100">
+      <label for="cVida">Costo de vida mensual (USD)</label><input type="number" id="cVida" value="1100" min="0" step="50">
+    </div>
+    <div class="field">
+      <label for="cBeca">Cubierto por beca o empresa (USD)</label><input type="number" id="cBeca" value="0" min="0" step="500">
+      <label for="cExtra">Pasajes, visa, exámenes, seguro (USD)</label><input type="number" id="cExtra" value="3000" min="0" step="100">
+    </div>
+    <hr style="border:0;border-top:1px solid var(--border);margin:18px 0">
+    <div class="grid">
+      <div><div class="small">Desembolso de bolsillo</div><div class="calcout" id="outBolsillo">—</div></div>
+      <div><div class="small">Sueldo que dejás de cobrar</div><div class="calcout" id="outLucro">—</div></div>
+      <div><div class="small">Costo total real</div><div class="calcout" id="outTotal">—</div></div>
+    </div>
+    <p class="small" id="outMsg" style="margin-top:14px"></p>
+  </div>
+
+  <div class="card">
+    <h3>Cuánto tiene que subir tu sueldo para que cierre</h3>
+    <p id="outBreak" class="small">—</p>
+    <p class="small">Cuenta simple y deliberadamente conservadora: no le pone valor a la red de contactos, al idioma, ni a la opción de trabajar afuera después — que muchas veces son lo que de verdad justifica la decisión. Tomala como el piso que tenés que superar, no como la respuesta completa.</p>
+  </div>
+
+  <div class="card flat">
+    <h3>La comparación que importa</h3>
+    <p>Poné el mismo número contra estas tres alternativas antes de decidir:</p>
+    <ul>
+      <li><strong>Máster afuera pagado por vos</strong> — el número de arriba, entero, de tu bolsillo.</li>
+      <li><strong>Máster afuera con beca</strong> — cargá el monto en “cubierto por beca” y mirá cómo se desploma. Esa diferencia es exactamente el valor de dedicarle dos años a preparar la postulación. Suele ser el trabajo mejor pago de tu vida por hora invertida.</li>
+      <li><strong>Quedarte tres años más en una buena empresa</strong> — cero desembolso, cero lucro cesante, más antigüedad y más red local. Compará contra esto de verdad, no de compromiso.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ========== 7 ========== -->
+<section id="notas" hidden>
+  <h2>Notas</h2>
+  <p class="lede">Para lo que vayas agregando: nombres de contactos, universidades que te interesen, qué te respondieron, dudas. Se guarda automáticamente.</p>
+  <h3>Personas a las que preguntarles cómo lo hicieron</h3>
+  <p class="small">La fuente más útil que tenés. Preguntales estas cuatro cosas concretas: ¿quién lo pagó? ¿pediste licencia o renunciaste? ¿había un puesto esperándote al volver? ¿qué harías distinto?</p>
+  <textarea id="n1" placeholder="Ej.: Marín (Tecpetrol) — preguntarle si fue con el programa Roberto Rocca o por su cuenta, y si tenía el puesto acordado antes de irse."></textarea>
+  <h3>Universidades y programas candidatos</h3>
+  <textarea id="n2" placeholder="País, universidad, duración (1 o 2 años), arancel, deadline, por qué este y no otro."></textarea>
+  <h3>Preguntas abiertas y decisiones pendientes</h3>
+  <textarea id="n3" placeholder="Lo que todavía no sabés y quién te lo puede contestar."></textarea>
+  <h3>Bitácora</h3>
+  <textarea id="n4" placeholder="Fecha + qué hiciste. Un renglón por semana alcanza para no perder el hilo."></textarea>
+</section>
+
+<footer>
+  <p>Archivo local y autónomo: funciona sin internet y no manda nada a ningún lado. Todo lo que tildás y escribís vive en el almacenamiento de este navegador, en esta computadora. Si vas a cambiar de máquina o de navegador, usá <strong>Exportar copia</strong> y después <strong>Importar</strong>.</p>
+  <p>Verificá siempre fechas y requisitos en los sitios oficiales antes de aplicar. Última revisión de datos: septiembre de 2026.</p>
+</footer>
+
+</div>
+<div class="saved" id="toast">Guardado</div>
+
+<script>
+(function(){
+"use strict";
+var KEY="ruta_carrera_v1";
+var DEFAULT_OPPS=[
+ {p:"Chevening (Reino Unido)",c:"Máster de 1 año completo: matrícula, pasajes y estipendio de vida.",v:"Abre ~4 de agosto, cierra ~6 de octubre. Todos los años.",r:"2.800 h de trabajo posteriores al título (~18 meses). Inglés alto. Obliga a volver 2 años al país.",e:"Objetivo"},
+ {p:"Fulbright Argentina",c:"Hasta 2 años en EE.UU.: pasajes, estipendio, seguro y ayuda para conseguir financiamiento de matrícula.",v:"Convocatoria entre febrero y abril del año anterior al inicio.",r:"Ciudadanía argentina, promedio ≥ 7 con aplazos, TOEFL iBT 95 / IELTS 7.0 / Duolingo 125.",e:"Objetivo"},
+ {p:"Fundación Carolina (España)",c:"Posgrados en España. Cientos de becas por año, muchas de ellas de máster.",v:"Abre a principios de enero, cierra a principios de marzo.",r:"Iberoamericano con título de grado. Sin examen de inglés: es en español.",e:"Investigar"},
+ {p:"Erasmus Mundus Joint Masters (UE)",c:"Máster conjunto en 2 o 3 países europeos, con estipendio mensual.",v:"No hay fecha única: cada consorcio abre entre octubre y enero para empezar en septiembre.",r:"Título de grado. Se aplica programa por programa, del catálogo de la Comisión Europea.",e:"Investigar"},
+ {p:"Roberto Rocca Education Program (Techint)",c:"Posgrado en ingeniería y ciencias aplicadas en el exterior. También becas de grado en Argentina.",v:"Postulación hacia mediados de diciembre; resultados en abril.",r:"Ingeniería o ciencias. Campos y universidades acotados: verificar la lista del año.",e:"Investigar"},
+ {p:"AOTS – Japón",c:"Beca parcial: alojamiento, comidas, traslados y seguro. Vos ponés parte del pasaje y del curso.",v:"Programas cortos con cierres escalonados durante todo el año.",r:"Suele exigir postulación a través de la empresa donde trabajás.",e:"Para después de entrar a una empresa"},
+ {p:"Traslado interno a filial del exterior",c:"Sueldo local + visa de trabajo patrocinada. El máster se cursa part-time, muchas veces pagado como capacitación.",v:"Cuando se abre la vacante. Se prepara con 2 a 4 años de anticipación.",r:"Estar adentro de una multinacional y ser evaluado bien dos o tres ciclos seguidos.",e:"Vía paralela"}
+];
+var DEFAULT_STATE={gradYear:2030,checks:{},notes:{},opps:null,calc:{}};
+var state=load();
+
+function load(){
+  try{
+    var raw=localStorage.getItem(KEY);
+    if(!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
+    var o=JSON.parse(raw);
+    return {
+      gradYear:o.gradYear||DEFAULT_STATE.gradYear,
+      checks:o.checks||{}, notes:o.notes||{},
+      opps:Array.isArray(o.opps)?o.opps:null, calc:o.calc||{}
+    };
+  }catch(e){ return JSON.parse(JSON.stringify(DEFAULT_STATE)); }
+}
+var toastT;
+function save(){
+  try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){}
+  var t=document.getElementById("toast");
+  t.classList.add("show"); clearTimeout(toastT);
+  toastT=setTimeout(function(){t.classList.remove("show");},1100);
+}
+
+/* ---------- tabs ---------- */
+var tabs=document.getElementById("tabs");
+tabs.addEventListener("click",function(ev){
+  var b=ev.target.closest("button[data-tab]"); if(!b) return;
+  Array.prototype.forEach.call(tabs.querySelectorAll("button"),function(x){
+    var on = x===b;
+    x.setAttribute("aria-selected",on?"true":"false");
+    document.getElementById(x.dataset.tab).hidden=!on;
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+/* ---------- theme ---------- */
+document.getElementById("themeBtn").addEventListener("click",function(){
+  var cur=document.documentElement.getAttribute("data-theme");
+  var sysDark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;
+  var next = cur ? (cur==="dark"?"light":"dark") : (sysDark?"light":"dark");
+  document.documentElement.setAttribute("data-theme",next);
+  try{ localStorage.setItem(KEY+"_theme",next); }catch(e){}
+});
+try{ var th=localStorage.getItem(KEY+"_theme"); if(th) document.documentElement.setAttribute("data-theme",th); }catch(e){}
+
+/* ---------- timeline ---------- */
+var PHASES=[
+ {off:-2,t:"Todavía cursando — la fase que decide todo",items:[
+   "Arrancar inglés en serio con objetivo explícito: IELTS 7.0 / TOEFL iBT 95. Doce a dieciocho meses de trabajo sostenido, no un curso suelto.",
+   "Cuidar el promedio final por final. Fulbright pide 7 con aplazos incluidos y eso no se arregla después.",
+   "Entrar como pasante a una empresa con nombre reconocible. El nombre del empleador pesa en cada postulación que hagas.",
+   "Averiguar si la empresa donde estás tiene programa de becas propio (el de Techint es el más conocido, pero no el único).",
+   "Abrir una carpeta: certificados, notas, constancias, cartas. Dentro de tres años vas a necesitarla armada en quince días."
+ ]},
+ {off:-1,t:"Último año — armar la plataforma de salida",items:[
+   "Cerrar la tesis o el trabajo final sobre un tema que puedas defender en una entrevista de beca.",
+   "Conseguir dos profesores o jefes dispuestos a escribirte cartas de recomendación. Pedírselo ahora, no cuando los necesites.",
+   "Pasar de pasantía a efectivo, o conseguir el primer puesto. El reloj de experiencia de las becas arranca recién con el título en la mano.",
+   "Hacer un posgrado corto local o un curso ejecutivo en finanzas o supply chain: barato y te cubre el costado que la ingeniería no te da."
+ ]},
+ {off:0,t:"Me recibo — empieza a correr el reloj",items:[
+   "Tramitar el título y hacer la apostilla de La Haya. Tarda meses y todas las universidades del exterior la piden.",
+   "Anotar la fecha exacta del título: desde ahí se cuentan las 2.800 horas de Chevening.",
+   "Elegir empleador con criterio de salida: multinacional con operación afuera, o empresa con programa de becas. No es lo mismo cualquier trabajo.",
+   "Pedir explícitamente proyectos con números: ahorro, toneladas, porcentaje, tiempo de ciclo. Eso es lo que después se escribe en los ensayos."
+ ]},
+ {off:1,t:"Primer año trabajando — fabricar las historias",items:[
+   "Liderar al menos un proyecto de punta a punta, con impacto medible y documentado.",
+   "Llegar a nivel B2 alto o C1 conversacional. Todavía no rindas el examen: vence a los dos años.",
+   "Mapear diez programas concretos de máster: país, duración real (uno o dos años), arancel, deadline.",
+   "Hablar con tres personas que ya se fueron. Las cuatro preguntas están en la pestaña de Notas."
+ ]},
+ {off:2,t:"Segundo año — el año de postular",items:[
+   "Rendir IELTS o TOEFL entre marzo y junio, para llegar con el papel a las convocatorias de agosto.",
+   "Agosto a octubre: postular a Chevening.",
+   "Octubre a enero: postular a los Erasmus Mundus que te sirvan (cada consorcio tiene su propia fecha).",
+   "Enero a marzo: postular a Fundación Carolina.",
+   "Febrero a abril: postular a Fulbright.",
+   "Diciembre: postular al programa de la empresa si calificás.",
+   "En paralelo: plantear el tema en tu empresa. Licencia sin goce, sponsorship o traslado interno. Que sepan que existe la intención."
+ ]},
+ {off:3,t:"Tercer año — cursar",items:[
+   "Aceptar, tramitar la visa y dejar por escrito el acuerdo con la empresa (licencia o reingreso). De palabra no sirve.",
+   "Si nada salió: ejecutar el plan B sin dramatizarlo. Posgrado local o programa ejecutivo corto, y volver a postular el año siguiente. Rechazo en primera vuelta es lo normal, no la excepción.",
+   "Durante el máster, tratar la red de contactos como la materia principal. El título se olvida; la gente no."
+ ]},
+ {off:4,t:"Después — cobrar lo invertido",items:[
+   "Negociar el regreso antes de volver, no después de aterrizar. Tu poder de negociación es máximo cuando todavía estás afuera.",
+   "Revisar la cláusula de permanencia si hubo sponsorship, y cumplirla o pagarla, pero con los números claros.",
+   "Volver a la cadencia: una formación relevante cada uno o dos años. Eso es lo único del patrón que realmente compone en el tiempo."
+ ]}
+];
+function renderTimeline(){
+  var g=parseInt(state.gradYear,10)||2030;
+  var host=document.getElementById("timeline"); host.innerHTML="";
+  PHASES.forEach(function(ph,pi){
+    var y=g+ph.off;
+    var div=document.createElement("div"); div.className="phase";
+    var label = ph.off<0 ? String(y) : (ph.off===0? String(y) : String(y));
+    var h=document.createElement("h3");
+    h.innerHTML='<span class="yr">'+label+'</span> <span>'+ph.t+'</span>';
+    div.appendChild(h);
+    var box=document.createElement("div"); box.className="card";
+    ph.items.forEach(function(txt,ii){
+      var id="p"+pi+"_"+ii;
+      var row=document.createElement("div"); row.className="check";
+      var inp=document.createElement("input"); inp.type="checkbox"; inp.id=id;
+      inp.checked=!!state.checks[id];
+      inp.addEventListener("change",function(){ state.checks[id]=inp.checked; save(); updateProgress(); markDone(); });
+      var lab=document.createElement("label"); lab.htmlFor=id; lab.textContent=txt;
+      row.appendChild(inp); row.appendChild(lab); box.appendChild(row);
+    });
+    div.appendChild(box); host.appendChild(div);
+  });
+  markDone(); updateProgress();
+}
+function markDone(){
+  Array.prototype.forEach.call(document.querySelectorAll("#timeline .phase"),function(ph){
+    var ins=ph.querySelectorAll("input[type=checkbox]");
+    var all=ins.length>0&&Array.prototype.every.call(ins,function(i){return i.checked;});
+    ph.classList.toggle("done",all);
+  });
+}
+function updateProgress(){
+  var ins=document.querySelectorAll("#timeline input[type=checkbox]");
+  var n=ins.length, d=0;
+  Array.prototype.forEach.call(ins,function(i){ if(i.checked) d++; });
+  document.getElementById("progBar").style.width=(n? (d/n*100):0)+"%";
+  document.getElementById("progTxt").textContent=d+" / "+n;
+}
+var gy=document.getElementById("gradYear");
+gy.value=state.gradYear;
+gy.addEventListener("input",function(){ state.gradYear=gy.value; save(); renderTimeline(); });
+
+/* ---------- radar ---------- */
+function opps(){ if(!state.opps) state.opps=JSON.parse(JSON.stringify(DEFAULT_OPPS)); return state.opps; }
+var STATES=["Investigar","Objetivo","Preparando","Postulado","Aceptado","Descartado","Vía paralela","Para después de entrar a una empresa"];
+function renderOpps(){
+  var tb=document.getElementById("oppBody"); tb.innerHTML="";
+  opps().forEach(function(o,idx){
+    var tr=document.createElement("tr");
+    ["p","c","v","r"].forEach(function(k){
+      var td=document.createElement("td");
+      td.contentEditable="true"; td.textContent=o[k]||"";
+      if(k==="p") td.style.fontWeight="600";
+      td.addEventListener("blur",function(){ o[k]=td.textContent.trim(); save(); });
+      tr.appendChild(td);
+    });
+    var tdS=document.createElement("td");
+    var sel=document.createElement("select");
+    var list=STATES.slice(); if(o.e&&list.indexOf(o.e)<0) list.push(o.e);
+    list.forEach(function(s){ var op=document.createElement("option"); op.value=s; op.textContent=s; sel.appendChild(op); });
+    sel.value=o.e||"Investigar";
+    sel.addEventListener("change",function(){ o.e=sel.value; save(); });
+    tdS.appendChild(sel); tr.appendChild(tdS);
+    var tdD=document.createElement("td");
+    var b=document.createElement("button"); b.className="del"; b.type="button"; b.textContent="×"; b.title="Eliminar fila";
+    b.addEventListener("click",function(){ opps().splice(idx,1); save(); renderOpps(); });
+    tdD.appendChild(b); tr.appendChild(tdD);
+    tb.appendChild(tr);
+  });
+}
+document.getElementById("addOpp").addEventListener("click",function(){
+  opps().push({p:"Nuevo programa",c:"",v:"",r:"",e:"Investigar"}); save(); renderOpps();
+  var tb=document.getElementById("oppBody");
+  var last=tb.lastElementChild; if(last){ last.firstElementChild.focus(); }
+});
+document.getElementById("restoreOpp").addEventListener("click",function(){
+  if(!confirm("Esto reemplaza la tabla por la lista original y pierde lo que hayas editado o agregado. ¿Seguir?")) return;
+  state.opps=JSON.parse(JSON.stringify(DEFAULT_OPPS)); save(); renderOpps();
+});
+
+/* ---------- notas ---------- */
+["n1","n2","n3","n4"].forEach(function(id){
+  var el=document.getElementById(id);
+  el.value=state.notes[id]||"";
+  var t;
+  el.addEventListener("input",function(){ state.notes[id]=el.value; clearTimeout(t); t=setTimeout(save,500); });
+});
+
+/* ---------- calculadora ---------- */
+var CF=["cSueldo","cMeses","cMatricula","cVida","cBeca","cExtra"];
+function fmt(n){ return "USD "+Math.round(n).toLocaleString("es-AR"); }
+function calc(){
+  var v={}; CF.forEach(function(id){ var el=document.getElementById(id); v[id]=parseFloat(el.value)||0; state.calc[id]=el.value; });
+  var bolsillo=Math.max(0, v.cMatricula + v.cVida*v.cMeses + v.cExtra - v.cBeca);
+  var lucro=v.cSueldo*v.cMeses;
+  var total=bolsillo+lucro;
+  document.getElementById("outBolsillo").textContent=fmt(bolsillo);
+  document.getElementById("outLucro").textContent=fmt(lucro);
+  document.getElementById("outTotal").textContent=fmt(total);
+  document.getElementById("outMsg").textContent = v.cSueldo>0
+    ? "El lucro cesante es el "+Math.round(lucro/total*100)+"% del costo total. Lo que pagás de tu bolsillo equivale a "+ (Math.round(bolsillo/v.cSueldo*10)/10) +" meses de tu sueldo actual."
+    : "Cargá tu sueldo para ver el costo de oportunidad, que casi siempre es la mitad o más del total.";
+  var años=[3,5,10];
+  var txt=años.map(function(a){
+    var need = total/(a*12);
+    return "para recuperarlo en "+a+" años necesitás ganar "+fmt(need)+" más por mes (+"+Math.round(v.cSueldo>0?need/v.cSueldo*100:0)+"%)";
+  }).join("; ");
+  document.getElementById("outBreak").textContent = v.cSueldo>0 ? ("Sobre un costo total de "+fmt(total)+": "+txt+".") : "Cargá tu sueldo actual para ver el umbral.";
+  save();
+}
+CF.forEach(function(id){
+  var el=document.getElementById(id);
+  if(state.calc[id]!==undefined) el.value=state.calc[id];
+  el.addEventListener("input",calc);
+});
+
+/* ---------- export / import / reset / print ---------- */
+document.getElementById("exportBtn").addEventListener("click",function(){
+  var blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="ruta-carrera-"+new Date().toISOString().slice(0,10)+".json";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+});
+document.getElementById("importBtn").addEventListener("click",function(){ document.getElementById("fileIn").click(); });
+document.getElementById("fileIn").addEventListener("change",function(ev){
+  var f=ev.target.files&&ev.target.files[0]; if(!f) return;
+  var r=new FileReader();
+  r.onload=function(){
+    try{
+      var o=JSON.parse(r.result);
+      state={gradYear:o.gradYear||2030,checks:o.checks||{},notes:o.notes||{},opps:Array.isArray(o.opps)?o.opps:null,calc:o.calc||{}};
+      save(); location.reload();
+    }catch(e){ alert("No pude leer ese archivo. Tiene que ser un JSON exportado desde acá."); }
+  };
+  r.readAsText(f); ev.target.value="";
+});
+document.getElementById("resetBtn").addEventListener("click",function(){
+  if(!confirm("Borra todo lo que marcaste y escribiste en esta computadora. No se puede deshacer. ¿Seguro?")) return;
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  location.reload();
+});
+document.getElementById("printBtn").addEventListener("click",function(){ window.print(); });
+
+renderTimeline(); renderOpps(); calc();
+})();
+</script>
+</body>
+</html>
