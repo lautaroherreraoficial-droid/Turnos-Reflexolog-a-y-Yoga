@@ -331,6 +331,10 @@ textarea.input{height:auto;padding:8px 10px;resize:vertical;line-height:1.5}
 .field > span{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
 .field.span2{grid-column:1 / -1}
 .qdates{display:flex;flex-wrap:wrap;gap:6px;margin-top:-10px}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:-10px}
+.days button{height:30px;border-radius:4px;border:1px solid var(--line);font-size:12px;font-weight:500;color:var(--ink-3);background:var(--surface)}
+.days button:hover{border-color:var(--line-strong);color:var(--ink)}
+.days button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
 .qdates button{height:26px;padding:0 9px;border-radius:4px;border:1px solid var(--line);font-size:12px;color:var(--ink-2);background:var(--surface-2)}
 .qdates button:hover{border-color:var(--line-strong);color:var(--ink)}
 .dr-sec h3{display:flex;align-items:baseline;justify-content:space-between;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
@@ -467,7 +471,7 @@ textarea.input{height:auto;padding:8px 10px;resize:vertical;line-height:1.5}
   </header>
 
   <section class="intro" id="intro" hidden>
-    <p>La agenda arranca con <strong>los pendientes reales de tus dos proyectos</strong>, el sistema de turnos (WhatsApp, Google y Render) y el dashboard de finanzas. Las fechas son una propuesta y se cambian desde cada tarea. Para sumar el resto de tus tareas, pegalas en <strong>Importar lista</strong>.</p>
+    <p>La agenda arranca con <strong>tus rutinas de trabajo</strong> y los pendientes de tus dos proyectos, el sistema de turnos y el dashboard de finanzas. Las fechas y repeticiones se cambian desde cada tarea. Para sumar más, escribilas arriba o pegalas en <strong>Importar lista</strong>.</p>
     <div class="actions">
       <button class="btn" type="button" data-act="import">Importar lista</button>
       <button class="btn btn-primary" type="button" id="intro-ok">Entendido</button>
@@ -484,7 +488,7 @@ textarea.input{height:auto;padding:8px 10px;resize:vertical;line-height:1.5}
     </div>
     <div class="qa-under">
       <div class="chips" id="qa-chips"></div>
-      <p class="qa-help" id="qa-help">Escribilo todo en una línea: <code>hoy</code> <code>mañana</code> <code>viernes</code> <code>15/10</code> · <code>10:30</code> · <code>!alta</code> · <code>#Área</code> · <code>cada semana</code></p>
+      <p class="qa-help" id="qa-help">Escribilo todo en una línea: <code>hoy</code> <code>mañana</code> <code>viernes</code> <code>15/10</code> · <code>10:30</code> · <code>!alta</code> · <code>#Área</code> · <code>a diario</code> <code>martes y jueves</code> <code>quincenal</code></p>
     </div>
   </form>
 
@@ -610,7 +614,9 @@ var DAYS_SHORT = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
 var MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 var MONTHS_SHORT = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 var PRIO = { 1: 'Alta', 2: 'Media', 3: 'Baja' };
-var REPEAT = { none: 'No se repite', daily: 'Todos los días', weekdays: 'Días hábiles', weekly: 'Cada semana', monthly: 'Cada mes' };
+var REPEAT = { none: 'No se repite', daily: 'Todos los días', weekdays: 'Días hábiles (lun a vie)', custom: 'Días específicos', weekly: 'Cada semana', biweekly: 'Cada 2 semanas (quincenal)', monthly: 'Cada mes' };
+var REPEAT_SHORT = { daily: 'Todos los días', weekdays: 'Lun a vie', weekly: 'Cada semana', biweekly: 'Quincenal', monthly: 'Cada mes' };
+var WEEK_ORDER = [1, 2, 3, 4, 5, 6, 0];
 var VIEWS = { hoy: 'Hoy', semana: 'Próximos 7 días', todas: 'Todas las tareas', hechas: 'Completadas' };
 var NO_AREA = '__sin_area__';
 
@@ -682,7 +688,8 @@ function fmtStamp(ms) {
    el título, y la vista previa muestra qué se entendió antes de guardar.
    ========================================================================== */
 var WD = { domingo: 0, lunes: 1, martes: 2, miercoles: 3, jueves: 4, viernes: 5, sabado: 6 };
-var WD_RE = 'lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bado|domingo';
+var WD_RE = 'lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bados?|domingos?';
+function wdNum(name) { var n = norm(name).replace(/^(sabado|domingo)s$/, '$1'); return WD[n]; }
 var MONTH_RE = 'enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre';
 function monthNum(name) { var n = norm(name); return n === 'setiembre' ? 9 : MONTHS.map(norm).indexOf(n) + 1; }
 
@@ -698,10 +705,32 @@ function dmy(dd, mm, yy, base) {
   return iso;
 }
 
+function daysLabel(days) {
+  var names = WEEK_ORDER.filter(function (d) { return days.indexOf(d) !== -1; }).map(function (d) { return DAYS_SHORT[d]; });
+  if (!names.length) return 'Sin días elegidos';
+  if (names.length === 7) return 'Todos los días';
+  return cap(names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' y ' + names[names.length - 1]);
+}
+function repeatLabel(t) {
+  if (!t.repeat || t.repeat === 'none') return '';
+  if (t.repeat === 'custom') return daysLabel(t.days || []);
+  if (t.repeat === 'weekly' && t.due) { var d = DAYS[fromISO(t.due).getDay()]; return 'Los ' + (/s$/.test(d) ? d : d + 's'); }
+  return REPEAT_SHORT[t.repeat];
+}
+function isWorkday(iso) { var g = fromISO(iso).getDay(); return g !== 0 && g !== 6; }
+/* Primera fecha en que corresponde una tarea que se repite, contando desde base. */
+function firstOccurrence(repeat, days, base) {
+  if (repeat === 'weekdays') { var n = base; while (!isWorkday(n)) n = addDays(n, 1); return n; }
+  if (repeat === 'custom' && days && days.length) {
+    for (var i = 0; i < 7; i++) { var d = addDays(base, i); if (days.indexOf(fromISO(d).getDay()) !== -1) return d; }
+  }
+  return base;
+}
+
 function parseQuick(raw, base) {
   base = base || todayISO();
   var s = ' ' + String(raw || '').replace(/\s+/g, ' ') + ' ';
-  var r = { title: '', due: undefined, time: undefined, priority: undefined, area: undefined, repeat: undefined };
+  var r = { title: '', due: undefined, time: undefined, priority: undefined, area: undefined, repeat: undefined, days: undefined };
 
   function grab(src, fn) {
     var re = new RegExp('(\\s)(?:' + src + ')(?=[\\s.,;:!?)]|$)', 'iu');
@@ -721,12 +750,19 @@ function parseQuick(raw, base) {
   });
 
   // Repeticiones (antes que las fechas, así "de lunes a viernes" no se toma como "lunes").
-  grab('cada\\s+(' + WD_RE + ')', function (m) {
-    r.repeat = 'weekly';
-    r.due = nextWeekday(base, WD[norm(m[2])], true);
-  }) ||
+  var WDX = '(?:' + WD_RE + ')';
   grab('(?:los\\s+)?d[ií]as\\s+h[aá]biles|de\\s+lunes\\s+a\\s+viernes', function () { r.repeat = 'weekdays'; }) ||
-  grab('todos\\s+los\\s+d[ií]as|cada\\s+d[ií]a|diariamente', function () { r.repeat = 'daily'; }) ||
+  grab('(?:cada\\s+|los\\s+)?' + WDX + '(?:\\s*,\\s*(?:los\\s+)?' + WDX + '|\\s+[ye]\\s+(?:los\\s+)?' + WDX + ')+', function (m) {
+    var days = [], re = new RegExp(WD_RE, 'giu'), w;
+    while ((w = re.exec(m[0]))) { var n = wdNum(w[0]); if (days.indexOf(n) === -1) days.push(n); }
+    r.repeat = 'custom'; r.days = days;
+  }) ||
+  grab('(?:cada|los)\\s+(' + WD_RE + ')', function (m) {
+    r.repeat = 'weekly';
+    r.due = nextWeekday(base, wdNum(m[2]), true);
+  }) ||
+  grab('todos\\s+los\\s+d[ií]as|cada\\s+d[ií]a|a\\s+diario|diariamente', function () { r.repeat = 'daily'; }) ||
+  grab('quincenal(?:mente)?|cada\\s+(?:15|quince)\\s+d[ií]as|cada\\s+(?:2|dos)\\s+semanas', function () { r.repeat = 'biweekly'; }) ||
   grab('todas\\s+las\\s+semanas|cada\\s+semana|semanalmente', function () { r.repeat = 'weekly'; }) ||
   grab('todos\\s+los\\s+meses|cada\\s+mes|mensualmente', function () { r.repeat = 'monthly'; });
 
@@ -750,7 +786,7 @@ function parseQuick(raw, base) {
       ['(?:el\\s+)?(\\d{1,2})\\s+de\\s+(' + MONTH_RE + ')(?:\\s+(?:de\\s+)?(\\d{4}))?', function (m) { return dmy(m[2], String(monthNum(m[3])), m[4], base); }],
       ['(?:el\\s+)?(\\d{1,2})[/-](\\d{1,2})(?:[/-](\\d{4}|\\d{2}))?', function (m) { return dmy(m[2], m[3], m[4], base); }],
       ['(?:el\\s+|este\\s+|pr[oó]ximo\\s+)?(' + WD_RE + ')(?:\\s+que\\s+viene|\\s+pr[oó]ximo)?', function (m) {
-        return nextWeekday(base, WD[norm(m[2])], false);
+        return nextWeekday(base, wdNum(m[2]), false);
       }]
     ];
     for (var i = 0; i < rules.length; i++) {
@@ -758,6 +794,9 @@ function parseQuick(raw, base) {
       if (grab(rules[i][0], function (m) { val = fn(m); if (!val) return false; })) { r.due = val; break; }
     }
   }
+
+  // Una tarea que se repite siempre tiene una primera fecha.
+  if (r.repeat && r.due === undefined) r.due = firstOccurrence(r.repeat, r.days, base);
 
   var title = s.replace(/\s+/g, ' ').trim().replace(/^[\s\-–,;:.]+|[\s\-–,;:]+$/g, '').trim();
   r.title = cap(title);
@@ -770,7 +809,7 @@ function parsedChips(p) {
   if (p.time) out.push(p.time);
   if (p.priority) out.push('Prioridad ' + PRIO[p.priority].toLowerCase());
   if (p.area) out.push(p.area);
-  if (p.repeat) out.push(REPEAT[p.repeat]);
+  if (p.repeat) out.push(repeatLabel(p));
   return out;
 }
 
@@ -787,7 +826,8 @@ function makeTask(o) {
     time: o.time || null,
     priority: o.priority || 2,
     area: o.area || '',
-    repeat: o.repeat || 'none',
+    repeat: REPEAT[o.repeat] ? o.repeat : 'none',
+    days: Array.isArray(o.days) ? o.days.filter(function (d) { return d >= 0 && d <= 6; }) : [],
     steps: (o.steps || []).map(function (x) {
       return typeof x === 'string' ? { id: uid(), text: x, done: false } : { id: x.id || uid(), text: String(x.text || ''), done: !!x.done };
     }),
@@ -841,13 +881,47 @@ function seed() {
   return list.map(makeTask);
 }
 
+/* Rutinas del trabajo. Cada una arranca en su primera fecha desde hoy. */
+function seedTrabajo() {
+  var t = todayISO(), W = 'Trabajo';
+  var list = [
+    { title: 'Actualizar estado pulmones', repeat: 'weekdays' },
+    { title: 'Facturación Andreani', repeat: 'weekdays' },
+    { title: 'Check distri', repeat: 'weekdays' },
+    { title: 'Enviar mail de pendientes', repeat: 'custom', days: [2, 4] },
+    { title: 'Grado de ocupación', repeat: 'weekly', days: [1] },
+    { title: 'Reapro', repeat: 'biweekly' },
+    { title: 'Pendiente ingreso Andreani', repeat: 'biweekly' }
+  ];
+  return list.map(function (o) {
+    o.area = W; o.priority = 2;
+    o.due = o.repeat === 'weekly' ? nextWeekday(t, o.days[0], true) : firstOccurrence(o.repeat, o.days, t);
+    if (o.repeat !== 'custom') delete o.days;
+    return makeTask(o);
+  });
+}
+
+/* Lotes de tareas precargadas. Si la agenda ya estaba en uso, se suman sólo
+   los lotes nuevos, sin tocar lo que ya había. */
+var SEEDS = [['proyecto-v1', seed], ['trabajo-v1', seedTrabajo]];
+var seededNow = 0;
+
 function defaults() {
-  return { v: 1, tasks: [], prefs: { theme: 'system', view: 'hoy', area: null }, intro: true, notified: {} };
+  return { v: 1, tasks: [], prefs: { theme: 'system', view: 'hoy', area: null }, intro: true, notified: {}, seeds: [] };
 }
 function load() {
   var s = null;
   try { s = JSON.parse(localStorage.getItem(KEY)); } catch (e) { s = null; }
-  if (!s || !Array.isArray(s.tasks)) { s = defaults(); s.tasks = seed(); }
+  var fresh = !s || !Array.isArray(s.tasks);
+  if (fresh) s = defaults();
+  if (!Array.isArray(s.seeds)) s.seeds = ['proyecto-v1'];   // agendas creadas antes de los lotes
+  SEEDS.forEach(function (b) {
+    if (s.seeds.indexOf(b[0]) !== -1) return;
+    var add = b[1]();
+    s.tasks = s.tasks.concat(add);
+    s.seeds.push(b[0]);
+    if (!fresh) seededNow += add.length;
+  });
   var d = defaults();
   s.prefs = Object.assign(d.prefs, s.prefs || {});
   if (!VIEWS[s.prefs.view]) s.prefs.view = 'hoy';
@@ -885,13 +959,19 @@ function nextDue(t) {
   var step = function (iso) {
     if (t.repeat === 'daily') return addDays(iso, 1);
     if (t.repeat === 'weekly') return addDays(iso, 7);
+    if (t.repeat === 'biweekly') return addDays(iso, 14);
     if (t.repeat === 'monthly') return addMonths(iso, 1);
+    if (t.repeat === 'custom' && t.days.length) {
+      for (var i = 1; i <= 7; i++) { var c = addDays(iso, i); if (t.days.indexOf(fromISO(c).getDay()) !== -1) return c; }
+    }
     var n = addDays(iso, 1);                       // días hábiles
-    while (fromISO(n).getDay() === 0 || fromISO(n).getDay() === 6) n = addDays(n, 1);
+    while (!isWorkday(n)) n = addDays(n, 1);
     return n;
   };
+  // Siempre queda después de hoy: una rutina atrasada que se completa hoy
+  // cuenta como la de hoy y no vuelve a aparecer para hoy.
   var n = step(t.due || today);
-  while (n < today) n = step(n);
+  while (n <= today) n = step(n);
   return n;
 }
 
@@ -973,7 +1053,7 @@ function taskHTML(x, g) {
     var d = x.steps.filter(function (s) { return s.done; }).length;
     meta.push('<span title="Pasos hechos">' + ICON.steps + '<span class="mono">' + d + '/' + x.steps.length + '</span></span>');
   }
-  if (x.repeat !== 'none') meta.push('<span>' + ICON.repeat + esc(REPEAT[x.repeat]) + '</span>');
+  if (x.repeat !== 'none') meta.push('<span>' + ICON.repeat + esc(repeatLabel(x)) + '</span>');
   if (x.notes.trim()) meta.push('<span>' + ICON.note + 'Nota</span>');
 
   var dueTxt, dueCls = '';
@@ -1143,7 +1223,7 @@ function toggleDone(id) {
   var clone = null;
   if (t.repeat !== 'none') {
     clone = makeTask({
-      title: t.title, notes: t.notes, due: nextDue(t), time: t.time, priority: t.priority, area: t.area, repeat: t.repeat,
+      title: t.title, notes: t.notes, due: nextDue(t), time: t.time, priority: t.priority, area: t.area, repeat: t.repeat, days: t.days,
       steps: t.steps.map(function (s) { return s.text; })
     });
     state.tasks.push(clone);
@@ -1189,7 +1269,7 @@ function addFromQuick() {
   var t = makeTask({
     title: p.title,
     due: p.due !== undefined ? p.due : ((view === 'hoy' || view === 'semana') ? todayISO() : null),
-    time: p.time, priority: p.priority || 2, repeat: p.repeat || 'none',
+    time: p.time, priority: p.priority || 2, repeat: p.repeat || 'none', days: p.days,
     area: p.area !== undefined ? p.area : (a && a !== NO_AREA ? a : '')
   });
   state.tasks.push(t);
@@ -1279,6 +1359,9 @@ function renderDrawer(focusSel) {
         '<label class="field"><span>Repetir</span><select class="input" id="dr-repeat" data-f="repeat">' + opt(REPEAT, t.repeat) + '</select></label>' +
         '<label class="field span2"><span>Área</span><input class="input" id="dr-area" data-f="area" list="area-list" placeholder="Sin área" value="' + esc(t.area) + '"></label>' +
       '</div>' +
+      (t.repeat === 'custom' ? '<div class="days" role="group" aria-label="Días en que se repite">' + WEEK_ORDER.map(function (d) {
+        return '<button type="button" data-day="' + d + '" aria-pressed="' + (t.days.indexOf(d) !== -1) + '">' + cap(DAYS_SHORT[d]) + '</button>';
+      }).join('') + '</div>' : '') +
       '<div class="qdates" aria-label="Fechas rápidas">' +
         '<button type="button" data-qd="0">Hoy</button><button type="button" data-qd="1">Mañana</button>' +
         '<button type="button" data-qd="mon">Próximo lunes</button><button type="button" data-qd="7">En una semana</button>' +
@@ -1311,7 +1394,11 @@ function setField(t, f, v) {
   else if (f === 'due') t.due = v || null;
   else if (f === 'time') t.time = v || null;
   else if (f === 'priority') t.priority = +v || 2;
-  else if (f === 'repeat') t.repeat = REPEAT[v] ? v : 'none';
+  else if (f === 'repeat') {
+    t.repeat = REPEAT[v] ? v : 'none';
+    if (t.repeat === 'custom' && !t.days.length) t.days = [fromISO(t.due || todayISO()).getDay()];
+    if (t.repeat !== 'none' && !t.due) t.due = firstOccurrence(t.repeat, t.days, todayISO());
+  }
   else if (f === 'area') t.area = v.trim();
   else if (f === 'notes') t.notes = v;
   touch(t);
@@ -1335,6 +1422,7 @@ el.drawer.addEventListener('change', function (e) {
   var t = find(openId); if (!t) return;
   var f = e.target.dataset.f;
   if (f === 'due' || f === 'time' || f === 'priority' || f === 'repeat') setField(t, f, e.target.value);
+  if (f === 'repeat') renderDrawer('#dr-repeat');
 });
 el.drawer.addEventListener('focusout', function (e) {
   var t = find(openId); if (!t) return;
@@ -1366,8 +1454,16 @@ el.drawer.addEventListener('submit', function (e) {
 });
 el.drawer.addEventListener('click', function (e) {
   var t = find(openId); if (!t) return;
-  var b = e.target.closest('[data-act],[data-qd]');
+  var b = e.target.closest('[data-act],[data-qd],[data-day]');
   if (!b) return;
+  if (b.dataset.day) {
+    var day = +b.dataset.day, i = t.days.indexOf(day);
+    if (i === -1) t.days.push(day);
+    else if (t.days.length > 1) t.days.splice(i, 1);
+    else { toast('Tiene que quedar al menos un día elegido.'); return; }
+    touch(t); save(); renderDrawer(); renderList();
+    return;
+  }
   if (b.dataset.qd) {
     var q = b.dataset.qd, today = todayISO();
     setField(t, 'due', q === 'none' ? '' : q === 'mon' ? nextWeekday(today, 1, false) : addDays(today, +q));
@@ -1410,7 +1506,7 @@ function parseList(text, defaultArea) {
     if (!p.title) return;
     out.push({
       title: p.title, due: p.due || null, time: p.time || null, priority: p.priority || 2,
-      area: p.area !== undefined ? p.area : (heading || defaultArea || ''), repeat: p.repeat || 'none', done: done
+      area: p.area !== undefined ? p.area : (heading || defaultArea || ''), repeat: p.repeat || 'none', days: p.days, done: done
     });
   });
   return out;
@@ -1421,7 +1517,7 @@ function renderImportPreview() {
   var prev = $('#imp-preview');
   prev.hidden = !impItems.length;
   prev.innerHTML = impItems.slice(0, 8).map(function (x) {
-    var chips = parsedChips({ due: x.due, time: x.time, priority: x.priority !== 2 ? x.priority : undefined, area: x.area, repeat: x.repeat !== 'none' ? x.repeat : undefined });
+    var chips = parsedChips({ due: x.due, time: x.time, priority: x.priority !== 2 ? x.priority : undefined, area: x.area, repeat: x.repeat !== 'none' ? x.repeat : undefined, days: x.days });
     if (x.done) chips.unshift('Ya hecha');
     return '<li><span class="t">' + esc(x.title) + '</span>' + chips.map(function (c) { return '<span class="chip">' + esc(c) + '</span>'; }).join('') + '</li>';
   }).join('') + (impItems.length > 8 ? '<li class="more">y ' + (impItems.length - 8) + ' más</li>' : '');
@@ -1720,6 +1816,7 @@ document.addEventListener('visibilitychange', function () {
 
 save();
 render();
+if (seededNow) toast('Se sumaron <b>' + seededNow + '</b> rutinas de trabajo a tu agenda.', { action: 'Ver', onAction: function () { state.prefs.area = 'Trabajo'; state.prefs.view = 'todas'; save(); render(); } });
 renderNotifyBtn();
 renderQuickPreview();
 checkReminders();
