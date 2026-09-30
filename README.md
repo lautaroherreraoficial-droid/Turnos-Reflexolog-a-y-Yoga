@@ -298,3 +298,19 @@ El cartel de Configuración muestra el motivo exacto. Los más comunes:
 
 Si preferís no configurar nada: **Exportar CSV (Notion/Excel)** baja todos los movimientos y
 posiciones en un archivo que Notion importa como base de datos.
+
+---
+
+## 8. Agenda de trabajo (`recordatorios/index.html`)
+
+Agenda personal de pendientes y recordatorios, en un solo archivo HTML (sin servidor ni build).
+Se abre con doble clic y todo queda guardado en ese navegador.
+
+- Arranca cargada con los pendientes reales de este proyecto (WhatsApp, Google, Render, Pages y
+  Notion). Las fechas son una propuesta y se cambian desde cada tarea.
+- Alta rápida en una línea: `Llamar al contador mañana 10:00 !alta #Administración`. También
+  entiende `viernes`, `15/10`, `3 de octubre`, `fin de mes`, `en 2 semanas` y `cada semana`.
+- Vistas Hoy, Próximos 7 días, Todas y Completadas, filtro por área, buscador, pasos dentro de
+  cada tarea, notas, tareas que se repiten y recordatorios a la hora indicada mientras está abierta.
+- **Importar lista** carga muchas tareas de una vez desde texto pegado (una por línea).
+- **Exportar copia** / **Restaurar copia** para respaldar los datos o pasarlos a otro navegador.
