@@ -35,3 +35,25 @@ services:
         sync: false
       - key: NOTION_DB_MOVIMIENTOS
         sync: false
+
+  # Turnero de Barberia Lux (barberia/): servicio aparte, con su propia URL.
+  # Pagina de turnos en "/" y panel de la barberia en "/admin". Ver barberia/README.md.
+  - type: web
+    name: barberia-lux
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm run barberia
+    envVars:
+      - key: BARBERIA_ADMIN_USER
+        sync: false
+      - key: BARBERIA_ADMIN_PASSWORD
+        sync: false
+      # Planilla de Google Sheets donde se guardan los turnos (necesaria en el plan gratis,
+      # porque el disco se borra en cada reinicio)
+      - key: BARBERIA_SHEET_ID
+        sync: false
+      - key: GOOGLE_SERVICE_ACCOUNT_EMAIL
+        sync: false
+      - key: GOOGLE_PRIVATE_KEY
+        sync: false

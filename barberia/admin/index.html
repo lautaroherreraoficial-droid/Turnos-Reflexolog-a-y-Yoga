@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agenda · Barbería Lux</title>
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#141210" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23141210'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='700' text-anchor='middle' fill='%23d6ae5c'%3EL%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-marca"><span class="logo">Lux</span><span class="topbar-titulo">Agenda</span></div>
+  <a class="link-publico" href="../" target="_blank" rel="noopener">Ver página de turnos ↗</a>
+</header>
+
+<main>
+  <div id="avisos" class="avisos"></div>
+
+  <section class="barra-dia">
+    <div class="nav-dia">
+      <button type="button" class="boton-icono" id="dia-anterior" aria-label="Día anterior">‹</button>
+      <div class="titulo-dia">
+        <h1 id="titulo-dia">Hoy</h1>
+        <p id="subtitulo-dia"></p>
+      </div>
+      <button type="button" class="boton-icono" id="dia-siguiente" aria-label="Día siguiente">›</button>
+    </div>
+    <div class="nav-acciones">
+      <button type="button" class="boton" id="boton-hoy">Hoy</button>
+      <input type="date" id="selector-fecha" aria-label="Ir a una fecha" />
+      <button type="button" class="boton boton-primario" id="boton-nuevo">+ Nuevo turno</button>
+    </div>
+  </section>
+
+  <nav class="semana" id="semana" aria-label="Días de la semana"></nav>
+
+  <section class="stats" id="stats" aria-live="polite"></section>
+
+  <div class="filtros" id="filtros" role="group" aria-label="Filtrar por barbero"></div>
+
+  <section class="agenda" id="agenda" aria-live="polite">
+    <p class="vacio">Cargando turnos…</p>
+  </section>
+</main>
+
+<dialog id="dialogo-nuevo" aria-labelledby="titulo-nuevo">
+  <form id="form-nuevo" method="dialog" class="form-nuevo">
+    <header>
+      <h2 id="titulo-nuevo">Nuevo turno</h2>
+      <p>Para quien llama, escribe o pasa por el local.</p>
+    </header>
+    <label>Servicio <select id="nuevo-servicio" required></select></label>
+    <label>Barbero <select id="nuevo-barbero" required></select></label>
+    <label>Día <input type="date" id="nuevo-fecha" required /></label>
+    <label>Hora <input type="time" id="nuevo-hora" step="300" required /></label>
+    <div class="libres campo-ancho">
+      <span class="libres-titulo">Horarios libres</span>
+      <div id="nuevo-libres" class="chips"></div>
+    </div>
+    <label>Cliente <input type="text" id="nuevo-cliente" maxlength="60" placeholder="Nombre" required /></label>
+    <label><span>Teléfono <span class="opcional">(opcional)</span></span> <input type="tel" id="nuevo-telefono" maxlength="30" placeholder="11 2345-6789" /></label>
+    <label class="campo-ancho"><span>Nota <span class="opcional">(opcional)</span></span> <input type="text" id="nuevo-nota" maxlength="200" /></label>
+    <p id="nuevo-error" class="error campo-ancho" role="alert" hidden></p>
+    <footer class="campo-ancho">
+      <button type="button" class="boton" id="nuevo-cancelar">Cancelar</button>
+      <button type="submit" class="boton boton-primario" id="nuevo-guardar">Guardar turno</button>
+    </footer>
+  </form>
+</dialog>
+
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="script.js"></script>
+</body>
+</html>

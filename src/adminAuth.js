@@ -10,22 +10,31 @@ function comparar(a, b) {
   return crypto.timingSafeEqual(bufA, bufB);
 }
 
-export function requireAdminAuth(req, res, next) {
-  const usuario = process.env.ADMIN_USER;
-  const clave = process.env.ADMIN_PASSWORD;
+// Arma el middleware leyendo usuario y contrasena de las variables de entorno indicadas,
+// asi cada panel (el de turnos, el de la barberia) tiene sus propias credenciales.
+export function crearAuthBasica(varUsuario, varClave, realm = "Panel de administracion") {
+  return function (req, res, next) {
+    const usuario = process.env[varUsuario];
+    const clave = process.env[varClave];
 
-  if (!usuario || !clave) {
-    return res.status(500).send("Falta configurar ADMIN_USER y ADMIN_PASSWORD en el servidor.");
-  }
+    if (!usuario || !clave) {
+      return res.status(500).send(`Falta configurar ${varUsuario} y ${varClave} en el servidor.`);
+    }
 
-  const header = req.get("authorization") || "";
-  const [tipo, credenciales] = header.split(" ");
+    const header = req.get("authorization") || "";
+    const [tipo, credenciales] = header.split(" ");
 
-  if (tipo === "Basic" && credenciales) {
-    const [u, p] = Buffer.from(credenciales, "base64").toString("utf8").split(":");
-    if (comparar(u, usuario) && comparar(p, clave)) return next();
-  }
+    if (tipo === "Basic" && credenciales) {
+      // Se corta en el primer ":" (la contrasena si puede tener dos puntos).
+      const texto = Buffer.from(credenciales, "base64").toString("utf8");
+      const corte = texto.indexOf(":");
+      const [u, p] = corte === -1 ? [texto, ""] : [texto.slice(0, corte), texto.slice(corte + 1)];
+      if (comparar(u, usuario) && comparar(p, clave)) return next();
+    }
 
-  res.set("WWW-Authenticate", 'Basic realm="Panel de administracion"');
-  return res.status(401).send("Autenticacion requerida.");
+    res.set("WWW-Authenticate", `Basic realm="${realm}"`);
+    return res.status(401).send("Autenticacion requerida.");
+  };
 }
+
+export const requireAdminAuth = crearAuthBasica("ADMIN_USER", "ADMIN_PASSWORD");

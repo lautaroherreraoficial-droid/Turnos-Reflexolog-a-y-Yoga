@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "dev": "node --watch src/server.js",
+    "barberia": "node barberia/server/index.js",
+    "barberia:dev": "node --watch barberia/server/index.js"
   },
   "dependencies": {
     "axios": "^1.7.2",

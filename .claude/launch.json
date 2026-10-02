@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["start"],
       "port": 3000
+    },
+    {
+      "name": "barberia-lux",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "barberia"],
+      "port": 3001
     }
   ]
 }

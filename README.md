@@ -1,5 +1,8 @@
 # Turnos Mamá — Bot de WhatsApp + panel privado para reservar masajes, reflexología y yoga
 
+> **¿Buscás el turnero de Barbería Lux?** Es una app aparte dentro de este repo, en la carpeta
+> [`barberia/`](barberia/README.md) (página de reservas + panel para la barbería).
+
 ## Qué hace
 
 Hay dos partes bien separadas:

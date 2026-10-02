@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Barbería Lux · Turnos</title>
+<meta name="description" content="Reservá tu turno en Barbería Lux, Merlo Centro. Elegí servicio, barbero y horario en un minuto." />
+<meta name="theme-color" content="#0e0d0c" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e0d0c'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='700' text-anchor='middle' fill='%23d6ae5c'%3EL%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-brillo" aria-hidden="true"></div>
+  <p class="marca-sup">Barbería</p>
+  <h1 class="marca">Lux</h1>
+  <p class="zona" id="zona">Merlo Centro · Buenos Aires</p>
+  <p class="estado-hoy" id="estado-hoy" hidden><span class="punto" aria-hidden="true"></span><span id="estado-hoy-texto"></span></p>
+  <div class="hero-acciones">
+    <a class="boton boton-oro" href="#reservar">Reservar turno</a>
+    <a class="boton boton-linea" id="como-llegar" href="#" target="_blank" rel="noopener">Cómo llegar</a>
+  </div>
+</header>
+
+<main>
+  <section id="mis-turnos" class="mis-turnos" aria-live="polite" hidden></section>
+
+  <section id="reservar" class="reserva" aria-labelledby="titulo-reserva">
+    <div class="reserva-cabecera">
+      <p class="eyebrow">Turnos online</p>
+      <h2 id="titulo-reserva">Reservá en un minuto</h2>
+    </div>
+
+    <div id="pasos">
+      <section class="paso" id="paso-servicio">
+        <header class="paso-titulo">
+          <span class="paso-num"></span>
+          <h3>Elegí el servicio</h3>
+        </header>
+        <div class="opciones-servicio" id="lista-servicios" role="radiogroup" aria-label="Servicio">
+          <p class="cargando">Cargando servicios…</p>
+        </div>
+      </section>
+
+      <section class="paso bloqueado" id="paso-barbero">
+        <header class="paso-titulo">
+          <span class="paso-num"></span>
+          <h3>¿Con quién?</h3>
+        </header>
+        <div class="opciones-barbero" id="lista-barberos" role="radiogroup" aria-label="Barbero"></div>
+      </section>
+
+      <section class="paso bloqueado" id="paso-dia">
+        <header class="paso-titulo">
+          <span class="paso-num"></span>
+          <h3>Elegí el día</h3>
+        </header>
+        <div class="dias" id="lista-dias" role="radiogroup" aria-label="Día">
+          <p class="cargando">Elegí un servicio para ver los días con lugar.</p>
+        </div>
+      </section>
+
+      <section class="paso bloqueado" id="paso-hora">
+        <header class="paso-titulo">
+          <span class="paso-num"></span>
+          <h3>Elegí el horario</h3>
+          <span class="paso-detalle" id="detalle-dia"></span>
+        </header>
+        <div id="lista-horas" aria-live="polite"></div>
+      </section>
+
+      <section class="paso bloqueado" id="paso-datos">
+        <header class="paso-titulo">
+          <span class="paso-num"></span>
+          <h3>Tus datos</h3>
+        </header>
+        <form id="form-datos" class="form-datos" novalidate>
+          <label>
+            <span>Nombre y apellido</span>
+            <input id="cliente" name="cliente" autocomplete="name" maxlength="60" required />
+          </label>
+          <label>
+            <span>WhatsApp</span>
+            <input id="telefono" name="telefono" type="tel" inputmode="tel" autocomplete="tel" placeholder="11 2345-6789" maxlength="30" required />
+          </label>
+          <label class="campo-ancho">
+            <span>¿Algo que debamos saber? <em>(opcional)</em></span>
+            <input id="nota" name="nota" maxlength="200" placeholder="Ej: degradé bajo, traigo una foto" />
+          </label>
+          <div class="resumen campo-ancho" id="resumen"></div>
+          <p class="error campo-ancho" id="error-reserva" role="alert" hidden></p>
+          <button type="submit" class="boton boton-oro boton-ancho campo-ancho" id="boton-confirmar">Confirmar turno</button>
+          <p class="letra-chica campo-ancho">Tu turno queda guardado en este celular para que puedas verlo o cancelarlo.</p>
+        </form>
+      </section>
+    </div>
+
+    <section id="confirmacion" class="confirmacion" tabindex="-1" hidden></section>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="pie-grilla">
+    <div>
+      <h4>Horarios</h4>
+      <ul class="horarios" id="horarios"></ul>
+    </div>
+    <div>
+      <h4>Dónde estamos</h4>
+      <p id="direccion">Merlo Centro, Buenos Aires</p>
+      <a id="mapa" href="#" target="_blank" rel="noopener">Ver en Google Maps →</a>
+    </div>
+    <div id="pie-contacto" hidden>
+      <h4>Contacto</h4>
+      <a id="pie-whatsapp" href="#" target="_blank" rel="noopener" hidden>WhatsApp</a>
+      <a id="pie-instagram" href="#" target="_blank" rel="noopener" hidden>Instagram</a>
+    </div>
+  </div>
+  <p class="pie-marca">Barbería Lux · Merlo Centro</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
