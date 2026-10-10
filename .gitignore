@@ -1,3 +1,7 @@
 node_modules/
 .env
 *.log
+
+# Control Tower
+control-tower/engine/__pycache__/
+control-tower/out/estado.json

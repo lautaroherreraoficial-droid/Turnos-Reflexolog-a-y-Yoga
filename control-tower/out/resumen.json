@@ -1,0 +1,33 @@
+{
+ "corte": "2026-09-01 08:28",
+ "alertas": 26,
+ "a_notificar": 0,
+ "por_severidad": {
+  "alta": 7,
+  "media": 7,
+  "critica": 12
+ },
+ "por_nodo": {
+  "Abastecimiento": 4,
+  "Andreani": 1,
+  "MCR": 1,
+  "Transporte": 13,
+  "CDR": 5,
+  "Promesa": 1,
+  "Datos": 1
+ },
+ "por_regla": {
+  "R01": 10,
+  "R02": 1,
+  "R04": 11,
+  "R05": 1,
+  "R06": 1,
+  "R08": 1,
+  "R09": 1
+ },
+ "por_estado": {
+  "abierta": 26
+ },
+ "nuevas": 0,
+ "resueltas_en_esta_corrida": 0
+}

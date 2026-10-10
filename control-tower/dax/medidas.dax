@@ -1,0 +1,249 @@
+// =====================================================================
+//  OI CONTROL TOWER - medidas DAX
+// ---------------------------------------------------------------------
+//  Modelo esperado en Power BI:
+//    fEnvioLinea  (hecho, grano linea de envio)  -> sql/01
+//    fUT          (hecho, grano unidad de transporte)
+//    dSucursal, dCDR, dEtapa, dFecha             -> dimensiones
+//    fAlerta      (hecho, una fila por alerta)   -> salida del motor
+//
+//  Relaciones: dFecha[fecha] 1->* fEnvioLinea[fecha_alta] (activa)
+//              y una relacion INACTIVA a fEnvioLinea[fecha_recepcion],
+//              que se activa con USERELATIONSHIP donde hace falta.
+//              Dos fechas distintas sobre el mismo hecho no se resuelven
+//              con dos tablas de fecha: eso rompe el filtrado cruzado.
+//
+//  TRES REGLAS QUE SE RESPETAN EN TODAS LAS MEDIDAS:
+//   1. El reloj logistico termina en la recepcion del item. Lo que el
+//      cliente tarda en pasar a buscarlo no es tiempo nuestro.
+//   2. Los tiempos de etapa van en HORAS reales; el cumplimiento, en DIAS
+//      calendario, porque asi esta expresada la promesa.
+//   3. Ninguna medida divide sin DIVIDE(): un denominador cero por un
+//      filtro raro no puede romper el tablero delante de un gerente.
+// =====================================================================
+
+
+// ---------- 1. Volumen y cobertura ----------------------------------
+
+Envios =
+DISTINCTCOUNT ( fEnvioLinea[id_envio] )
+
+Lineas =
+COUNTROWS ( fEnvioLinea )
+
+UT =
+DISTINCTCOUNT ( fUT[ut] )
+
+Lineas cerradas =
+CALCULATE ( [Lineas], fEnvioLinea[es_cerrada] = TRUE () )
+
+// Cobertura de medicion: que porcentaje del volumen tiene recepcion
+// registrada. Si cae, cualquier KPI de tiempo se vuelve poco confiable
+// y hay que decirlo en el tablero antes que el numero.
+Cobertura de medicion % =
+DIVIDE ( [Lineas cerradas], [Lineas] )
+
+
+// ---------- 2. Cumplimiento de la promesa ---------------------------
+
+// Denominador explicito: solo envios cerrados y con promesa cargada.
+// Sin esto, el cumplimiento sube solo cuando falta informacion.
+Base cumplimiento =
+CALCULATE (
+    [Lineas],
+    fEnvioLinea[es_cerrada] = TRUE (),
+    NOT ISBLANK ( fEnvioLinea[leadtimetotal] ),
+    fEnvioLinea[leadtimetotal] > 0
+)
+
+Entregas en plazo =
+CALCULATE ( [Base cumplimiento], fEnvioLinea[cumple_plazo] = 1 )
+
+Cumplimiento % =
+DIVIDE ( [Entregas en plazo], [Base cumplimiento] )
+
+Dias de ciclo (mediana) =
+MEDIANX (
+    FILTER ( fEnvioLinea, fEnvioLinea[es_cerrada] = TRUE () ),
+    fEnvioLinea[dias_ciclo]
+)
+
+Dias de ciclo (p90) =
+PERCENTILEX.INC (
+    FILTER ( fEnvioLinea, fEnvioLinea[es_cerrada] = TRUE () ),
+    fEnvioLinea[dias_ciclo],
+    0.90
+)
+
+Promesa (mediana) =
+MEDIANX ( fEnvioLinea, fEnvioLinea[leadtimetotal] )
+
+// LA MEDIDA QUE SEPARA LOS DOS PROBLEMAS.
+// Holgura positiva: el plazo es alcanzable y si se incumple es operacion.
+// Holgura negativa: el plazo no se cumple ni operando bien. Son dos
+// problemas distintos, con dos duenos distintos y dos costos distintos.
+Holgura de la promesa (dias) =
+[Promesa (mediana)] - [Dias de ciclo (mediana)]
+
+Diagnostico de la promesa =
+VAR Holgura  = [Holgura de la promesa (dias)]
+VAR Incumple = 1 - [Cumplimiento %]
+VAR HolguraP90 = [Promesa (mediana)] - [Dias de ciclo (p90)]
+RETURN
+    SWITCH (
+        TRUE (),
+        ISBLANK ( [Base cumplimiento] ), "sin datos suficientes",
+        [Base cumplimiento] < 30,        "muestra chica",
+        Holgura <= 0,                    "promesa mal calibrada",
+        Incumple > 0.25,                 "problema operativo",
+        HolguraP90 >= 3,                 "holgura sin usar",
+        "en linea"
+    )
+
+
+// ---------- 3. Tiempos por etapa ------------------------------------
+// En horas. La mediana y no el promedio: en logistica la cola de valores
+// altos corre el promedio y hace parecer que todo tarda mas de lo que
+// tarda la mayoria de las veces.
+
+Horas en etapa (mediana) =
+MEDIANX ( fEnvioLinea, fEnvioLinea[horas_etapa] )
+
+// La referencia NO es el promedio general: ese ya viene contaminado por
+// los que se pasan. Es la mediana de los envios que SI llegaron en fecha,
+// o sea el tiempo que efectivamente permite cumplir.
+Referencia de la etapa (h) =
+CALCULATE (
+    MEDIANX ( fEnvioLinea, fEnvioLinea[horas_etapa] ),
+    fEnvioLinea[cumple_plazo] = 1,
+    ALLEXCEPT ( fEnvioLinea, dEtapa[etapa] )
+)
+
+Exceso sobre la referencia =
+DIVIDE ( [Horas en etapa (mediana)], [Referencia de la etapa (h)] )
+
+Semaforo de la etapa =
+VAR R = [Exceso sobre la referencia]
+RETURN
+    SWITCH (
+        TRUE (),
+        ISBLANK ( R ),  "sin dato",
+        R >= 2,         "fuera de tiempo",
+        R >= 1.3,       "en el limite",
+        "normal"
+    )
+
+
+// ---------- 4. Pulmon (WIP) -----------------------------------------
+// Una linea esta en cola si ya abrio la etapa y todavia no la cerro a la
+// fecha del filtro. Se evalua contra la fecha, no contra hoy.
+
+Lineas en cola =
+VAR Dia = MAX ( dFecha[fecha] )
+RETURN
+    CALCULATE (
+        COUNTROWS ( fEnvioLinea ),
+        FILTER (
+            ALL ( fEnvioLinea ),
+            fEnvioLinea[fecha_abre_etapa] <= Dia
+                && ( ISBLANK ( fEnvioLinea[fecha_cierra_etapa] )
+                     || fEnvioLinea[fecha_cierra_etapa] > Dia )
+        )
+    )
+
+// La metrica robusta para mirar todos los dias: no se infla por el borde
+// de los datos, porque una linea que entro ayer no puede llevar 5 dias.
+Lineas en cola hace mas de 5 dias =
+VAR Dia = MAX ( dFecha[fecha] )
+RETURN
+    CALCULATE (
+        COUNTROWS ( fEnvioLinea ),
+        FILTER (
+            ALL ( fEnvioLinea ),
+            fEnvioLinea[fecha_abre_etapa] <= Dia - 5
+                && ( ISBLANK ( fEnvioLinea[fecha_cierra_etapa] )
+                     || fEnvioLinea[fecha_cierra_etapa] > Dia )
+        )
+    )
+
+// Mediana movil de 7 dias, descartando los ultimos 3: en el borde de los
+// datos toda linea en vuelo figura como "en cola" y la serie se dispara
+// por recencia, no por atraso.
+Cola (mediana movil 7d) =
+VAR Fin = MAX ( dFecha[fecha] ) - 3
+RETURN
+    MEDIANX (
+        DATESINPERIOD ( dFecha[fecha], Fin, -7, DAY ),
+        [Lineas en cola]
+    )
+
+
+// ---------- 5. Pendientes y excepciones -----------------------------
+
+UT detenidas =
+CALCULATE ( [UT], fUT[cerrada] = 0, fUT[todas_anuladas] = 0 )
+
+UT detenidas mas de 5 dias =
+CALCULATE ( [UT detenidas], fUT[dias_detenida] > 5 )
+
+Dias detenida (maximo) =
+MAXX ( FILTER ( fUT, fUT[cerrada] = 0 ), fUT[dias_detenida] )
+
+// El indicador que hay que bajar. Un pendiente viejo no es un pendiente
+// mas: es uno que ya nadie va a poder explicarle al cliente.
+Antiguedad del pendiente mas viejo =
+CALCULATE ( [Dias detenida (maximo)], fUT[todas_anuladas] = 0 )
+
+
+// ---------- 6. Alertas y gestion ------------------------------------
+
+Alertas activas =
+CALCULATE ( COUNTROWS ( fAlerta ), fAlerta[estado] <> "resuelta" )
+
+Alertas criticas =
+CALCULATE ( [Alertas activas], fAlerta[severidad] = "critica" )
+
+Alertas nuevas =
+CALCULATE ( COUNTROWS ( fAlerta ), fAlerta[estado] = "nueva" )
+
+// Mide si el sistema sirve: no cuantas alertas hay, sino cuantas se
+// cerraron y en cuanto tiempo. Un tablero que solo acumula alertas
+// abiertas es un tablero que nadie uso.
+Alertas resueltas =
+CALCULATE ( COUNTROWS ( fAlerta ), fAlerta[estado] = "resuelta" )
+
+Tasa de resolucion % =
+DIVIDE ( [Alertas resueltas], COUNTROWS ( fAlerta ) )
+
+Dias hasta resolver (mediana) =
+MEDIANX (
+    FILTER ( fAlerta, fAlerta[estado] = "resuelta" ),
+    DATEDIFF ( fAlerta[detectada], fAlerta[resuelta], DAY )
+)
+
+Alertas reincidentes =
+CALCULATE ( [Alertas activas], fAlerta[semanas_abierta] >= 3 )
+
+// Antiguedad de lo que sigue abierto. Si sube mes a mes, el circuito de
+// gestion no esta funcionando aunque el conteo de alertas baje.
+Edad media de lo abierto (dias) =
+AVERAGEX (
+    FILTER ( fAlerta, fAlerta[estado] <> "resuelta" ),
+    DATEDIFF ( fAlerta[detectada], TODAY (), DAY )
+)
+
+
+// ---------- 7. Texto para el resumen ejecutivo ----------------------
+// Una sola linea que un gerente lee en dos segundos.
+
+Titular =
+VAR Crit  = [Alertas criticas]
+VAR Viejo = [Antiguedad del pendiente mas viejo]
+VAR Cump  = FORMAT ( [Cumplimiento %], "0.0%" )
+RETURN
+    IF (
+        Crit = 0,
+        "Sin alertas criticas. Cumplimiento " & Cump & ".",
+        Crit & " alerta(s) critica(s). El pendiente mas viejo lleva "
+            & Viejo & " dias. Cumplimiento " & Cump & "."
+    )

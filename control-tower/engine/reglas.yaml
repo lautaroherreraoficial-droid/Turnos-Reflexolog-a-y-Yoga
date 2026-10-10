@@ -1,0 +1,222 @@
+# =====================================================================
+#  OI CONTROL TOWER - reglas del motor de alertas
+# ---------------------------------------------------------------------
+#  Cada regla se puede activar, desactivar y recalibrar sin tocar codigo.
+#  Los umbrales de aqui son PROPUESTAS calibradas sobre jun-ago 2026;
+#  antes de publicar hay que validarlos con el responsable de cada nodo
+#  (ver docs/05-motor-alertas.md, seccion "Calibracion").
+#
+#  severidad: se calcula por tramos. `critica` arriba, `alta`, `media`.
+#  min_n: volumen minimo para que la regla emita. Evita alertar sobre 3 casos.
+#  agrupar_si_mas_de: si la misma regla toca mas entidades que esto en el
+#      mismo nodo, se emite UNA alerta agregada en lugar de N. Anti-ruido.
+#  histeresis: la alerta se abre en `umbral` y recien se cierra en
+#      `umbral_cierre`. Evita el parpadeo de una alerta que oscila.
+#  silencio_horas: no se vuelve a notificar la misma alerta antes de esto,
+#      salvo que suba de severidad.
+# =====================================================================
+
+parametros_globales:
+  corte: auto                 # auto = ultimo timestamp observado en la fuente
+  silencio_horas: 24
+  min_n_default: 5
+  dias_recurrencia: 21        # ventana para marcar un problema como repetido
+
+responsables:
+  # Rellenar con los nombres/equipos reales antes de activar notificaciones.
+  # Se dejan los roles para no cablear personas en el codigo.
+  MCR: "Abastecimiento MCR (deposito 940)"
+  CDR: "Responsable del CDR"
+  Transporte: "Transporte / distribucion"
+  Andreani: "Mesa de control Andreani"
+  Abastecimiento: "Abastecimiento / compras"
+  Sucursal: "Jefe de sucursal"
+  Promesa: "Logistica Online - definicion de plazos"
+  Datos: "Sistemas / dueno del circuito 1060"
+
+reglas:
+
+  - id: R01
+    nombre: "UT detenida mas de 5 dias"
+    pregunta: "Que problemas requieren atencion?"
+    activa: true
+    tipo: ut_detenida
+    indicador: dias_detenida
+    umbral: 5
+    umbral_cierre: 3
+    severidad:
+      critica: 20
+      alta: 10
+      media: 5
+    min_n: 1
+    agrupar_si_mas_de: 15
+    excluir_circuitos: []
+    accion: >
+      Buscar la UT en el deposito donde quedo el ultimo hito y registrar el
+      hito faltante o reponer la mercaderia. Si la UT no se encuentra
+      fisicamente, abrir reclamo al transporte con el numero de expedicion.
+    responsable: por_nodo
+
+  - id: R02
+    nombre: "Pedido sin circuito asignado y sin anular"
+    pregunta: "Que problemas requieren atencion?"
+    activa: true
+    tipo: sin_circuito
+    indicador: dias_desde_alta
+    umbral: 7
+    umbral_cierre: 5
+    severidad:
+      critica: 30
+      alta: 15
+      media: 7
+    min_n: 1
+    agrupar_si_mas_de: 25
+    accion: >
+      Decidir: reponer, reasignar deposito o anular y avisar al cliente.
+      Mientras la linea siga sin deposito y sin anulacion, el pedido no existe
+      para ningun tablero y el cliente no recibe ninguna novedad.
+    responsable: Abastecimiento
+
+  - id: R03
+    nombre: "Pulmon creciendo fuera de su comportamiento habitual"
+    pregunta: "Que situaciones podrian empeorar?"
+    activa: true
+    tipo: wip_anomalo
+    indicador: wip_mediana_7d
+    metodo: mad                 # z robusto: (x - mediana) / (1.4826 * MAD)
+    ventana_base_dias: 56
+    umbral: 3.0                 # z robusto
+    umbral_cierre: 2.0
+    min_n: 30                   # no alertar sobre colas chicas
+    excluir_etapas:
+      # Estas dos colas las abre la fecha de alta: TODO pedido entra en ellas,
+      # asi que al borde del corte de datos la cola crece por recencia y no por
+      # atraso. El balde de pedidos sin circuito ya lo cubre R02, que mide
+      # antiguedad individual en lugar de tamano de cola.
+      - "Sin planificar"
+      - "Sin circuito asignado"
+    severidad:
+      critica: 6.0
+      alta: 4.0
+      media: 3.0
+    accion: >
+      Revisar dotacion y turnos del nodo frente al ingreso de los ultimos dias.
+      Un pulmon que crece dos semanas seguidas se convierte en atraso de
+      entrega con 1 a 2 semanas de retardo.
+    responsable: por_nodo
+
+  - id: R04
+    nombre: "Nodo por encima de su tiempo de referencia"
+    pregunta: "Que esta pasando en la operacion?"
+    activa: true
+    tipo: nodo_lento
+    indicador: razon_vs_pares    # mediana del nodo / mediana de su grupo de pares
+    umbral: 1.3
+    umbral_cierre: 1.15
+    severidad:
+      critica: 2.0
+      alta: 1.6
+      media: 1.3
+    min_n: 30
+    agrupar_si_mas_de: 8
+    accion: >
+      Comparar contra el mismo nodo el mes anterior y contra los nodos pares.
+      Si el exceso esta en una espera y no en una tarea, el problema es de
+      programacion de salidas, no de productividad.
+    responsable: por_nodo
+
+  - id: R05
+    nombre: "Plazo prometido imposible de cumplir"
+    pregunta: "Quien deberia intervenir?"
+    activa: true
+    tipo: promesa_descalibrada
+    indicador: holgura_dias      # promesa - mediana real de la sucursal
+    umbral: 0                    # holgura <= 0 => la promesa nace incumplida
+    umbral_cierre: 1
+    severidad:
+      critica: -3
+      alta: -1
+      media: 0
+    min_n: 30
+    agrupar_si_mas_de: 8
+    accion: >
+      Recalibrar el lead time publicado de esa sucursal. No es un problema de
+      operacion: con el tiempo real actual, el plazo no se puede cumplir ni
+      trabajando bien. Es la correccion mas barata del tablero.
+    responsable: Promesa
+
+  - id: R06
+    nombre: "Registro incompleto que impide reclamar"
+    pregunta: "Quien deberia intervenir y con que informacion?"
+    activa: true
+    tipo: datos_incompletos
+    indicador: porcentaje_lineas
+    umbral: 2.0                  # % de lineas del nodo sin el campo clave
+    umbral_cierre: 1.0
+    severidad:
+      critica: 10.0
+      alta: 5.0
+      media: 2.0
+    min_n: 50
+    campos_clave: [ut, exp_mcr_cdr, deposito3]
+    accion: >
+      Sin UT ni numero de expedicion no se puede reclamar una entrega al
+      transporte: no hay con que identificarla. Corregir en el origen del dato.
+    responsable: Datos
+
+  - id: R07
+    nombre: "Problema repetido sin resolucion"
+    pregunta: "Como verificamos que el problema fue resuelto?"
+    activa: true
+    tipo: recurrencia
+    indicador: semanas_consecutivas
+    umbral: 3
+    umbral_cierre: 1
+    severidad:
+      critica: 6
+      alta: 4
+      media: 3
+    min_n: 1
+    accion: >
+      Escalar. Tres semanas con la misma alerta abierta significa que la accion
+      sugerida no se ejecuto o no sirve. Pedir plan con fecha al responsable.
+    responsable: por_nodo
+
+  - id: R08
+    nombre: "Pedido que ya necesito un reenvio"
+    pregunta: "Que esta pasando en la operacion?"
+    activa: true
+    tipo: reenvio
+    indicador: envios_por_pedido
+    umbral: 2
+    umbral_cierre: 1
+    severidad:
+      critica: 3
+      alta: 2
+      media: 2
+    min_n: 1
+    agrupar_si_mas_de: 20
+    accion: >
+      Revisar la causa del primer intento fallido antes de despachar el
+      segundo. Un reenvio duplica el costo de la entrega y el cliente ya
+      espero el plazo completo una vez.
+    responsable: por_nodo
+
+  - id: R09
+    nombre: "Backorder envejecido"
+    pregunta: "Que situaciones podrian empeorar?"
+    activa: true
+    tipo: backorder
+    indicador: dias_desde_alta
+    umbral: 10
+    umbral_cierre: 7
+    severidad:
+      critica: 30
+      alta: 20
+      media: 10
+    min_n: 1
+    agrupar_si_mas_de: 25
+    accion: >
+      Confirmar con el proveedor o liberar el pedido para anulacion. El cliente
+      ya pago y no tiene fecha.
+    responsable: Abastecimiento

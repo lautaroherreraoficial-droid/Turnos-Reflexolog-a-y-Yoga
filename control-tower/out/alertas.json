@@ -1,0 +1,3703 @@
+[
+ {
+  "id": "R01-69af7578",
+  "regla": "R01",
+  "regla_nombre": "UT detenida mas de 5 dias",
+  "entidad": "ut:9012021034",
+  "nodo": "Abastecimiento",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "alta",
+  "valor": 19,
+  "umbral": 5,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "alta",
+    "valor": 19
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "alta",
+    "valor": 19
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "UT 9012021034 detenida 19 dias en \"Sin circuito asignado\"",
+  "pregunta": "Que problemas requieren atencion?",
+  "accion": "Buscar la UT en el deposito donde quedo el ultimo hito y registrar el hito faltante o reponer la mercaderia. Si la UT no se encuentra fisicamente, abrir reclamo al transporte con el numero de expedicion.",
+  "responsable": "Abastecimiento / compras",
+  "evidencia": {
+   "ut": "9012021034",
+   "circuito": "sin_origen",
+   "sucursal": "214 PERITO MORENO",
+   "cdr": "-",
+   "pedidos": [
+    "5047534"
+   ],
+   "lineas": 1,
+   "alta": "2026-08-02 21:15",
+   "ultimo_hito": "pickeada",
+   "ultimo_hito_fecha": "2026-08-12 14:22",
+   "dias_detenida": 19,
+   "dias_desde_alta": 29,
+   "lt_prometido": 21,
+   "atraso_vs_promesa": 9
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R01-12941e32",
+  "regla": "R01",
+  "regla_nombre": "UT detenida mas de 5 dias",
+  "entidad": "ut:9011964516",
+  "nodo": "Abastecimiento",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "media",
+  "valor": 6,
+  "umbral": 5,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "media",
+    "valor": 6
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "media",
+    "valor": 6
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "UT 9011964516 detenida 6 dias en \"Sin circuito asignado\"",
+  "pregunta": "Que problemas requieren atencion?",
+  "accion": "Buscar la UT en el deposito donde quedo el ultimo hito y registrar el hito faltante o reponer la mercaderia. Si la UT no se encuentra fisicamente, abrir reclamo al transporte con el numero de expedicion.",
+  "responsable": "Abastecimiento / compras",
+  "evidencia": {
+   "ut": "9011964516",
+   "circuito": "sin_origen",
+   "sucursal": "213 CENTENARIO 1",
+   "cdr": "-",
+   "pedidos": [
+    "5070896"
+   ],
+   "lineas": 1,
+   "alta": "2026-08-22 19:15",
+   "ultimo_hito": "controlada",
+   "ultimo_hito_fecha": "2026-08-25 17:30",
+   "dias_detenida": 6,
+   "dias_desde_alta": 9,
+   "lt_prometido": 23,
+   "atraso_vs_promesa": -13
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R01-76fd9079",
+  "regla": "R01",
+  "regla_nombre": "UT detenida mas de 5 dias",
+  "entidad": "grupo:Andreani|En Andreani",
+  "nodo": "Andreani",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "critica",
+  "valor": 179,
+  "umbral": 5,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "critica",
+    "valor": 179
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "critica",
+    "valor": 179
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "179 UT detenidas en \"En Andreani\"",
+  "pregunta": "Que problemas requieren atencion?",
+  "accion": "Buscar la UT en el deposito donde quedo el ultimo hito y registrar el hito faltante o reponer la mercaderia. Si la UT no se encuentra fisicamente, abrir reclamo al transporte con el numero de expedicion.",
+  "responsable": "Mesa de control Andreani",
+  "evidencia": {
+   "total_ut": 179,
+   "dias_mediana": 47,
+   "dias_max": 90,
+   "lineas": 179,
+   "sucursales_afectadas": 1,
+   "detalle": [
+    {
+     "ut": "8052489474",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4975599"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-01 05:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-02 15:24",
+     "dias_detenida": 90,
+     "dias_desde_alta": 92,
+     "lt_prometido": 7,
+     "atraso_vs_promesa": 85
+    },
+    {
+     "ut": "8052498064",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4976148"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-01 16:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-02 15:24",
+     "dias_detenida": 90,
+     "dias_desde_alta": 91,
+     "lt_prometido": 5,
+     "atraso_vs_promesa": 87
+    },
+    {
+     "ut": "8052492732",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4975723"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-01 10:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-03 14:40",
+     "dias_detenida": 89,
+     "dias_desde_alta": 91,
+     "lt_prometido": 5,
+     "atraso_vs_promesa": 87
+    },
+    {
+     "ut": "8052495518",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4975894"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-01 13:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-03 14:40",
+     "dias_detenida": 89,
+     "dias_desde_alta": 91,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 86
+    },
+    {
+     "ut": "8052500314",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4976826"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-02 01:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-03 14:40",
+     "dias_detenida": 89,
+     "dias_desde_alta": 91,
+     "lt_prometido": 8,
+     "atraso_vs_promesa": 83
+    },
+    {
+     "ut": "8052508383",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4977410"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-02 18:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-04 14:39",
+     "dias_detenida": 88,
+     "dias_desde_alta": 90,
+     "lt_prometido": 5,
+     "atraso_vs_promesa": 86
+    },
+    {
+     "ut": "8052508563",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4977460"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-02 18:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-04 14:39",
+     "dias_detenida": 88,
+     "dias_desde_alta": 90,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 85
+    },
+    {
+     "ut": "8052517946",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4978526"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-03 19:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-04 14:39",
+     "dias_detenida": 88,
+     "dias_desde_alta": 89,
+     "lt_prometido": 8,
+     "atraso_vs_promesa": 82
+    },
+    {
+     "ut": "8052516234",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4978223"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-03 15:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-05 14:59",
+     "dias_detenida": 87,
+     "dias_desde_alta": 89,
+     "lt_prometido": 7,
+     "atraso_vs_promesa": 83
+    },
+    {
+     "ut": "8052517624",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4978423"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-03 18:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-05 14:59",
+     "dias_detenida": 87,
+     "dias_desde_alta": 89,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 84
+    },
+    {
+     "ut": "8052517780",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4978469"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-03 19:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-05 14:59",
+     "dias_detenida": 87,
+     "dias_desde_alta": 89,
+     "lt_prometido": 5,
+     "atraso_vs_promesa": 85
+    },
+    {
+     "ut": "8052517951",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4978536"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-03 19:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-05 14:59",
+     "dias_detenida": 87,
+     "dias_desde_alta": 89,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 84
+    },
+    {
+     "ut": "8052521897",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4979068"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-04 10:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-05 14:59",
+     "dias_detenida": 87,
+     "dias_desde_alta": 88,
+     "lt_prometido": 0,
+     "atraso_vs_promesa": 89
+    },
+    {
+     "ut": "8052528636",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4980120"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-04 23:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-05 14:59",
+     "dias_detenida": 87,
+     "dias_desde_alta": 88,
+     "lt_prometido": 5,
+     "atraso_vs_promesa": 84
+    },
+    {
+     "ut": "8052536272",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4980685"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-05 17:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-08 15:25",
+     "dias_detenida": 84,
+     "dias_desde_alta": 87,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 82
+    },
+    {
+     "ut": "8052544416",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4982244"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-07 11:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-08 15:25",
+     "dias_detenida": 84,
+     "dias_desde_alta": 85,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 80
+    },
+    {
+     "ut": "8052545763",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4982830"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-07 19:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-08 15:25",
+     "dias_detenida": 84,
+     "dias_desde_alta": 85,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 80
+    },
+    {
+     "ut": "8052542367",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4981597"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-06 16:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-09 15:48",
+     "dias_detenida": 83,
+     "dias_desde_alta": 86,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 81
+    },
+    {
+     "ut": "8052545241",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4982519"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-07 15:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-09 15:48",
+     "dias_detenida": 83,
+     "dias_desde_alta": 85,
+     "lt_prometido": 8,
+     "atraso_vs_promesa": 78
+    },
+    {
+     "ut": "8052552391",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4983726"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-08 14:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-10 15:43",
+     "dias_detenida": 82,
+     "dias_desde_alta": 84,
+     "lt_prometido": 8,
+     "atraso_vs_promesa": 77
+    },
+    {
+     "ut": "8052553064",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4983825"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-08 15:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-10 15:43",
+     "dias_detenida": 82,
+     "dias_desde_alta": 84,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 79
+    },
+    {
+     "ut": "8052554379",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4983976"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-08 17:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-10 15:43",
+     "dias_detenida": 82,
+     "dias_desde_alta": 84,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 79
+    },
+    {
+     "ut": "8052554919",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4984045"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-08 18:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-10 15:43",
+     "dias_detenida": 82,
+     "dias_desde_alta": 84,
+     "lt_prometido": 5,
+     "atraso_vs_promesa": 80
+    },
+    {
+     "ut": "8052570423",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4986131"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-10 11:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-11 14:50",
+     "dias_detenida": 81,
+     "dias_desde_alta": 82,
+     "lt_prometido": 7,
+     "atraso_vs_promesa": 76
+    },
+    {
+     "ut": "8052531962",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4980332"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-05 11:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-12 14:11",
+     "dias_detenida": 80,
+     "dias_desde_alta": 87,
+     "lt_prometido": 21,
+     "atraso_vs_promesa": 67
+    },
+    {
+     "ut": "8052537600",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4980944"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-05 20:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-12 14:11",
+     "dias_detenida": 80,
+     "dias_desde_alta": 87,
+     "lt_prometido": 25,
+     "atraso_vs_promesa": 63
+    },
+    {
+     "ut": "8052567926",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4986027"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-10 08:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-12 14:11",
+     "dias_detenida": 80,
+     "dias_desde_alta": 82,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 77
+    },
+    {
+     "ut": "8052594345",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4989296"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-12 18:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-16 15:00",
+     "dias_detenida": 76,
+     "dias_desde_alta": 80,
+     "lt_prometido": 8,
+     "atraso_vs_promesa": 73
+    },
+    {
+     "ut": "8052595214",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4989548"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-12 21:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-16 15:00",
+     "dias_detenida": 76,
+     "dias_desde_alta": 80,
+     "lt_prometido": 7,
+     "atraso_vs_promesa": 74
+    },
+    {
+     "ut": "8052598772",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4989783"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-13 11:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-16 15:00",
+     "dias_detenida": 76,
+     "dias_desde_alta": 79,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 74
+    },
+    {
+     "ut": "8052600137",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4990019"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-13 14:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-16 15:00",
+     "dias_detenida": 76,
+     "dias_desde_alta": 79,
+     "lt_prometido": 5,
+     "atraso_vs_promesa": 75
+    },
+    {
+     "ut": "8052600377",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4990113"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-13 15:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-16 15:00",
+     "dias_detenida": 76,
+     "dias_desde_alta": 79,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 74
+    },
+    {
+     "ut": "8052602240",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4990680"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-14 10:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-16 15:00",
+     "dias_detenida": 76,
+     "dias_desde_alta": 78,
+     "lt_prometido": 7,
+     "atraso_vs_promesa": 72
+    },
+    {
+     "ut": "8052608370",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4991859"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-15 15:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-16 15:00",
+     "dias_detenida": 76,
+     "dias_desde_alta": 77,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 72
+    },
+    {
+     "ut": "8052603502",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4991136"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-14 19:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-17 14:27",
+     "dias_detenida": 75,
+     "dias_desde_alta": 78,
+     "lt_prometido": 8,
+     "atraso_vs_promesa": 71
+    },
+    {
+     "ut": "8052608986",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4992051"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-15 18:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-17 14:27",
+     "dias_detenida": 75,
+     "dias_desde_alta": 77,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 72
+    },
+    {
+     "ut": "8052610990",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4992074"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-16 08:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-17 14:27",
+     "dias_detenida": 75,
+     "dias_desde_alta": 76,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 71
+    },
+    {
+     "ut": "8052609502",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4992283"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-15 21:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-17 14:27",
+     "dias_detenida": 75,
+     "dias_desde_alta": 77,
+     "lt_prometido": 5,
+     "atraso_vs_promesa": 73
+    },
+    {
+     "ut": "8052609633",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4992452"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-16 00:45",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-17 14:27",
+     "dias_detenida": 75,
+     "dias_desde_alta": 77,
+     "lt_prometido": 6,
+     "atraso_vs_promesa": 71
+    },
+    {
+     "ut": "8052613382",
+     "circuito": "andreani",
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "cdr": "-",
+     "pedidos": [
+      "4992656"
+     ],
+     "lineas": 1,
+     "alta": "2026-06-16 11:15",
+     "ultimo_hito": "despachada de MCR",
+     "ultimo_hito_fecha": "2026-06-17 14:27",
+     "dias_detenida": 75,
+     "dias_desde_alta": 76,
+     "lt_prometido": 5,
+     "atraso_vs_promesa": 72
+    }
+   ]
+  },
+  "agregada": true,
+  "notificar": false
+ },
+ {
+  "id": "R01-d6acfab5",
+  "regla": "R01",
+  "regla_nombre": "UT detenida mas de 5 dias",
+  "entidad": "ut:8052927728",
+  "nodo": "MCR",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "critica",
+  "valor": 26,
+  "umbral": 5,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "critica",
+    "valor": 26
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "critica",
+    "valor": 26
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "UT 8052927728 detenida 26 dias en \"Cola de despacho MCR\"",
+  "pregunta": "Que problemas requieren atencion?",
+  "accion": "Buscar la UT en el deposito donde quedo el ultimo hito y registrar el hito faltante o reponer la mercaderia. Si la UT no se encuentra fisicamente, abrir reclamo al transporte con el numero de expedicion.",
+  "responsable": "Abastecimiento MCR (deposito 940)",
+  "evidencia": {
+   "ut": "8052927728",
+   "circuito": "andreani",
+   "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+   "cdr": "-",
+   "pedidos": [
+    "5036396"
+   ],
+   "lineas": 1,
+   "alta": "2026-07-24 13:45",
+   "ultimo_hito": "controlada",
+   "ultimo_hito_fecha": "2026-08-05 16:00",
+   "dias_detenida": 26,
+   "dias_desde_alta": 38,
+   "lt_prometido": 21,
+   "atraso_vs_promesa": 18
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R01-8bdae113",
+  "regla": "R01",
+  "regla_nombre": "UT detenida mas de 5 dias",
+  "entidad": "ut:9012007106",
+  "nodo": "Transporte",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "alta",
+  "valor": 10,
+  "umbral": 5,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "alta",
+    "valor": 10
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "alta",
+    "valor": 10
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "UT 9012007106 detenida 10 dias en \"Transito MCR a sucursal\"",
+  "pregunta": "Que problemas requieren atencion?",
+  "accion": "Buscar la UT en el deposito donde quedo el ultimo hito y registrar el hito faltante o reponer la mercaderia. Si la UT no se encuentra fisicamente, abrir reclamo al transporte con el numero de expedicion.",
+  "responsable": "Transporte / distribucion",
+  "evidencia": {
+   "ut": "9012007106",
+   "circuito": "directo",
+   "sucursal": "960 DEPOSITO 30NOVIEMBRE - LAOL",
+   "cdr": "-",
+   "pedidos": [
+    "5048935",
+    "5059174",
+    "5067140",
+    "5068109",
+    "5069033",
+    "5069146"
+   ],
+   "lineas": 6,
+   "alta": "2026-08-12 09:15",
+   "ultimo_hito": "despachada de MCR",
+   "ultimo_hito_fecha": "2026-08-21 19:46",
+   "dias_detenida": 10,
+   "dias_desde_alta": 19,
+   "lt_prometido": 8,
+   "atraso_vs_promesa": 12
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R01-822a4312",
+  "regla": "R01",
+  "regla_nombre": "UT detenida mas de 5 dias",
+  "entidad": "ut:9011995060",
+  "nodo": "Transporte",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "alta",
+  "valor": 10,
+  "umbral": 5,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "alta",
+    "valor": 10
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "alta",
+    "valor": 10
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "UT 9011995060 detenida 10 dias en \"Transito MCR a sucursal\"",
+  "pregunta": "Que problemas requieren atencion?",
+  "accion": "Buscar la UT en el deposito donde quedo el ultimo hito y registrar el hito faltante o reponer la mercaderia. Si la UT no se encuentra fisicamente, abrir reclamo al transporte con el numero de expedicion.",
+  "responsable": "Transporte / distribucion",
+  "evidencia": {
+   "ut": "9011995060",
+   "circuito": "directo",
+   "sucursal": "960 DEPOSITO 30NOVIEMBRE - LAOL",
+   "cdr": "-",
+   "pedidos": [
+    "5035949",
+    "5058240"
+   ],
+   "lineas": 2,
+   "alta": "2026-07-24 00:45",
+   "ultimo_hito": "despachada de MCR",
+   "ultimo_hito_fecha": "2026-08-21 19:46",
+   "dias_detenida": 10,
+   "dias_desde_alta": 39,
+   "lt_prometido": 25,
+   "atraso_vs_promesa": 14
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R01-cc380ddd",
+  "regla": "R01",
+  "regla_nombre": "UT detenida mas de 5 dias",
+  "entidad": "ut:9011686838",
+  "nodo": "Transporte",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "alta",
+  "valor": 10,
+  "umbral": 5,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "alta",
+    "valor": 10
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "alta",
+    "valor": 10
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "UT 9011686838 detenida 10 dias en \"Transito MCR a sucursal\"",
+  "pregunta": "Que problemas requieren atencion?",
+  "accion": "Buscar la UT en el deposito donde quedo el ultimo hito y registrar el hito faltante o reponer la mercaderia. Si la UT no se encuentra fisicamente, abrir reclamo al transporte con el numero de expedicion.",
+  "responsable": "Transporte / distribucion",
+  "evidencia": {
+   "ut": "9011686838",
+   "circuito": "directo",
+   "sucursal": "960 DEPOSITO 30NOVIEMBRE - LAOL",
+   "cdr": "-",
+   "pedidos": [
+    "5058939"
+   ],
+   "lineas": 1,
+   "alta": "2026-08-11 22:45",
+   "ultimo_hito": "despachada de MCR",
+   "ultimo_hito_fecha": "2026-08-21 19:46",
+   "dias_detenida": 10,
+   "dias_desde_alta": 20,
+   "lt_prometido": 8,
+   "atraso_vs_promesa": 13
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R01-36157eea",
+  "regla": "R01",
+  "regla_nombre": "UT detenida mas de 5 dias",
+  "entidad": "ut:9011965728",
+  "nodo": "Transporte",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "alta",
+  "valor": 10,
+  "umbral": 5,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "alta",
+    "valor": 10
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "alta",
+    "valor": 10
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "UT 9011965728 detenida 10 dias en \"Transito MCR a sucursal\"",
+  "pregunta": "Que problemas requieren atencion?",
+  "accion": "Buscar la UT en el deposito donde quedo el ultimo hito y registrar el hito faltante o reponer la mercaderia. Si la UT no se encuentra fisicamente, abrir reclamo al transporte con el numero de expedicion.",
+  "responsable": "Transporte / distribucion",
+  "evidencia": {
+   "ut": "9011965728",
+   "circuito": "directo",
+   "sucursal": "266 ANELO",
+   "cdr": "-",
+   "pedidos": [
+    "5066685"
+   ],
+   "lineas": 1,
+   "alta": "2026-08-18 20:15",
+   "ultimo_hito": "despachada de MCR",
+   "ultimo_hito_fecha": "2026-08-21 19:06",
+   "dias_detenida": 10,
+   "dias_desde_alta": 13,
+   "lt_prometido": 11,
+   "atraso_vs_promesa": 3
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R01-e5da8b63",
+  "regla": "R01",
+  "regla_nombre": "UT detenida mas de 5 dias",
+  "entidad": "ut:9011965438",
+  "nodo": "Transporte",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "alta",
+  "valor": 10,
+  "umbral": 5,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "alta",
+    "valor": 10
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "alta",
+    "valor": 10
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "UT 9011965438 detenida 10 dias en \"Transito MCR a sucursal\"",
+  "pregunta": "Que problemas requieren atencion?",
+  "accion": "Buscar la UT en el deposito donde quedo el ultimo hito y registrar el hito faltante o reponer la mercaderia. Si la UT no se encuentra fisicamente, abrir reclamo al transporte con el numero de expedicion.",
+  "responsable": "Transporte / distribucion",
+  "evidencia": {
+   "ut": "9011965438",
+   "circuito": "directo",
+   "sucursal": "162 BELGRANO 1",
+   "cdr": "-",
+   "pedidos": [
+    "5067019"
+   ],
+   "lineas": 1,
+   "alta": "2026-08-19 10:15",
+   "ultimo_hito": "despachada de MCR",
+   "ultimo_hito_fecha": "2026-08-21 19:06",
+   "dias_detenida": 10,
+   "dias_desde_alta": 12,
+   "lt_prometido": 9,
+   "atraso_vs_promesa": 4
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R01-f1484618",
+  "regla": "R01",
+  "regla_nombre": "UT detenida mas de 5 dias",
+  "entidad": "ut:9012023700",
+  "nodo": "Transporte",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "media",
+  "valor": 6,
+  "umbral": 5,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "media",
+    "valor": 6
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "media",
+    "valor": 6
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "UT 9012023700 detenida 6 dias en \"Transito MCR a sucursal\"",
+  "pregunta": "Que problemas requieren atencion?",
+  "accion": "Buscar la UT en el deposito donde quedo el ultimo hito y registrar el hito faltante o reponer la mercaderia. Si la UT no se encuentra fisicamente, abrir reclamo al transporte con el numero de expedicion.",
+  "responsable": "Transporte / distribucion",
+  "evidencia": {
+   "ut": "9012023700",
+   "circuito": "directo",
+   "sucursal": "068 HIPERMERCADO NEUQUEN",
+   "cdr": "-",
+   "pedidos": [
+    "5066287"
+   ],
+   "lineas": 1,
+   "alta": "2026-08-18 14:15",
+   "ultimo_hito": "recibida en sucursal (caja)",
+   "ultimo_hito_fecha": "2026-08-25 14:01",
+   "dias_detenida": 6,
+   "dias_desde_alta": 13,
+   "lt_prometido": 9,
+   "atraso_vs_promesa": 5
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R02-e5a029dd",
+  "regla": "R02",
+  "regla_nombre": "Pedido sin circuito asignado y sin anular",
+  "entidad": "grupo:sin_circuito",
+  "nodo": "Abastecimiento",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "critica",
+  "valor": 416,
+  "umbral": 7,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "critica",
+    "valor": 416
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "critica",
+    "valor": 416
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "416 lineas sin circuito asignado y sin anular",
+  "pregunta": "Que problemas requieren atencion?",
+  "accion": "Decidir: reponer, reasignar deposito o anular y avisar al cliente. Mientras la linea siga sin deposito y sin anulacion, el pedido no existe para ningun tablero y el cliente no recibe ninguna novedad.",
+  "responsable": "Abastecimiento / compras",
+  "evidencia": {
+   "total_lineas": 416,
+   "dias_mediana": 10.0,
+   "dias_max": 88,
+   "sucursales_afectadas": 100,
+   "con_backorder": 393,
+   "detalle": [
+    {
+     "pedido": "4951201",
+     "sucursal": "BELGRANO 1",
+     "articulo": "CALEFACTOR TB 3500 KCAL CA3500B",
+     "alta": "2026-06-04",
+     "dias": 88,
+     "planificada": true,
+     "backorder": 0
+    },
+    {
+     "pedido": "4987881",
+     "sucursal": "DIRECCION GENERAL",
+     "articulo": "PRESTAMO EN SUCURSAL",
+     "alta": "2026-06-11",
+     "dias": 81,
+     "planificada": false,
+     "backorder": 0
+    },
+    {
+     "pedido": "5006939",
+     "sucursal": "TRELEW",
+     "articulo": "CONJUNTO 1 1/2 PLAZA 90X190 ONEPLUS",
+     "alta": "2026-06-29",
+     "dias": 64,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5015269",
+     "sucursal": "RIO GRANDE 4",
+     "articulo": "COLCHON UPPER-AD MAX 2 P 140X190",
+     "alta": "2026-07-05",
+     "dias": 57,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5023377",
+     "sucursal": "DIRECCION GENERAL",
+     "articulo": "PRESTAMO EN SUCURSAL",
+     "alta": "2026-07-12",
+     "dias": 50,
+     "planificada": false,
+     "backorder": 0
+    },
+    {
+     "pedido": "5028003",
+     "sucursal": "COMODORO RIVADAVIA",
+     "articulo": "SOPORTE MAGNETICO 5\"",
+     "alta": "2026-07-16",
+     "dias": 46,
+     "planificada": false,
+     "backorder": 2
+    },
+    {
+     "pedido": "5037125",
+     "sucursal": "RAWSON",
+     "articulo": "BOTINERO 3P 1C JACARANDA",
+     "alta": "2026-07-24",
+     "dias": 38,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5036506",
+     "sucursal": "DEPOSITO 30NOVIEMBRE - LAOL",
+     "articulo": "CONJUNTO 2 1/2P 160X200 ONE PLUS",
+     "alta": "2026-07-24",
+     "dias": 38,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5037225",
+     "sucursal": "LINCOLN",
+     "articulo": "SOPORTE MAGNETICO 5\"",
+     "alta": "2026-07-25",
+     "dias": 38,
+     "planificada": false,
+     "backorder": 3
+    },
+    {
+     "pedido": "5037588",
+     "sucursal": "V.LA ANGOSTURA 2",
+     "articulo": "CONJUNTO 2 1/2P 160X200 ONE PLUS",
+     "alta": "2026-07-25",
+     "dias": 37,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5046716",
+     "sucursal": "VILLA REGINA",
+     "articulo": "MESA DE LUZ 1 CAJON 1 PUERTA BLANCO",
+     "alta": "2026-08-02",
+     "dias": 30,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5047397",
+     "sucursal": "RIO TURBIO",
+     "articulo": "PULVERIZADOR MANUAL 8L",
+     "alta": "2026-08-02",
+     "dias": 29,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5047534",
+     "sucursal": "PERITO MORENO",
+     "articulo": "PALA FORJADA ANCHA (PUNTA CUADRADA)",
+     "alta": "2026-08-02",
+     "dias": 29,
+     "planificada": true,
+     "backorder": 0
+    },
+    {
+     "pedido": "5049227",
+     "sucursal": "BARILOCHE 2",
+     "articulo": "BAJO MESADA 1.60 ABEDUL",
+     "alta": "2026-08-04",
+     "dias": 27,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5052194",
+     "sucursal": "LABOULAYE",
+     "articulo": "DINOSAURIO CON LUZ Y SONIDO",
+     "alta": "2026-08-06",
+     "dias": 25,
+     "planificada": true,
+     "backorder": 0
+    },
+    {
+     "pedido": "5053448",
+     "sucursal": "BARILOCHE 2",
+     "articulo": "FRAZADA CORDERITO MINNIE",
+     "alta": "2026-08-07",
+     "dias": 24,
+     "planificada": true,
+     "backorder": 0
+    },
+    {
+     "pedido": "5054525",
+     "sucursal": "GENERAL PICO",
+     "articulo": "CONJUNTO 1 1/2 P 100X200 E SUEZ ESP",
+     "alta": "2026-08-08",
+     "dias": 23,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5054544",
+     "sucursal": "CALAFATE II",
+     "articulo": "REMERA HOMBRE 0201 MC ROJO TL",
+     "alta": "2026-08-08",
+     "dias": 23,
+     "planificada": true,
+     "backorder": 0
+    },
+    {
+     "pedido": "5055218",
+     "sucursal": "USHUAIA",
+     "articulo": "RACK DE TV MT4000 WENGUE",
+     "alta": "2026-08-08",
+     "dias": 23,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5055241",
+     "sucursal": "RESISTENCIA",
+     "articulo": "SET DE MOLDES Y PINTURAS",
+     "alta": "2026-08-08",
+     "dias": 23,
+     "planificada": true,
+     "backorder": 0
+    },
+    {
+     "pedido": "5056008",
+     "sucursal": "TRELEW",
+     "articulo": "PLACARD PUERTAS CORREDIZAS 1.8M RB",
+     "alta": "2026-08-09",
+     "dias": 22,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5057801",
+     "sucursal": "GOYA",
+     "articulo": "PULVERIZADOR 1.5 LITROS P/JARDIN",
+     "alta": "2026-08-11",
+     "dias": 21,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5058289",
+     "sucursal": "USHUAIA",
+     "articulo": "PANTALON HOMBRE ZIP CARGO BEIGE TL",
+     "alta": "2026-08-11",
+     "dias": 20,
+     "planificada": true,
+     "backorder": 0
+    },
+    {
+     "pedido": "5058481",
+     "sucursal": "TRELEW",
+     "articulo": "PLACARD PUERTAS CORREDIZAS 1.8M RB",
+     "alta": "2026-08-11",
+     "dias": 20,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5058491",
+     "sucursal": "CENTENARIO 1",
+     "articulo": "MOTOSIERRA 16 38CC BASICLINE",
+     "alta": "2026-08-11",
+     "dias": 20,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5058614",
+     "sucursal": "QUIJOTE SAN JORGE",
+     "articulo": "CUCHILLO MANGO FLOTANTE FUNDA",
+     "alta": "2026-08-11",
+     "dias": 20,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5059406",
+     "sucursal": "HIPERMERCADO ROSARIO",
+     "articulo": "SOMMIER PLEGABLE 140X190 2P",
+     "alta": "2026-08-12",
+     "dias": 19,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5060167",
+     "sucursal": "PICO TRUNCADO 2",
+     "articulo": "SOMMIER 1 1/2P 90X190X20 + PATA",
+     "alta": "2026-08-12",
+     "dias": 19,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5060441",
+     "sucursal": "RIO COLORADO",
+     "articulo": "CONJUNTO DELUXE 80X190X20 1P",
+     "alta": "2026-08-13",
+     "dias": 18,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5062060",
+     "sucursal": "CALAFATE II",
+     "articulo": "ALACENA CONFORT 1.20M BLANCA",
+     "alta": "2026-08-14",
+     "dias": 17,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5062217",
+     "sucursal": "RAWSON",
+     "articulo": "MESADA 120X60 C/ZOC DER. NEGRO",
+     "alta": "2026-08-14",
+     "dias": 17,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5062313",
+     "sucursal": "HIPERMERCADO NEUQUEN",
+     "articulo": "MESADA 160X53 RECT. S/ZOC NEGRO",
+     "alta": "2026-08-14",
+     "dias": 17,
+     "planificada": true,
+     "backorder": 0
+    },
+    {
+     "pedido": "5062357",
+     "sucursal": "CALETA OLIVIA",
+     "articulo": "COMPRESOR FL50 2HP 50 LTS MONOF",
+     "alta": "2026-08-14",
+     "dias": 17,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5062978",
+     "sucursal": "C. DE PATAGONES",
+     "articulo": "VANITORY 52X42 RECT BLANCO 3AG.",
+     "alta": "2026-08-15",
+     "dias": 17,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5063855",
+     "sucursal": "GENERAL PICO",
+     "articulo": "CONJUNT RESORT 1 1/2P100X190MONETT",
+     "alta": "2026-08-15",
+     "dias": 16,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5063535",
+     "sucursal": "RAWSON",
+     "articulo": "MESA DE TV INDUSTRIAL 1.40MT",
+     "alta": "2026-08-15",
+     "dias": 16,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5063163",
+     "sucursal": "TREVELIN",
+     "articulo": "COLCHON 2P 140X190 ONE PLUS",
+     "alta": "2026-08-15",
+     "dias": 16,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5063665",
+     "sucursal": "RIO GALLEGOS 6",
+     "articulo": "MUEBLE P/MICROONDAS 2PTAS2EST BLANC",
+     "alta": "2026-08-15",
+     "dias": 16,
+     "planificada": false,
+     "backorder": 1
+    },
+    {
+     "pedido": "5063929",
+     "sucursal": "COMODORO RIVADAVIA",
+     "articulo": "AUTO A RADIO CONTROL",
+     "alta": "2026-08-16",
+     "dias": 16,
+     "planificada": true,
+     "backorder": 0
+    },
+    {
+     "pedido": "5064139",
+     "sucursal": "VILLA REGINA",
+     "articulo": "VANITORY 52X42 RECT BLANCO 1AG.",
+     "alta": "2026-08-16",
+     "dias": 15,
+     "planificada": false,
+     "backorder": 1
+    }
+   ]
+  },
+  "agregada": true,
+  "notificar": false
+ },
+ {
+  "id": "R04-523a1151",
+  "regla": "R04",
+  "regla_nombre": "Nodo por encima de su tiempo de referencia",
+  "entidad": "nodo:Cola de despacho CDR|CDR 054",
+  "nodo": "CDR",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "critica",
+  "valor": 3.37,
+  "umbral": 1.3,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "critica",
+    "valor": 3.37
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "critica",
+    "valor": 3.37
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "CDR 054 en \"Cola de despacho CDR\": 12.6 h, 3.4 veces sus pares",
+  "pregunta": "Que esta pasando en la operacion?",
+  "accion": "Comparar contra el mismo nodo el mes anterior y contra los nodos pares. Si el exceso esta en una espera y no en una tarea, el problema es de programacion de salidas, no de productividad.",
+  "responsable": "Responsable del CDR",
+  "evidencia": {
+   "etapa": "Cola de despacho CDR",
+   "entidad": "CDR 054",
+   "comparado_contra": "CDR de la red",
+   "envios": 152,
+   "horas_mediana": 12.6,
+   "horas_referencia_pares": 3.7,
+   "veces_la_referencia": 3.37,
+   "horas_p90": 43.9
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R04-2d3deb12",
+  "regla": "R04",
+  "regla_nombre": "Nodo por encima de su tiempo de referencia",
+  "entidad": "nodo:Dentro del CDR|CDR 054",
+  "nodo": "CDR",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "critica",
+  "valor": 2.06,
+  "umbral": 1.3,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "critica",
+    "valor": 2.06
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "critica",
+    "valor": 2.06
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "CDR 054 en \"Dentro del CDR\": 48.5 h, 2.1 veces sus pares",
+  "pregunta": "Que esta pasando en la operacion?",
+  "accion": "Comparar contra el mismo nodo el mes anterior y contra los nodos pares. Si el exceso esta en una espera y no en una tarea, el problema es de programacion de salidas, no de productividad.",
+  "responsable": "Responsable del CDR",
+  "evidencia": {
+   "etapa": "Dentro del CDR",
+   "entidad": "CDR 054",
+   "comparado_contra": "CDR de la red",
+   "envios": 3844,
+   "horas_mediana": 48.5,
+   "horas_referencia_pares": 23.5,
+   "veces_la_referencia": 2.06,
+   "horas_p90": 131.7
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R04-b80fad31",
+  "regla": "R04",
+  "regla_nombre": "Nodo por encima de su tiempo de referencia",
+  "entidad": "nodo:Dentro del CDR|CDR 099",
+  "nodo": "CDR",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "media",
+  "valor": 1.54,
+  "umbral": 1.3,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "media",
+    "valor": 1.54
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "media",
+    "valor": 1.54
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "CDR 099 en \"Dentro del CDR\": 36.3 h, 1.5 veces sus pares",
+  "pregunta": "Que esta pasando en la operacion?",
+  "accion": "Comparar contra el mismo nodo el mes anterior y contra los nodos pares. Si el exceso esta en una espera y no en una tarea, el problema es de programacion de salidas, no de productividad.",
+  "responsable": "Responsable del CDR",
+  "evidencia": {
+   "etapa": "Dentro del CDR",
+   "entidad": "CDR 099",
+   "comparado_contra": "CDR de la red",
+   "envios": 4473,
+   "horas_mediana": 36.3,
+   "horas_referencia_pares": 23.5,
+   "veces_la_referencia": 1.54,
+   "horas_p90": 80.2
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R04-275b7ca0",
+  "regla": "R04",
+  "regla_nombre": "Nodo por encima de su tiempo de referencia",
+  "entidad": "nodo:Pulmon de picking CDR|CDR 065",
+  "nodo": "CDR",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "alta",
+  "valor": 1.68,
+  "umbral": 1.3,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "alta",
+    "valor": 1.68
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "alta",
+    "valor": 1.68
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "CDR 065 en \"Pulmon de picking CDR\": 6.1 h, 1.7 veces sus pares",
+  "pregunta": "Que esta pasando en la operacion?",
+  "accion": "Comparar contra el mismo nodo el mes anterior y contra los nodos pares. Si el exceso esta en una espera y no en una tarea, el problema es de programacion de salidas, no de productividad.",
+  "responsable": "Responsable del CDR",
+  "evidencia": {
+   "etapa": "Pulmon de picking CDR",
+   "entidad": "CDR 065",
+   "comparado_contra": "CDR de la red",
+   "envios": 88,
+   "horas_mediana": 6.1,
+   "horas_referencia_pares": 3.6,
+   "veces_la_referencia": 1.68,
+   "horas_p90": 9.9
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R04-9af31cf6",
+  "regla": "R04",
+  "regla_nombre": "Nodo por encima de su tiempo de referencia",
+  "entidad": "nodo:Pulmon de picking CDR|CDR 064",
+  "nodo": "CDR",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "media",
+  "valor": 1.34,
+  "umbral": 1.3,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "media",
+    "valor": 1.34
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "media",
+    "valor": 1.34
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "CDR 064 en \"Pulmon de picking CDR\": 4.9 h, 1.3 veces sus pares",
+  "pregunta": "Que esta pasando en la operacion?",
+  "accion": "Comparar contra el mismo nodo el mes anterior y contra los nodos pares. Si el exceso esta en una espera y no en una tarea, el problema es de programacion de salidas, no de productividad.",
+  "responsable": "Responsable del CDR",
+  "evidencia": {
+   "etapa": "Pulmon de picking CDR",
+   "entidad": "CDR 064",
+   "comparado_contra": "CDR de la red",
+   "envios": 116,
+   "horas_mediana": 4.9,
+   "horas_referencia_pares": 3.6,
+   "veces_la_referencia": 1.34,
+   "horas_p90": 28.3
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R04-b6309b17",
+  "regla": "R04",
+  "regla_nombre": "Nodo por encima de su tiempo de referencia",
+  "entidad": "nodo_grupo:Transito CDR a sucursal",
+  "nodo": "Transporte",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "critica",
+  "valor": 39,
+  "umbral": 1.3,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "critica",
+    "valor": 39
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "critica",
+    "valor": 39
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "39 de 121 por encima de sus pares en \"Transito CDR a sucursal\"",
+  "pregunta": "Que esta pasando en la operacion?",
+  "accion": "Comparar contra el mismo nodo el mes anterior y contra los nodos pares. Si el exceso esta en una espera y no en una tarea, el problema es de programacion de salidas, no de productividad.",
+  "responsable": "Transporte / distribucion",
+  "evidencia": {
+   "etapa": "Transito CDR a sucursal",
+   "entidades_fuera_de_referencia": 39,
+   "entidades_evaluadas": 121,
+   "comparacion": "cada una contra su grupo de pares",
+   "razon_peor": 7.67,
+   "razon_mediana": 2.12,
+   "detalle": [
+    {
+     "entidad": "386 HIPERMERCADO POSADAS",
+     "pares": "sucursales del CDR 389",
+     "envios": 76,
+     "horas_mediana": 68.0,
+     "horas_pares": 8.9,
+     "veces_los_pares": 7.67
+    },
+    {
+     "entidad": "384 HIPERMERCADO SALTA",
+     "pares": "sucursales del CDR 389",
+     "envios": 119,
+     "horas_mediana": 43.0,
+     "horas_pares": 8.9,
+     "veces_los_pares": 4.85
+    },
+    {
+     "entidad": "076 PLAZA HUINCUL",
+     "pares": "sucursales del CDR 254",
+     "envios": 45,
+     "horas_mediana": 15.5,
+     "horas_pares": 3.7,
+     "veces_los_pares": 4.18
+    },
+    {
+     "entidad": "363 FERNANDEZ ORO",
+     "pares": "sucursales del CDR 064",
+     "envios": 150,
+     "horas_mediana": 24.4,
+     "horas_pares": 6.4,
+     "veces_los_pares": 3.84
+    },
+    {
+     "entidad": "068 HIPERMERCADO NEUQUEN",
+     "pares": "sucursales del CDR 054",
+     "envios": 144,
+     "horas_mediana": 63.4,
+     "horas_pares": 16.6,
+     "veces_los_pares": 3.81
+    },
+    {
+     "entidad": "074 RIO GRANDE 4",
+     "pares": "sucursales del CDR 040",
+     "envios": 659,
+     "horas_mediana": 26.8,
+     "horas_pares": 7.3,
+     "veces_los_pares": 3.66
+    },
+    {
+     "entidad": "387 HIPERMERCADO ROSARIO",
+     "pares": "sucursales del CDR 099",
+     "envios": 48,
+     "horas_mediana": 46.9,
+     "horas_pares": 15.4,
+     "veces_los_pares": 3.05
+    },
+    {
+     "entidad": "385 HIPERMERCADO SGO DEL ESTERO",
+     "pares": "sucursales del CDR 389",
+     "envios": 153,
+     "horas_mediana": 27.0,
+     "horas_pares": 8.9,
+     "veces_los_pares": 3.04
+    },
+    {
+     "entidad": "053 ALLEN",
+     "pares": "sucursales del CDR 079",
+     "envios": 537,
+     "horas_mediana": 31.9,
+     "horas_pares": 10.9,
+     "veces_los_pares": 2.94
+    },
+    {
+     "entidad": "386 HIPERMERCADO POSADAS",
+     "pares": "sucursales del CDR 099",
+     "envios": 79,
+     "horas_mediana": 44.0,
+     "horas_pares": 15.4,
+     "veces_los_pares": 2.86
+    },
+    {
+     "entidad": "201 MERCEDES",
+     "pares": "sucursales del CDR 054",
+     "envios": 35,
+     "horas_mediana": 47.4,
+     "horas_pares": 16.6,
+     "veces_los_pares": 2.85
+    },
+    {
+     "entidad": "010 GENERAL ROCA",
+     "pares": "sucursales del CDR 079",
+     "envios": 1510,
+     "horas_mediana": 30.4,
+     "horas_pares": 10.9,
+     "veces_los_pares": 2.8
+    },
+    {
+     "entidad": "189 ESQUEL 3",
+     "pares": "sucursales del CDR 005",
+     "envios": 223,
+     "horas_mediana": 24.5,
+     "horas_pares": 9.0,
+     "veces_los_pares": 2.72
+    },
+    {
+     "entidad": "387 HIPERMERCADO ROSARIO",
+     "pares": "sucursales del CDR 389",
+     "envios": 103,
+     "horas_mediana": 22.2,
+     "horas_pares": 8.9,
+     "veces_los_pares": 2.5
+    },
+    {
+     "entidad": "172 RINCON DE LOS SAUCES",
+     "pares": "sucursales del CDR 054",
+     "envios": 150,
+     "horas_mediana": 40.2,
+     "horas_pares": 16.6,
+     "veces_los_pares": 2.42
+    },
+    {
+     "entidad": "381 HIPERMERCADO SAN JUAN",
+     "pares": "sucursales del CDR 389",
+     "envios": 180,
+     "horas_mediana": 20.1,
+     "horas_pares": 8.9,
+     "veces_los_pares": 2.26
+    },
+    {
+     "entidad": "382 HIPERMERCADO TUCUMAN 1",
+     "pares": "sucursales del CDR 389",
+     "envios": 181,
+     "horas_mediana": 19.6,
+     "horas_pares": 8.9,
+     "veces_los_pares": 2.21
+    },
+    {
+     "entidad": "383 HIPERMERCADO TUCUMAN 2",
+     "pares": "sucursales del CDR 389",
+     "envios": 200,
+     "horas_mediana": 19.2,
+     "horas_pares": 8.9,
+     "veces_los_pares": 2.17
+    },
+    {
+     "entidad": "048 VILLA REGINA",
+     "pares": "sucursales del CDR 079",
+     "envios": 816,
+     "horas_mediana": 23.5,
+     "horas_pares": 10.9,
+     "veces_los_pares": 2.17
+    },
+    {
+     "entidad": "363 FERNANDEZ ORO",
+     "pares": "sucursales del CDR 054",
+     "envios": 191,
+     "horas_mediana": 35.3,
+     "horas_pares": 16.6,
+     "veces_los_pares": 2.12
+    },
+    {
+     "entidad": "147 JUNIN DE LOS ANDES",
+     "pares": "sucursales del CDR 005",
+     "envios": 384,
+     "horas_mediana": 18.6,
+     "horas_pares": 9.0,
+     "veces_los_pares": 2.06
+    },
+    {
+     "entidad": "188 CATRIEL",
+     "pares": "sucursales del CDR 054",
+     "envios": 401,
+     "horas_mediana": 32.9,
+     "horas_pares": 16.6,
+     "veces_los_pares": 1.98
+    },
+    {
+     "entidad": "357 SAN PATRICIO DEL CHAÑAR",
+     "pares": "sucursales del CDR 254",
+     "envios": 45,
+     "horas_mediana": 7.2,
+     "horas_pares": 3.7,
+     "veces_los_pares": 1.95
+    },
+    {
+     "entidad": "212 SAN MARTIN DE LOS ANDES II",
+     "pares": "sucursales del CDR 005",
+     "envios": 335,
+     "horas_mediana": 16.2,
+     "horas_pares": 9.0,
+     "veces_los_pares": 1.8
+    },
+    {
+     "entidad": "162 BELGRANO 1",
+     "pares": "sucursales del CDR 254",
+     "envios": 43,
+     "horas_mediana": 6.7,
+     "horas_pares": 3.7,
+     "veces_los_pares": 1.79
+    },
+    {
+     "entidad": "090 SANTA ROSA",
+     "pares": "sucursales del CDR 054",
+     "envios": 42,
+     "horas_mediana": 28.6,
+     "horas_pares": 16.6,
+     "veces_los_pares": 1.72
+    },
+    {
+     "entidad": "050 ZAPALA",
+     "pares": "sucursales del CDR 063",
+     "envios": 101,
+     "horas_mediana": 9.4,
+     "horas_pares": 5.5,
+     "veces_los_pares": 1.72
+    },
+    {
+     "entidad": "161 CALAFATE II",
+     "pares": "sucursales del CDR 081",
+     "envios": 498,
+     "horas_mediana": 12.2,
+     "horas_pares": 7.6,
+     "veces_los_pares": 1.62
+    },
+    {
+     "entidad": "102 SAN MARTIN DE LOS ANDES",
+     "pares": "sucursales del CDR 005",
+     "envios": 496,
+     "horas_mediana": 14.2,
+     "horas_pares": 9.0,
+     "veces_los_pares": 1.58
+    },
+    {
+     "entidad": "214 PERITO MORENO",
+     "pares": "sucursales del CDR 191",
+     "envios": 352,
+     "horas_mediana": 12.2,
+     "horas_pares": 7.8,
+     "veces_los_pares": 1.56
+    },
+    {
+     "entidad": "076 PLAZA HUINCUL",
+     "pares": "sucursales del CDR 063",
+     "envios": 129,
+     "horas_mediana": 8.3,
+     "horas_pares": 5.5,
+     "veces_los_pares": 1.52
+    },
+    {
+     "entidad": "213 CENTENARIO 1",
+     "pares": "sucursales del CDR 254",
+     "envios": 39,
+     "horas_mediana": 5.5,
+     "horas_pares": 3.7,
+     "veces_los_pares": 1.47
+    },
+    {
+     "entidad": "206 GOYA",
+     "pares": "sucursales del CDR 099",
+     "envios": 558,
+     "horas_mediana": 22.4,
+     "horas_pares": 15.4,
+     "veces_los_pares": 1.46
+    },
+    {
+     "entidad": "160 LAS HERAS",
+     "pares": "sucursales del CDR 191",
+     "envios": 376,
+     "horas_mediana": 11.3,
+     "horas_pares": 7.8,
+     "veces_los_pares": 1.45
+    },
+    {
+     "entidad": "031 CALETA OLIVIA",
+     "pares": "sucursales del CDR 191",
+     "envios": 300,
+     "horas_mediana": 11.1,
+     "horas_pares": 7.8,
+     "veces_los_pares": 1.42
+    },
+    {
+     "entidad": "197 GOBERNADOR GREGORES",
+     "pares": "sucursales del CDR 081",
+     "envios": 132,
+     "horas_mediana": 10.7,
+     "horas_pares": 7.6,
+     "veces_los_pares": 1.41
+    },
+    {
+     "entidad": "097 PUERTO DESEADO",
+     "pares": "sucursales del CDR 191",
+     "envios": 548,
+     "horas_mediana": 11.0,
+     "horas_pares": 7.8,
+     "veces_los_pares": 1.41
+    },
+    {
+     "entidad": "208 LAS GRUTAS",
+     "pares": "sucursales del CDR 064",
+     "envios": 259,
+     "horas_mediana": 8.6,
+     "horas_pares": 6.4,
+     "veces_los_pares": 1.35
+    },
+    {
+     "entidad": "369 RESISTENCIA",
+     "pares": "sucursales del CDR 099",
+     "envios": 311,
+     "horas_mediana": 20.6,
+     "horas_pares": 15.4,
+     "veces_los_pares": 1.34
+    }
+   ]
+  },
+  "agregada": true,
+  "notificar": false
+ },
+ {
+  "id": "R04-f2865250",
+  "regla": "R04",
+  "regla_nombre": "Nodo por encima de su tiempo de referencia",
+  "entidad": "nodo:Transito MCR a CDR|068 HIPERMERCADO NEUQUEN",
+  "nodo": "Transporte",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "critica",
+  "valor": 3.85,
+  "umbral": 1.3,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "critica",
+    "valor": 3.85
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "critica",
+    "valor": 3.85
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "068 HIPERMERCADO NEUQUEN en \"Transito MCR a CDR\": 65.3 h, 3.9 veces sus pares",
+  "pregunta": "Que esta pasando en la operacion?",
+  "accion": "Comparar contra el mismo nodo el mes anterior y contra los nodos pares. Si el exceso esta en una espera y no en una tarea, el problema es de programacion de salidas, no de productividad.",
+  "responsable": "Transporte / distribucion",
+  "evidencia": {
+   "etapa": "Transito MCR a CDR",
+   "entidad": "068 HIPERMERCADO NEUQUEN",
+   "comparado_contra": "sucursales del CDR 389",
+   "envios": 77,
+   "horas_mediana": 65.3,
+   "horas_referencia_pares": 17.0,
+   "veces_la_referencia": 3.85,
+   "horas_p90": 66.1
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R04-5437acc3",
+  "regla": "R04",
+  "regla_nombre": "Nodo por encima de su tiempo de referencia",
+  "entidad": "nodo:Transito MCR a CDR|069 C. DE PATAGONES",
+  "nodo": "Transporte",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "media",
+  "valor": 1.51,
+  "umbral": 1.3,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "media",
+    "valor": 1.51
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "media",
+    "valor": 1.51
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "069 C. DE PATAGONES en \"Transito MCR a CDR\": 37.3 h, 1.5 veces sus pares",
+  "pregunta": "Que esta pasando en la operacion?",
+  "accion": "Comparar contra el mismo nodo el mes anterior y contra los nodos pares. Si el exceso esta en una espera y no en una tarea, el problema es de programacion de salidas, no de productividad.",
+  "responsable": "Transporte / distribucion",
+  "evidencia": {
+   "etapa": "Transito MCR a CDR",
+   "entidad": "069 C. DE PATAGONES",
+   "comparado_contra": "sucursales del CDR 079",
+   "envios": 484,
+   "horas_mediana": 37.3,
+   "horas_referencia_pares": 24.7,
+   "veces_la_referencia": 1.51,
+   "horas_p90": 47.1
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R04-681c1598",
+  "regla": "R04",
+  "regla_nombre": "Nodo por encima de su tiempo de referencia",
+  "entidad": "nodo:Transito MCR a CDR|047 VIEDMA 2",
+  "nodo": "Transporte",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "media",
+  "valor": 1.36,
+  "umbral": 1.3,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "media",
+    "valor": 1.36
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "media",
+    "valor": 1.36
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "047 VIEDMA 2 en \"Transito MCR a CDR\": 33.6 h, 1.4 veces sus pares",
+  "pregunta": "Que esta pasando en la operacion?",
+  "accion": "Comparar contra el mismo nodo el mes anterior y contra los nodos pares. Si el exceso esta en una espera y no en una tarea, el problema es de programacion de salidas, no de productividad.",
+  "responsable": "Transporte / distribucion",
+  "evidencia": {
+   "etapa": "Transito MCR a CDR",
+   "entidad": "047 VIEDMA 2",
+   "comparado_contra": "sucursales del CDR 079",
+   "envios": 1552,
+   "horas_mediana": 33.6,
+   "horas_referencia_pares": 24.7,
+   "veces_la_referencia": 1.36,
+   "horas_p90": 46.7
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R04-fb33fcf2",
+  "regla": "R04",
+  "regla_nombre": "Nodo por encima de su tiempo de referencia",
+  "entidad": "nodo:Transito MCR a CDR|216 CHOELE CHOEL",
+  "nodo": "Transporte",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "media",
+  "valor": 1.36,
+  "umbral": 1.3,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "media",
+    "valor": 1.36
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "media",
+    "valor": 1.36
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "216 CHOELE CHOEL en \"Transito MCR a CDR\": 33.6 h, 1.4 veces sus pares",
+  "pregunta": "Que esta pasando en la operacion?",
+  "accion": "Comparar contra el mismo nodo el mes anterior y contra los nodos pares. Si el exceso esta en una espera y no en una tarea, el problema es de programacion de salidas, no de productividad.",
+  "responsable": "Transporte / distribucion",
+  "evidencia": {
+   "etapa": "Transito MCR a CDR",
+   "entidad": "216 CHOELE CHOEL",
+   "comparado_contra": "sucursales del CDR 079",
+   "envios": 534,
+   "horas_mediana": 33.6,
+   "horas_referencia_pares": 24.7,
+   "veces_la_referencia": 1.36,
+   "horas_p90": 46.0
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R04-9ed03f75",
+  "regla": "R04",
+  "regla_nombre": "Nodo por encima de su tiempo de referencia",
+  "entidad": "nodo_grupo:Transito MCR a sucursal",
+  "nodo": "Transporte",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "critica",
+  "valor": 28,
+  "umbral": 1.3,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "critica",
+    "valor": 28
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "critica",
+    "valor": 28
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "28 de 57 por encima de sus pares en \"Transito MCR a sucursal\"",
+  "pregunta": "Que esta pasando en la operacion?",
+  "accion": "Comparar contra el mismo nodo el mes anterior y contra los nodos pares. Si el exceso esta en una espera y no en una tarea, el problema es de programacion de salidas, no de productividad.",
+  "responsable": "Transporte / distribucion",
+  "evidencia": {
+   "etapa": "Transito MCR a sucursal",
+   "entidades_fuera_de_referencia": 28,
+   "entidades_evaluadas": 57,
+   "comparacion": "cada una contra su grupo de pares",
+   "razon_peor": 6.01,
+   "razon_mediana": 1.91,
+   "detalle": [
+    {
+     "entidad": "038 USHUAIA",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 376,
+     "horas_mediana": 166.1,
+     "horas_pares": 27.6,
+     "veces_los_pares": 6.01
+    },
+    {
+     "entidad": "074 RIO GRANDE 4",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 830,
+     "horas_mediana": 153.7,
+     "horas_pares": 27.6,
+     "veces_los_pares": 5.56
+    },
+    {
+     "entidad": "960 DEPOSITO 30NOVIEMBRE - LAOL",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 308,
+     "horas_mediana": 151.5,
+     "horas_pares": 27.6,
+     "veces_los_pares": 5.48
+    },
+    {
+     "entidad": "356 CENTENARIO II",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 121,
+     "horas_mediana": 118.0,
+     "horas_pares": 27.6,
+     "veces_los_pares": 4.27
+    },
+    {
+     "entidad": "021 COMODORO RIVADAVIA",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 283,
+     "horas_mediana": 102.2,
+     "horas_pares": 27.6,
+     "veces_los_pares": 3.7
+    },
+    {
+     "entidad": "031 CALETA OLIVIA",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 147,
+     "horas_mediana": 101.2,
+     "horas_pares": 27.6,
+     "veces_los_pares": 3.66
+    },
+    {
+     "entidad": "357 SAN PATRICIO DEL CHAÑAR",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 132,
+     "horas_mediana": 98.7,
+     "horas_pares": 27.6,
+     "veces_los_pares": 3.57
+    },
+    {
+     "entidad": "022 FILIAL SAN MARTIN",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 48,
+     "horas_mediana": 78.7,
+     "horas_pares": 27.6,
+     "veces_los_pares": 2.85
+    },
+    {
+     "entidad": "266 ANELO",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 123,
+     "horas_mediana": 76.9,
+     "horas_pares": 27.6,
+     "veces_los_pares": 2.78
+    },
+    {
+     "entidad": "238 AUTOSERVICIO CIPOLLETTI 4",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 1074,
+     "horas_mediana": 74.8,
+     "horas_pares": 27.6,
+     "veces_los_pares": 2.7
+    },
+    {
+     "entidad": "259 CUTRAL CO",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 317,
+     "horas_mediana": 73.9,
+     "horas_pares": 27.6,
+     "veces_los_pares": 2.67
+    },
+    {
+     "entidad": "076 PLAZA HUINCUL",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 568,
+     "horas_mediana": 62.2,
+     "horas_pares": 27.6,
+     "veces_los_pares": 2.25
+    },
+    {
+     "entidad": "265 CINCO SALTOS 1",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 612,
+     "horas_mediana": 56.8,
+     "horas_pares": 27.6,
+     "veces_los_pares": 2.05
+    },
+    {
+     "entidad": "363 FERNANDEZ ORO",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 58,
+     "horas_mediana": 54.2,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.96
+    },
+    {
+     "entidad": "162 BELGRANO 1",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 510,
+     "horas_mediana": 51.6,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.87
+    },
+    {
+     "entidad": "213 CENTENARIO 1",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 508,
+     "horas_mediana": 51.0,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.85
+    },
+    {
+     "entidad": "172 RINCON DE LOS SAUCES",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 384,
+     "horas_mediana": 51.0,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.84
+    },
+    {
+     "entidad": "050 ZAPALA",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 688,
+     "horas_mediana": 50.8,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.84
+    },
+    {
+     "entidad": "182 PLOTTIER",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 682,
+     "horas_mediana": 50.0,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.81
+    },
+    {
+     "entidad": "386 HIPERMERCADO POSADAS",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 68,
+     "horas_mediana": 50.0,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.81
+    },
+    {
+     "entidad": "048 VILLA REGINA",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 348,
+     "horas_mediana": 49.3,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.78
+    },
+    {
+     "entidad": "384 HIPERMERCADO SALTA",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 37,
+     "horas_mediana": 48.6,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.76
+    },
+    {
+     "entidad": "053 ALLEN",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 164,
+     "horas_mediana": 47.4,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.72
+    },
+    {
+     "entidad": "068 HIPERMERCADO NEUQUEN",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 1271,
+     "horas_mediana": 47.0,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.7
+    },
+    {
+     "entidad": "156 QUIJOTE SAN JORGE",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 67,
+     "horas_mediana": 46.2,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.67
+    },
+    {
+     "entidad": "387 HIPERMERCADO ROSARIO",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 168,
+     "horas_mediana": 43.2,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.56
+    },
+    {
+     "entidad": "188 CATRIEL",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 91,
+     "horas_mediana": 42.3,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.53
+    },
+    {
+     "entidad": "090 SANTA ROSA",
+     "pares": "sucursales del CDR directo MCR",
+     "envios": 1059,
+     "horas_mediana": 39.8,
+     "horas_pares": 27.6,
+     "veces_los_pares": 1.44
+    }
+   ]
+  },
+  "agregada": true,
+  "notificar": false
+ },
+ {
+  "id": "R05-74a297e9",
+  "regla": "R05",
+  "regla_nombre": "Plazo prometido imposible de cumplir",
+  "entidad": "grupo:promesa",
+  "nodo": "Promesa",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "critica",
+  "valor": 30,
+  "umbral": 0,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "critica",
+    "valor": 30
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "critica",
+    "valor": 30
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "30 de 124 sucursales prometen menos de lo que tardan",
+  "pregunta": "Quien deberia intervenir?",
+  "accion": "Recalibrar el lead time publicado de esa sucursal. No es un problema de operacion: con el tiempo real actual, el plazo no se puede cumplir ni trabajando bien. Es la correccion mas barata del tablero.",
+  "responsable": "Logistica Online - definicion de plazos",
+  "evidencia": {
+   "sucursales_con_promesa_incumplible": 30,
+   "sucursales_evaluadas": 124,
+   "envios_afectados": 13566,
+   "holgura_peor_dias": -4,
+   "holgura_mediana_dias": -1.0,
+   "detalle": [
+    {
+     "sucursal": "387 HIPERMERCADO ROSARIO",
+     "envios": 329,
+     "promesa_dias": 5,
+     "real_p50": 9,
+     "real_p75": 10,
+     "real_p90": 14,
+     "holgura_dias": -4,
+     "incumplimiento_pct": 78.4
+    },
+    {
+     "sucursal": "388 HIPERMERCADO RAFAELA",
+     "envios": 100,
+     "promesa_dias": 5.0,
+     "real_p50": 9,
+     "real_p75": 10,
+     "real_p90": 15,
+     "holgura_dias": -4.0,
+     "incumplimiento_pct": 69.0
+    },
+    {
+     "sucursal": "960 DEPOSITO 30NOVIEMBRE - LAOL",
+     "envios": 314,
+     "promesa_dias": 8.0,
+     "real_p50": 12,
+     "real_p75": 19,
+     "real_p90": 24,
+     "holgura_dias": -4.0,
+     "incumplimiento_pct": 55.4
+    },
+    {
+     "sucursal": "378 HIPERMERCADO RIVERA INDARTE",
+     "envios": 197,
+     "promesa_dias": 5,
+     "real_p50": 8,
+     "real_p75": 11,
+     "real_p90": 15,
+     "holgura_dias": -3,
+     "incumplimiento_pct": 75.1
+    },
+    {
+     "sucursal": "379 HIPERMERCADO JACINTO RIOS",
+     "envios": 377,
+     "promesa_dias": 5,
+     "real_p50": 8,
+     "real_p75": 9,
+     "real_p90": 13,
+     "holgura_dias": -3,
+     "incumplimiento_pct": 71.9
+    },
+    {
+     "sucursal": "163 SIERRA GRANDE",
+     "envios": 362,
+     "promesa_dias": 7.0,
+     "real_p50": 9,
+     "real_p75": 11,
+     "real_p90": 18,
+     "holgura_dias": -2.0,
+     "incumplimiento_pct": 56.1
+    },
+    {
+     "sucursal": "208 LAS GRUTAS",
+     "envios": 271,
+     "promesa_dias": 7,
+     "real_p50": 9,
+     "real_p75": 12,
+     "real_p90": 19,
+     "holgura_dias": -2,
+     "incumplimiento_pct": 44.6
+    },
+    {
+     "sucursal": "377 HIPERMERCADO LUGONES",
+     "envios": 361,
+     "promesa_dias": 5,
+     "real_p50": 7,
+     "real_p75": 8,
+     "real_p90": 10,
+     "holgura_dias": -2,
+     "incumplimiento_pct": 70.4
+    },
+    {
+     "sucursal": "380 HIPERMERCADO RUTA 9",
+     "envios": 212,
+     "promesa_dias": 5.0,
+     "real_p50": 7,
+     "real_p75": 8,
+     "real_p90": 13,
+     "holgura_dias": -2.0,
+     "incumplimiento_pct": 64.2
+    },
+    {
+     "sucursal": "386 HIPERMERCADO POSADAS",
+     "envios": 227,
+     "promesa_dias": 8,
+     "real_p50": 10,
+     "real_p75": 13,
+     "real_p90": 17,
+     "holgura_dias": -2,
+     "incumplimiento_pct": 51.5
+    },
+    {
+     "sucursal": "046 SAN ANTONIO OESTE",
+     "envios": 435,
+     "promesa_dias": 7,
+     "real_p50": 8,
+     "real_p75": 11,
+     "real_p90": 16,
+     "holgura_dias": -1,
+     "incumplimiento_pct": 43.0
+    },
+    {
+     "sucursal": "200 RIO GALLEGOS 9",
+     "envios": 145,
+     "promesa_dias": 11,
+     "real_p50": 12,
+     "real_p75": 15,
+     "real_p90": 19,
+     "holgura_dias": -1,
+     "incumplimiento_pct": 23.4
+    },
+    {
+     "sucursal": "382 HIPERMERCADO TUCUMAN 1",
+     "envios": 249,
+     "promesa_dias": 7,
+     "real_p50": 8,
+     "real_p75": 11,
+     "real_p90": 13,
+     "holgura_dias": -1,
+     "incumplimiento_pct": 45.8
+    },
+    {
+     "sucursal": "383 HIPERMERCADO TUCUMAN 2",
+     "envios": 242,
+     "promesa_dias": 7.0,
+     "real_p50": 8,
+     "real_p75": 12,
+     "real_p90": 16,
+     "holgura_dias": -1.0,
+     "incumplimiento_pct": 43.0
+    },
+    {
+     "sucursal": "384 HIPERMERCADO SALTA",
+     "envios": 162,
+     "promesa_dias": 8.0,
+     "real_p50": 9,
+     "real_p75": 11,
+     "real_p90": 13,
+     "holgura_dias": -1.0,
+     "incumplimiento_pct": 48.8
+    },
+    {
+     "sucursal": "385 HIPERMERCADO SGO DEL ESTERO",
+     "envios": 199,
+     "promesa_dias": 7,
+     "real_p50": 8,
+     "real_p75": 11,
+     "real_p90": 14,
+     "holgura_dias": -1,
+     "incumplimiento_pct": 55.8
+    },
+    {
+     "sucursal": "001 DIRECCION GENERAL",
+     "envios": 801,
+     "promesa_dias": 3,
+     "real_p50": 3,
+     "real_p75": 3,
+     "real_p90": 5,
+     "holgura_dias": 0,
+     "incumplimiento_pct": 21.5
+    },
+    {
+     "sucursal": "012 TRELEW",
+     "envios": 1813,
+     "promesa_dias": 7,
+     "real_p50": 7,
+     "real_p75": 9,
+     "real_p90": 15,
+     "holgura_dias": 0,
+     "incumplimiento_pct": 23.0
+    },
+    {
+     "sucursal": "047 VIEDMA 2",
+     "envios": 1618,
+     "promesa_dias": 6.0,
+     "real_p50": 6,
+     "real_p75": 7,
+     "real_p90": 14,
+     "holgura_dias": 0.0,
+     "incumplimiento_pct": 19.4
+    },
+    {
+     "sucursal": "069 C. DE PATAGONES",
+     "envios": 490,
+     "promesa_dias": 6.0,
+     "real_p50": 6,
+     "real_p75": 8,
+     "real_p90": 14,
+     "holgura_dias": 0.0,
+     "incumplimiento_pct": 24.3
+    },
+    {
+     "sucursal": "076 PLAZA HUINCUL",
+     "envios": 754,
+     "promesa_dias": 8.0,
+     "real_p50": 8,
+     "real_p75": 11,
+     "real_p90": 16,
+     "holgura_dias": 0.0,
+     "incumplimiento_pct": 26.5
+    },
+    {
+     "sucursal": "138 RIO TURBIO",
+     "envios": 330,
+     "promesa_dias": 11.0,
+     "real_p50": 11,
+     "real_p75": 15,
+     "real_p90": 21,
+     "holgura_dias": 0.0,
+     "incumplimiento_pct": 16.7
+    },
+    {
+     "sucursal": "172 RINCON DE LOS SAUCES",
+     "envios": 548,
+     "promesa_dias": 9.0,
+     "real_p50": 9,
+     "real_p75": 11,
+     "real_p90": 17,
+     "holgura_dias": 0.0,
+     "incumplimiento_pct": 19.0
+    },
+    {
+     "sucursal": "192 SAN JULIAN",
+     "envios": 321,
+     "promesa_dias": 11,
+     "real_p50": 11,
+     "real_p75": 13,
+     "real_p90": 20,
+     "holgura_dias": 0,
+     "incumplimiento_pct": 17.4
+    },
+    {
+     "sucursal": "204 28 DE NOVIEMBRE 2",
+     "envios": 334,
+     "promesa_dias": 11.0,
+     "real_p50": 11,
+     "real_p75": 14,
+     "real_p90": 21,
+     "holgura_dias": 0.0,
+     "incumplimiento_pct": 20.7
+    },
+    {
+     "sucursal": "220 RIO GRANDE 5",
+     "envios": 402,
+     "promesa_dias": 12.0,
+     "real_p50": 12,
+     "real_p75": 15,
+     "real_p90": 20,
+     "holgura_dias": 0.0,
+     "incumplimiento_pct": 23.9
+    },
+    {
+     "sucursal": "259 CUTRAL CO",
+     "envios": 414,
+     "promesa_dias": 9.0,
+     "real_p50": 9,
+     "real_p75": 14,
+     "real_p90": 18,
+     "holgura_dias": 0.0,
+     "incumplimiento_pct": 23.7
+    },
+    {
+     "sucursal": "356 CENTENARIO II",
+     "envios": 147,
+     "promesa_dias": 10,
+     "real_p50": 10,
+     "real_p75": 15,
+     "real_p90": 18,
+     "holgura_dias": 0,
+     "incumplimiento_pct": 35.4
+    },
+    {
+     "sucursal": "360 RIO GALLEGOS 11",
+     "envios": 175,
+     "promesa_dias": 11,
+     "real_p50": 11,
+     "real_p75": 15,
+     "real_p90": 19,
+     "holgura_dias": 0,
+     "incumplimiento_pct": 15.4
+    },
+    {
+     "sucursal": "953 DEPOSITO TERCEROS ANDREANI",
+     "envios": 1237,
+     "promesa_dias": 7,
+     "real_p50": 7,
+     "real_p75": 12,
+     "real_p90": 20,
+     "holgura_dias": 0,
+     "incumplimiento_pct": 38.6
+    }
+   ]
+  },
+  "agregada": true,
+  "notificar": false
+ },
+ {
+  "id": "R06-14023a3d",
+  "regla": "R06",
+  "regla_nombre": "Registro incompleto que impide reclamar",
+  "entidad": "datos:ut|circuito andreani",
+  "nodo": "Datos",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "critica",
+  "valor": 93.5,
+  "umbral": 2.0,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "critica",
+    "valor": 93.5
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "critica",
+    "valor": 93.5
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "circuito andreani: 93.5% de las lineas sin \"ut\"",
+  "pregunta": "Quien deberia intervenir y con que informacion?",
+  "accion": "Sin UT ni numero de expedicion no se puede reclamar una entrega al transporte: no hay con que identificarla. Corregir en el origen del dato.",
+  "responsable": "Sistemas / dueno del circuito 1060",
+  "evidencia": {
+   "campo": "ut",
+   "grupo": "circuito andreani",
+   "lineas": 108,
+   "lineas_sin_dato": 101,
+   "porcentaje": 93.5
+  },
+  "agregada": false,
+  "notificar": false
+ },
+ {
+  "id": "R08-914563f0",
+  "regla": "R08",
+  "regla_nombre": "Pedido que ya necesito un reenvio",
+  "entidad": "grupo:reenvios",
+  "nodo": "Transporte",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "critica",
+  "valor": 421,
+  "umbral": 2,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "critica",
+    "valor": 421
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "critica",
+    "valor": 421
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "421 pedidos necesitaron mas de un envio",
+  "pregunta": "Que esta pasando en la operacion?",
+  "accion": "Revisar la causa del primer intento fallido antes de despachar el segundo. Un reenvio duplica el costo de la entrega y el cliente ya espero el plazo completo una vez.",
+  "responsable": "Transporte / distribucion",
+  "evidencia": {
+   "pedidos_con_reenvio": 421,
+   "intentos_max": 3,
+   "detalle": [
+    {
+     "pedido": "4998302",
+     "intentos": 3,
+     "sucursal": "RIO GALLEGOS 10",
+     "articulo": "MULTIFUNCION 0,72 2PUERTAS 2CAJONES"
+    },
+    {
+     "pedido": "4994986",
+     "intentos": 3,
+     "sucursal": "USHUAIA 5",
+     "articulo": "SET ORGANIZADORES CUBE BEIGE"
+    },
+    {
+     "pedido": "4995568",
+     "intentos": 3,
+     "sucursal": "LINCOLN",
+     "articulo": "TERMOTANQUE 50 L TSZ-50"
+    },
+    {
+     "pedido": "4996716",
+     "intentos": 3,
+     "sucursal": "SAN ANTONIO OESTE",
+     "articulo": "TERMOTANQUE MULTIGAS 80L TG80L"
+    },
+    {
+     "pedido": "4978096",
+     "intentos": 2,
+     "sucursal": "LABOULAYE",
+     "articulo": "PARLANTE BLUETOOTH 2X6,5\" ATR-621"
+    },
+    {
+     "pedido": "4981478",
+     "intentos": 2,
+     "sucursal": "PUERTO DESEADO",
+     "articulo": "LAVARROPAS SEMIAUTOM 7 KG LSC7001"
+    },
+    {
+     "pedido": "5008299",
+     "intentos": 2,
+     "sucursal": "TRELEW",
+     "articulo": "LAVAVAJILLAS INOX 10C WSFO3T2X"
+    },
+    {
+     "pedido": "5013144",
+     "intentos": 2,
+     "sucursal": "PERITO MORENO",
+     "articulo": "ROPERO R3 WENGUE"
+    },
+    {
+     "pedido": "5015180",
+     "intentos": 2,
+     "sucursal": "HIPERMERCADO RUTA 9",
+     "articulo": "BOWL NET VISON 14X6 CM"
+    },
+    {
+     "pedido": "5015474",
+     "intentos": 2,
+     "sucursal": "USHUAIA 5",
+     "articulo": "PLACARD 2 PUERTAS-ESTANTES Y 2 CAJ"
+    },
+    {
+     "pedido": "5015934",
+     "intentos": 2,
+     "sucursal": "FILIAL SAN MARTIN",
+     "articulo": "VANITORY 62X46 RECT GRIS 1AG."
+    },
+    {
+     "pedido": "5019748",
+     "intentos": 2,
+     "sucursal": "ARROYITO",
+     "articulo": "ESCRITORIO TURIN BLANCO PARAISO"
+    },
+    {
+     "pedido": "5020115",
+     "intentos": 2,
+     "sucursal": "CATRIEL",
+     "articulo": "RACK DE TV MT5000 NEGRO PARISO"
+    },
+    {
+     "pedido": "5020457",
+     "intentos": 2,
+     "sucursal": "TRELEW",
+     "articulo": "ROPERO R4 BLANCO"
+    },
+    {
+     "pedido": "5021395",
+     "intentos": 2,
+     "sucursal": "USHUAIA 5",
+     "articulo": "SILLA PETRA C/APOYABRAZOS"
+    },
+    {
+     "pedido": "5021656",
+     "intentos": 2,
+     "sucursal": "AUTOSERVICIO CIPOLLETTI 4",
+     "articulo": "PLACARD NIZA 1,90M ROBLE CON GRIS"
+    },
+    {
+     "pedido": "5022338",
+     "intentos": 2,
+     "sucursal": "RINCON DE LOS SAUCES",
+     "articulo": "TERMOTANQUE MULTIGAS 120L TG120L"
+    },
+    {
+     "pedido": "5023565",
+     "intentos": 2,
+     "sucursal": "PUERTO MADRYN 3",
+     "articulo": "CAMA CON CAJONES ROBLE"
+    },
+    {
+     "pedido": "5023786",
+     "intentos": 2,
+     "sucursal": "ANELO",
+     "articulo": "CONJUNTO RESORTES 1P 80X190 MONETT"
+    },
+    {
+     "pedido": "5025779",
+     "intentos": 2,
+     "sucursal": "BARILOCHE 2",
+     "articulo": "PLACARD 4 PUERTA-ESTANTES Y 4 CAJ"
+    },
+    {
+     "pedido": "5026002",
+     "intentos": 2,
+     "sucursal": "CINCO SALTOS 1",
+     "articulo": "CONJUNT RESORTES 2P 130X190 MONETT"
+    },
+    {
+     "pedido": "5026136",
+     "intentos": 2,
+     "sucursal": "DEPOSITO 30NOVIEMBRE - LAOL",
+     "articulo": "COMODA NIZA 3 CAJONES BL"
+    },
+    {
+     "pedido": "5026162",
+     "intentos": 2,
+     "sucursal": "USHUAIA 5",
+     "articulo": "CONTENEDOR 1153X1417X301MM"
+    },
+    {
+     "pedido": "5026730",
+     "intentos": 2,
+     "sucursal": "CALAFATE II",
+     "articulo": "ESCRITORIO CON BIBLIOTECA"
+    },
+    {
+     "pedido": "5027101",
+     "intentos": 2,
+     "sucursal": "PICO TRUNCADO 2",
+     "articulo": "CONJUNTO EXPRESS LIGHT 2P 140X190"
+    },
+    {
+     "pedido": "5027376",
+     "intentos": 2,
+     "sucursal": "EL BOLSON 2",
+     "articulo": "BANQUETA TOLIX C/RESPALDO ROJA"
+    },
+    {
+     "pedido": "5029563",
+     "intentos": 2,
+     "sucursal": "GENERAL ROCA",
+     "articulo": "ESCALADOR PRO"
+    },
+    {
+     "pedido": "5029618",
+     "intentos": 2,
+     "sucursal": "HIPERMERCADO SALTA",
+     "articulo": "COLCHON INFLABLE AEROLUXE  FULL"
+    },
+    {
+     "pedido": "5031017",
+     "intentos": 2,
+     "sucursal": "QUIJOTE SAN JORGE",
+     "articulo": "RESPALDO CAMA REG C/MESA LUZ"
+    },
+    {
+     "pedido": "5031046",
+     "intentos": 2,
+     "sucursal": "PUERTO MADRYN 3",
+     "articulo": "MUEBLE PARA MICROONDAS G10 BLANCO"
+    },
+    {
+     "pedido": "5031103",
+     "intentos": 2,
+     "sucursal": "BRAGADO",
+     "articulo": "LIJADORA ORBITAL DELTA A BATERIA"
+    },
+    {
+     "pedido": "5033278",
+     "intentos": 2,
+     "sucursal": "GENERAL ROCA",
+     "articulo": "LED TV 50\" B5026UG6G"
+    },
+    {
+     "pedido": "5034031",
+     "intentos": 2,
+     "sucursal": "INTENDENTE ALVEAR",
+     "articulo": "LIBRO 73 MARGARITAS"
+    },
+    {
+     "pedido": "5034433",
+     "intentos": 2,
+     "sucursal": "COMODORO RIVADAVIA",
+     "articulo": "CONJUNT RESORT 1 1/2P100X190JOPLIN"
+    },
+    {
+     "pedido": "5034574",
+     "intentos": 2,
+     "sucursal": "PUERTO MADRYN 3",
+     "articulo": "VASO TRAGO LARGO BURBUJAS 400CC"
+    },
+    {
+     "pedido": "5034615",
+     "intentos": 2,
+     "sucursal": "SAN PATRICIO DEL CHAÑAR",
+     "articulo": "SMARTWATCH W10 DOBLE MALLA NEGRO"
+    },
+    {
+     "pedido": "5034652",
+     "intentos": 2,
+     "sucursal": "RIO GRANDE 4",
+     "articulo": "MESA EXTENSIBLE"
+    },
+    {
+     "pedido": "5034739",
+     "intentos": 2,
+     "sucursal": "RIO GRANDE 4",
+     "articulo": "ORGANIZADOR CON TAPA 38L"
+    },
+    {
+     "pedido": "5034817",
+     "intentos": 2,
+     "sucursal": "CUTRAL CO",
+     "articulo": "PIZARRA 2 EN 1"
+    },
+    {
+     "pedido": "5035106",
+     "intentos": 2,
+     "sucursal": "28 DE NOVIEMBRE 2",
+     "articulo": "ESCRITORIO C/CAJON 1350MM JACARANDA"
+    }
+   ]
+  },
+  "agregada": true,
+  "notificar": false
+ },
+ {
+  "id": "R09-205a73f0",
+  "regla": "R09",
+  "regla_nombre": "Backorder envejecido",
+  "entidad": "grupo:backorder",
+  "nodo": "Abastecimiento",
+  "detectada": "2026-09-01 08:28",
+  "ultima_vez": "2026-09-01 08:28",
+  "estado": "abierta",
+  "severidad": "critica",
+  "valor": 143,
+  "umbral": 10,
+  "veces_vista": 2,
+  "notificada": "2026-09-01 08:28",
+  "historial": [
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "detectada",
+    "sev": "critica",
+    "valor": 143
+   },
+   {
+    "ts": "2026-09-01 08:28",
+    "ev": "notificada",
+    "sev": "critica",
+    "valor": 143
+   }
+  ],
+  "semanas": [
+   "2026-W36"
+  ],
+  "titulo": "143 lineas en backorder hace mas de 10 dias",
+  "pregunta": "Que situaciones podrian empeorar?",
+  "accion": "Confirmar con el proveedor o liberar el pedido para anulacion. El cliente ya pago y no tiene fecha.",
+  "responsable": "Abastecimiento / compras",
+  "evidencia": {
+   "lineas": 143,
+   "dias_mediana": 12,
+   "dias_max": 64,
+   "sucursales_afectadas": 65,
+   "detalle": [
+    {
+     "pedido": "5006939",
+     "articulo": "CONJUNTO 1 1/2 PLAZA 90X190 ONEPLUS",
+     "sucursal": "TRELEW",
+     "dias": 64,
+     "faltante": 1
+    },
+    {
+     "pedido": "5015269",
+     "articulo": "COLCHON UPPER-AD MAX 2 P 140X190",
+     "sucursal": "RIO GRANDE 4",
+     "dias": 57,
+     "faltante": 1
+    },
+    {
+     "pedido": "5028003",
+     "articulo": "SOPORTE MAGNETICO 5\"",
+     "sucursal": "COMODORO RIVADAVIA",
+     "dias": 46,
+     "faltante": 2
+    },
+    {
+     "pedido": "5036506",
+     "articulo": "CONJUNTO 2 1/2P 160X200 ONE PLUS",
+     "sucursal": "DEPOSITO 30NOVIEMBRE - LAOL",
+     "dias": 38,
+     "faltante": 1
+    },
+    {
+     "pedido": "5037125",
+     "articulo": "BOTINERO 3P 1C JACARANDA",
+     "sucursal": "RAWSON",
+     "dias": 38,
+     "faltante": 1
+    },
+    {
+     "pedido": "5037225",
+     "articulo": "SOPORTE MAGNETICO 5\"",
+     "sucursal": "LINCOLN",
+     "dias": 38,
+     "faltante": 3
+    },
+    {
+     "pedido": "5037588",
+     "articulo": "CONJUNTO 2 1/2P 160X200 ONE PLUS",
+     "sucursal": "V.LA ANGOSTURA 2",
+     "dias": 37,
+     "faltante": 1
+    },
+    {
+     "pedido": "5041035",
+     "articulo": "COLCHON UPPER-AD MAX 1 P 080X190",
+     "sucursal": "DEPOSITO TERCEROS ANDREANI",
+     "dias": 34,
+     "faltante": 1
+    },
+    {
+     "pedido": "5046716",
+     "articulo": "MESA DE LUZ 1 CAJON 1 PUERTA BLANCO",
+     "sucursal": "VILLA REGINA",
+     "dias": 30,
+     "faltante": 1
+    },
+    {
+     "pedido": "5047397",
+     "articulo": "PULVERIZADOR MANUAL 8L",
+     "sucursal": "RIO TURBIO",
+     "dias": 29,
+     "faltante": 1
+    },
+    {
+     "pedido": "5049227",
+     "articulo": "BAJO MESADA 1.60 ABEDUL",
+     "sucursal": "BARILOCHE 2",
+     "dias": 27,
+     "faltante": 1
+    },
+    {
+     "pedido": "5052441",
+     "articulo": "COLCHON 2 1/2P 160X200 ONE PLUS",
+     "sucursal": "DEPOSITO TERCEROS ANDREANI",
+     "dias": 25,
+     "faltante": 1
+    },
+    {
+     "pedido": "5054525",
+     "articulo": "CONJUNTO 1 1/2 P 100X200 E SUEZ ESP",
+     "sucursal": "GENERAL PICO",
+     "dias": 23,
+     "faltante": 1
+    },
+    {
+     "pedido": "5055218",
+     "articulo": "RACK DE TV MT4000 WENGUE",
+     "sucursal": "USHUAIA",
+     "dias": 23,
+     "faltante": 1
+    },
+    {
+     "pedido": "5056008",
+     "articulo": "PLACARD PUERTAS CORREDIZAS 1.8M RB",
+     "sucursal": "TRELEW",
+     "dias": 22,
+     "faltante": 1
+    },
+    {
+     "pedido": "5057801",
+     "articulo": "PULVERIZADOR 1.5 LITROS P/JARDIN",
+     "sucursal": "GOYA",
+     "dias": 21,
+     "faltante": 1
+    },
+    {
+     "pedido": "5058481",
+     "articulo": "PLACARD PUERTAS CORREDIZAS 1.8M RB",
+     "sucursal": "TRELEW",
+     "dias": 20,
+     "faltante": 1
+    },
+    {
+     "pedido": "5058491",
+     "articulo": "MOTOSIERRA 16 38CC BASICLINE",
+     "sucursal": "CENTENARIO 1",
+     "dias": 20,
+     "faltante": 1
+    },
+    {
+     "pedido": "5058614",
+     "articulo": "CUCHILLO MANGO FLOTANTE FUNDA",
+     "sucursal": "QUIJOTE SAN JORGE",
+     "dias": 20,
+     "faltante": 1
+    },
+    {
+     "pedido": "5059406",
+     "articulo": "SOMMIER PLEGABLE 140X190 2P",
+     "sucursal": "HIPERMERCADO ROSARIO",
+     "dias": 19,
+     "faltante": 1
+    },
+    {
+     "pedido": "5060167",
+     "articulo": "SOMMIER 1 1/2P 90X190X20 + PATA",
+     "sucursal": "PICO TRUNCADO 2",
+     "dias": 19,
+     "faltante": 1
+    },
+    {
+     "pedido": "5060441",
+     "articulo": "CONJUNTO DELUXE 80X190X20 1P",
+     "sucursal": "RIO COLORADO",
+     "dias": 18,
+     "faltante": 1
+    },
+    {
+     "pedido": "5062060",
+     "articulo": "ALACENA CONFORT 1.20M BLANCA",
+     "sucursal": "CALAFATE II",
+     "dias": 17,
+     "faltante": 1
+    },
+    {
+     "pedido": "5062217",
+     "articulo": "MESADA 120X60 C/ZOC DER. NEGRO",
+     "sucursal": "RAWSON",
+     "dias": 17,
+     "faltante": 1
+    },
+    {
+     "pedido": "5062357",
+     "articulo": "COMPRESOR FL50 2HP 50 LTS MONOF",
+     "sucursal": "CALETA OLIVIA",
+     "dias": 17,
+     "faltante": 1
+    },
+    {
+     "pedido": "5062978",
+     "articulo": "VANITORY 52X42 RECT BLANCO 3AG.",
+     "sucursal": "C. DE PATAGONES",
+     "dias": 17,
+     "faltante": 1
+    },
+    {
+     "pedido": "5063163",
+     "articulo": "COLCHON 2P 140X190 ONE PLUS",
+     "sucursal": "TREVELIN",
+     "dias": 16,
+     "faltante": 1
+    },
+    {
+     "pedido": "5063357",
+     "articulo": "PLACARD PUERTAS CORREDIZAS 1.8M RB",
+     "sucursal": "DEPOSITO TERCEROS ANDREANI",
+     "dias": 16,
+     "faltante": 1
+    },
+    {
+     "pedido": "5063535",
+     "articulo": "MESA DE TV INDUSTRIAL 1.40MT",
+     "sucursal": "RAWSON",
+     "dias": 16,
+     "faltante": 1
+    },
+    {
+     "pedido": "5063665",
+     "articulo": "MUEBLE P/MICROONDAS 2PTAS2EST BLANC",
+     "sucursal": "RIO GALLEGOS 6",
+     "dias": 16,
+     "faltante": 1
+    },
+    {
+     "pedido": "5063855",
+     "articulo": "CONJUNT RESORT 1 1/2P100X190MONETT",
+     "sucursal": "GENERAL PICO",
+     "dias": 16,
+     "faltante": 1
+    },
+    {
+     "pedido": "5064139",
+     "articulo": "VANITORY 52X42 RECT BLANCO 1AG.",
+     "sucursal": "VILLA REGINA",
+     "dias": 15,
+     "faltante": 1
+    },
+    {
+     "pedido": "5064278",
+     "articulo": "VANITORY 62X46 RECT GRIS 1AG.",
+     "sucursal": "LAS HERAS",
+     "dias": 15,
+     "faltante": 1
+    },
+    {
+     "pedido": "5064311",
+     "articulo": "PLACARD 2 PUERTAS-ESTANTES Y 2 CAJ",
+     "sucursal": "CALAFATE II",
+     "dias": 15,
+     "faltante": 1
+    },
+    {
+     "pedido": "5064339",
+     "articulo": "MESADA 160X53 RECT. S/ZOC GRIS O",
+     "sucursal": "VIEDMA 2",
+     "dias": 15,
+     "faltante": 1
+    },
+    {
+     "pedido": "5064352",
+     "articulo": "ROPERO 1.80MT WENGUE",
+     "sucursal": "SAN ANTONIO OESTE",
+     "dias": 15,
+     "faltante": 1
+    },
+    {
+     "pedido": "5064475",
+     "articulo": "RACK DE TV NIZA GRIS-ROBLE",
+     "sucursal": "DEPOSITO TERCEROS ANDREANI",
+     "dias": 15,
+     "faltante": 1
+    },
+    {
+     "pedido": "5064555",
+     "articulo": "ALACENA CONFORT 1.20M BLANCA",
+     "sucursal": "ESPERANZA II",
+     "dias": 15,
+     "faltante": 2
+    },
+    {
+     "pedido": "5064607",
+     "articulo": "CONTENEDOR 1153X1415X300MM ATAKAMA",
+     "sucursal": "TRENQUE LAUQUEN - SAIEP",
+     "dias": 15,
+     "faltante": 1
+    },
+    {
+     "pedido": "5064619",
+     "articulo": "RACK DE TV NIZA GRIS-ROBLE",
+     "sucursal": "SAN ANTONIO OESTE",
+     "dias": 15,
+     "faltante": 1
+    }
+   ]
+  },
+  "agregada": true,
+  "notificar": false
+ }
+]
