@@ -1,7 +1,7 @@
 {
  "corte": "2026-09-01 08:28",
  "alertas": 26,
- "a_notificar": 0,
+ "a_notificar": 26,
  "por_severidad": {
   "alta": 7,
   "media": 7,
@@ -26,8 +26,8 @@
   "R09": 1
  },
  "por_estado": {
-  "abierta": 26
+  "nueva": 26
  },
- "nuevas": 0,
+ "nuevas": 26,
  "resueltas_en_esta_corrida": 0
 }
