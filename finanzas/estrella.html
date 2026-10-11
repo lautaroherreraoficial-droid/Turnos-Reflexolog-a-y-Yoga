@@ -1,0 +1,1330 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estrella financiera</title>
+<meta name="description" content="Analisis de un negocio en 5 puntas: rentabilidad, liquidez, endeudamiento, eficiencia y crecimiento. Los datos quedan solo en este navegador.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 4l4.1 11.3 12.1.4-9.5 7.5 3.3 11.6L20 28l-10 6.8 3.3-11.6-9.5-7.5 12.1-.4z' fill='%23e3a008'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Ficha de analisis: a la izquierda los numeros del negocio armados como un estado
+   contable simplificado; a la derecha el veredicto, la estrella y el detalle de cada punta. */
+:root{
+  --bg:#f3f5f9;
+  --surface:#ffffff;
+  --surface-2:#eef1f6;
+  --line:#dde2ec;
+  --line-strong:#c4ccda;
+  --ink:#141a27;
+  --ink-dim:#525d74;
+  --ink-faint:#7c879e;
+  --accent:#3346c9;
+  --accent-ink:#ffffff;
+  --accent-soft:rgba(51,70,201,.09);
+  --accent-fill:rgba(51,70,201,.16);
+  --star:#e3a008;
+  --star-empty:#d5dae4;
+  --good:#0b8a55;
+  --good-soft:rgba(11,138,85,.11);
+  --warn:#b45f00;
+  --warn-soft:rgba(180,95,0,.11);
+  --bad:#c93434;
+  --bad-soft:rgba(201,52,52,.10);
+  --shadow:0 1px 2px rgba(20,26,39,.05),0 8px 24px rgba(20,26,39,.06);
+  --f-display:"Bricolage Grotesque","IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --f-data:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1018;
+    --surface:#141925;
+    --surface-2:#1b2130;
+    --line:#262e40;
+    --line-strong:#38425a;
+    --ink:#e8ecf5;
+    --ink-dim:#a0aac0;
+    --ink-faint:#717b94;
+    --accent:#8f9dff;
+    --accent-ink:#0d1018;
+    --accent-soft:rgba(143,157,255,.11);
+    --accent-fill:rgba(143,157,255,.20);
+    --star:#f5c242;
+    --star-empty:#323a4e;
+    --good:#3ccf8e;
+    --good-soft:rgba(60,207,142,.13);
+    --warn:#f2a33a;
+    --warn-soft:rgba(242,163,58,.13);
+    --bad:#f47272;
+    --bad-soft:rgba(244,114,114,.13);
+    --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1018;
+  --surface:#141925;
+  --surface-2:#1b2130;
+  --line:#262e40;
+  --line-strong:#38425a;
+  --ink:#e8ecf5;
+  --ink-dim:#a0aac0;
+  --ink-faint:#717b94;
+  --accent:#8f9dff;
+  --accent-ink:#0d1018;
+  --accent-soft:rgba(143,157,255,.11);
+  --accent-fill:rgba(143,157,255,.20);
+  --star:#f5c242;
+  --star-empty:#323a4e;
+  --good:#3ccf8e;
+  --good-soft:rgba(60,207,142,.13);
+  --warn:#f2a33a;
+  --warn-soft:rgba(242,163,58,.13);
+  --bad:#f47272;
+  --bad-soft:rgba(244,114,114,.13);
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+
+/* ---------- Base ---------- */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;letter-spacing:-.015em;line-height:1.15;margin:0;text-wrap:balance}
+p{margin:0}
+button,input,textarea{font:inherit;color:inherit}
+[hidden]{display:none !important}
+.oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.pagina{
+  max-width:1240px;
+  margin:0 auto;
+  padding-inline:clamp(16px,3vw,32px);
+  padding-block:22px 48px;
+  display:grid;
+  gap:20px;
+}
+
+/* ---------- Botones ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:38px;padding:7px 14px;
+  border:1px solid var(--line-strong);border-radius:10px;
+  background:var(--surface);color:var(--ink);
+  font-size:14px;font-weight:500;cursor:pointer;
+  transition:border-color .15s,background-color .15s,color .15s;
+}
+.btn:hover{border-color:var(--accent)}
+.btn-primario{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn-primario:hover{filter:brightness(1.08)}
+.btn-peligro:hover{border-color:var(--bad);color:var(--bad)}
+.btn.armado{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.btn-texto{border-color:transparent;background:transparent;color:var(--accent);padding-inline:6px}
+.btn-texto:hover{border-color:transparent;text-decoration:underline}
+
+/* ---------- Cabecera ---------- */
+.cabecera{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 20px}
+.marca{display:flex;align-items:center;gap:12px;min-width:0}
+.marca svg{width:42px;height:42px;flex:none}
+.marca svg path{fill:var(--star)}
+.marca h1{font-size:clamp(1.45rem,1.15rem + 1.2vw,2rem)}
+.marca p{color:var(--ink-dim);font-size:14px}
+.acciones{display:flex;flex-wrap:wrap;gap:8px}
+
+.aviso{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;
+  padding:12px 16px;border-radius:12px;
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  font-size:14px;
+}
+.aviso p{min-width:0;flex:1 1 280px}
+
+/* ---------- Importar / exportar ---------- */
+.io{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:14px}
+.io-cab{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.io-cab h2{font-size:1.15rem}
+.io-cols{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.io-col{display:grid;gap:10px;align-content:start;min-width:0}
+.io-col h3{font-size:1rem}
+.io-col p{font-size:14px;color:var(--ink-dim)}
+.io textarea{
+  width:100%;resize:vertical;min-height:120px;
+  border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);
+  padding:10px 12px;font-family:var(--f-data);font-size:12.5px;line-height:1.55;
+}
+.io textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.io-botones{display:flex;flex-wrap:wrap;gap:8px}
+.io-estado{font-size:14px;font-weight:500;min-height:1.5em}
+.io-estado.ok{color:var(--good)} .io-estado.mal{color:var(--bad)}
+code{font-family:var(--f-data);font-size:.9em;background:var(--surface-2);padding:1px 5px;border-radius:5px}
+
+/* ---------- Tablero ---------- */
+.tablero{
+  display:grid;gap:20px;
+  grid-template-columns:minmax(0,1fr);
+  grid-template-areas:"resumen" "datos" "detalle";
+}
+.resumen{grid-area:resumen}
+.datos{grid-area:datos}
+.detalle{grid-area:detalle}
+@media (min-width:980px){
+  .tablero{
+    grid-template-columns:minmax(350px,410px) minmax(0,1fr);
+    grid-template-areas:"datos resumen" "datos detalle";
+    align-items:start;
+  }
+  .datos{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);max-height:calc(100vh - 32px);overflow:auto;overscroll-behavior:contain}
+  .solo-celular{display:none !important}
+}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+
+/* ---------- Estrellas (puntaje 0 a 5) ---------- */
+.stars{
+  --v:0;
+  position:relative;display:inline-block;flex:none;
+  font-size:16px;line-height:1;letter-spacing:0;
+  font-family:"Segoe UI Symbol","Apple Symbols","Noto Sans Symbols 2",var(--f-body);
+}
+.stars::before{content:"★★★★★";color:var(--star-empty)}
+.stars::after{
+  content:"★★★★★";color:var(--star);
+  position:absolute;inset:0 auto 0 0;
+  width:calc(var(--v) / 5 * 100%);overflow:hidden;white-space:nowrap;
+  transition:width .35s ease;
+}
+.stars-lg{font-size:26px}
+.stars-sm{font-size:13px}
+
+/* ---------- Chips de estado ---------- */
+.chip{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:2px 9px 2px 7px;border-radius:99px;
+  font-size:12.5px;font-weight:600;white-space:nowrap;
+}
+.chip svg{width:12px;height:12px;flex:none}
+.chip svg path{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.chip.ok{background:var(--good-soft);color:var(--good)}
+.chip.ojo{background:var(--warn-soft);color:var(--warn)}
+.chip.mal{background:var(--bad-soft);color:var(--bad)}
+.chip.nd{background:var(--surface-2);color:var(--ink-faint)}
+
+/* ---------- Resumen ---------- */
+.resumen{
+  background:var(--surface);border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--shadow);container-type:inline-size;
+}
+.resumen-in{display:grid;gap:22px;padding:clamp(18px,3vw,28px);grid-template-columns:minmax(0,1fr)}
+@container (min-width:660px){
+  .resumen-in{grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);align-items:center}
+}
+.veredicto{display:grid;gap:18px;min-width:0}
+.ficha{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.ficha strong{font-family:var(--f-display);font-size:1.05rem}
+.ficha span{color:var(--ink-dim);font-size:14px}
+.nota{display:grid;gap:8px;justify-items:start}
+.nota-fila{display:flex;align-items:baseline;gap:8px}
+.nota-num{font-family:var(--f-display);font-size:clamp(3rem,2.4rem + 2.6vw,4.2rem);font-weight:700;line-height:.95;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.nota-de{font-family:var(--f-data);color:var(--ink-faint);font-size:15px}
+.nota-texto{color:var(--ink-dim);font-size:14.5px;max-width:52ch}
+.respuestas{display:grid;gap:10px;margin:0}
+.resp{display:grid;gap:3px;padding:12px 14px;border-radius:12px;background:var(--surface-2)}
+.resp dt{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:600}
+.resp dd{margin:0;color:var(--ink-dim);font-size:14px}
+.foco{border-left:3px solid var(--star);padding:2px 0 2px 12px;font-size:14px;color:var(--ink-dim)}
+.foco strong{color:var(--ink)}
+.vacio{display:grid;gap:10px;padding:8px 0}
+.vacio p{color:var(--ink-dim);max-width:46ch}
+
+/* ---------- Grafico de estrella ---------- */
+.grafico{position:relative;min-width:0}
+.radar{display:block;width:100%;height:auto;max-width:520px;margin:0 auto;overflow:visible}
+.r-fondo{fill:var(--surface-2);stroke:none}
+.r-anillo{fill:none;stroke:var(--line-strong);stroke-width:1}
+.r-eje{stroke:var(--line-strong);stroke-width:1}
+.r-sano{fill:none;stroke:var(--ink-faint);stroke-width:1.5;stroke-dasharray:5 4}
+.r-area{fill:var(--accent-fill);stroke:var(--accent);stroke-width:2;stroke-linejoin:round}
+.r-punto{stroke:var(--surface);stroke-width:2}
+.r-punto.ok{fill:var(--good)} .r-punto.ojo{fill:var(--warn)} .r-punto.mal{fill:var(--bad)} .r-punto.nd{fill:var(--surface);stroke:var(--ink-faint);stroke-width:1.5}
+.r-escala{fill:var(--ink-faint);font-family:var(--f-data);font-size:10px}
+.r-nombre{fill:var(--ink);font-family:var(--f-display);font-size:14px;font-weight:600}
+.r-valor{fill:var(--ink-dim);font-family:var(--f-data);font-size:12px}
+.r-hit{fill:transparent;cursor:pointer;outline:none}
+.r-hit:focus-visible{stroke:var(--accent);stroke-width:2}
+.leyenda{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;font-size:12.5px;color:var(--ink-dim);margin-top:6px}
+.leyenda span{display:inline-flex;align-items:center;gap:7px}
+.leyenda i{display:inline-block;width:22px;height:0;border-top:2px solid var(--accent)}
+.leyenda i.sano{border-top:2px dashed var(--ink-faint)}
+.tip{
+  position:absolute;z-index:5;pointer-events:none;
+  transform:translate(-50%,calc(-100% - 14px));
+  background:var(--ink);color:var(--bg);
+  padding:7px 10px;border-radius:8px;
+  font-size:13px;line-height:1.35;white-space:nowrap;
+  box-shadow:var(--shadow);
+}
+.tip b{font-family:var(--f-display)}
+
+/* ---------- Formulario (estado contable simplificado) ---------- */
+.datos{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px 18px 20px}
+.datos-cab{display:grid;gap:4px;margin-bottom:18px}
+.datos-cab h2{font-size:1.3rem}
+.datos-cab p{font-size:13.5px;color:var(--ink-dim)}
+.form{display:grid;gap:22px}
+.grupo{display:grid}
+.grupo-cab{display:grid;gap:2px;padding-bottom:6px;border-bottom:1px solid var(--line);margin-bottom:2px}
+.grupo-cab h3{font-size:1.02rem}
+.grupo-cab p{font-size:13px;color:var(--ink-dim)}
+.fila{
+  display:grid;
+  grid-template-columns:14px minmax(0,1fr) minmax(124px,44%);
+  column-gap:10px;row-gap:4px;align-items:center;
+  padding-block:7px;
+}
+.signo{font-family:var(--f-data);color:var(--ink-faint);font-size:14px;text-align:center}
+.fila-label{display:grid;gap:1px;min-width:0}
+.lbl{font-size:14px;font-weight:500}
+.ayuda{font-size:12.5px;color:var(--ink-faint);line-height:1.4}
+.entrada{
+  display:flex;align-items:center;gap:6px;
+  height:38px;padding-inline:10px;
+  border:1px solid var(--line-strong);border-radius:9px;background:var(--surface);
+  transition:border-color .15s,box-shadow .15s;
+}
+.entrada:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.entrada.invalida{border-color:var(--bad)}
+.entrada input{
+  flex:1;min-width:0;width:100%;height:100%;
+  border:0;padding:0;background:transparent;outline:none;
+  font-family:var(--f-data);font-size:14px;text-align:right;
+}
+.entrada input::placeholder{color:var(--ink-faint)}
+.pre,.suf{font-family:var(--f-data);font-size:13px;color:var(--ink-faint)}
+.fila .error{grid-column:2 / -1;font-size:12.5px;color:var(--bad);text-align:right}
+.fila-texto{grid-template-columns:14px minmax(0,1fr)}
+.fila-texto .entrada{grid-column:2}
+.fila-texto .entrada input{font-family:var(--f-body);text-align:left}
+.deriv{border-top:1px solid var(--line-strong);margin-top:2px}
+.deriv .lbl{font-weight:600}
+.deriv-valor{
+  font-family:var(--f-data);font-size:14px;font-weight:500;text-align:right;
+  padding-right:11px;font-variant-numeric:tabular-nums;
+}
+.deriv.total .deriv-valor{justify-self:end;padding-bottom:2px;border-bottom:3px double var(--ink-dim);padding-left:6px}
+.deriv-valor.neg{color:var(--bad)}
+.ver-resultado{justify-self:stretch}
+
+/* ---------- Detalle de las 5 puntas ---------- */
+.detalle{display:grid;gap:14px}
+.detalle-cab{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px}
+.detalle-cab h2{font-size:1.3rem}
+.detalle-cab p{font-size:13.5px;color:var(--ink-dim)}
+.puntas{display:grid;gap:12px}
+.punta{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:grid;gap:12px;scroll-margin-top:16px}
+.punta.resaltada{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.punta-cab{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px}
+.punta-tit{display:grid;gap:1px;min-width:0}
+.punta-tit h3{font-size:1.15rem}
+.punta-tit p{color:var(--ink-dim);font-size:14px}
+.punta-nota{display:flex;align-items:center;gap:10px}
+.punta-num{font-family:var(--f-data);font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
+.inds{list-style:none;margin:0;padding:0;display:grid}
+.ind{display:grid;gap:3px;padding-block:10px;border-top:1px solid var(--line)}
+.ind-top{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
+.ind-nombre{font-weight:600;font-size:14.5px;margin-right:auto}
+.ind-valor{font-family:var(--f-data);font-size:14px;font-weight:500;font-variant-numeric:tabular-nums}
+.ind-texto{font-size:14px;color:var(--ink);max-width:68ch}
+.ind-ref{font-size:12.5px;color:var(--ink-faint)}
+.ind.falta .ind-nombre,.ind.falta .ind-valor{color:var(--ink-faint)}
+.ind.falta .ind-texto{color:var(--ink-faint);font-style:italic}
+.consejo{font-size:14px;padding:10px 12px;border-radius:10px;background:var(--surface-2);color:var(--ink-dim)}
+.consejo strong{color:var(--ink)}
+
+/* ---------- Pie ---------- */
+.pie{display:grid;gap:12px;font-size:14px;color:var(--ink-dim)}
+.pie details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px}
+.pie summary{cursor:pointer;font-weight:600;color:var(--ink)}
+.pie .metodo{display:grid;gap:10px;margin-top:12px;max-width:72ch}
+.pie ul{margin:0;padding-left:20px;display:grid;gap:4px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body>
+<div class="pagina">
+
+  <header class="cabecera">
+    <div class="marca">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 4l4.1 11.3 12.1.4-9.5 7.5 3.3 11.6L20 28l-10 6.8 3.3-11.6-9.5-7.5 12.1-.4z"/></svg>
+      <div>
+        <h1>Estrella financiera</h1>
+        <p>Cinco puntas para saber si un negocio es rentable y saludable.</p>
+      </div>
+    </div>
+    <div class="acciones">
+      <button type="button" class="btn" id="btn-ejemplo">Cargar ejemplo</button>
+      <button type="button" class="btn" id="btn-io" aria-expanded="false" aria-controls="io">Importar / exportar</button>
+      <button type="button" class="btn btn-peligro" id="btn-borrar">Borrar todo</button>
+    </div>
+  </header>
+
+  <div class="aviso" id="aviso-ejemplo" hidden>
+    <p>Estás viendo <strong>números de ejemplo</strong> de un negocio inventado, para que veas cómo funciona. Cuando quieras, borralos y cargá los tuyos.</p>
+    <button type="button" class="btn btn-primario" id="btn-empezar">Empezar con mis datos</button>
+  </div>
+
+  <section class="io" id="io" hidden aria-labelledby="io-titulo">
+    <div class="io-cab">
+      <h2 id="io-titulo">Importar o exportar datos</h2>
+      <button type="button" class="btn" id="io-cerrar">Cerrar</button>
+    </div>
+    <div class="io-cols">
+      <div class="io-col">
+        <h3>Importar</h3>
+        <p>Elegí un archivo <code>.csv</code> o <code>.json</code>, o pegá el contenido abajo. El CSV lleva una fila por dato: <code>campo;valor</code>.</p>
+        <div class="io-botones">
+          <label class="btn" for="io-archivo">Elegir archivo</label>
+          <input type="file" id="io-archivo" class="oculto" accept=".csv,.json,.txt,text/csv,application/json">
+        </div>
+        <label class="oculto" for="io-pegar">Datos para importar</label>
+        <textarea id="io-pegar" rows="7" spellcheck="false" placeholder="ventas;48000000&#10;costoVentas;6000000&#10;gastosOperativos;36000000"></textarea>
+        <div class="io-botones">
+          <button type="button" class="btn btn-primario" id="io-importar">Importar lo pegado</button>
+        </div>
+      </div>
+      <div class="io-col">
+        <h3>Exportar</h3>
+        <p>Guardá estos datos para volver a cargarlos después o en otro dispositivo. También sirve de plantilla: abrilo en Excel o Google Sheets, completá la columna <code>valor</code> e importalo.</p>
+        <label class="oculto" for="io-salida">Datos exportados</label>
+        <textarea id="io-salida" rows="7" spellcheck="false" readonly></textarea>
+        <div class="io-botones">
+          <button type="button" class="btn" id="io-copiar">Copiar</button>
+          <button type="button" class="btn solo-descarga" id="io-descargar">Descargar .csv</button>
+        </div>
+      </div>
+    </div>
+    <p class="io-estado" id="io-estado" role="status"></p>
+  </section>
+
+  <main class="tablero">
+    <section class="resumen" id="resumen" aria-labelledby="resumen-titulo">
+      <h2 class="oculto" id="resumen-titulo">Resultado</h2>
+      <div class="resumen-in">
+        <div class="veredicto" id="veredicto" aria-live="polite"></div>
+        <div class="grafico" id="grafico">
+          <div id="radar"></div>
+          <div class="leyenda" aria-hidden="true">
+            <span><i></i>Tu negocio</span>
+            <span><i class="sano"></i>Mínimo sano (3,5 estrellas)</span>
+          </div>
+          <div class="tip" id="tip" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="datos" id="datos" aria-labelledby="datos-titulo">
+      <div class="datos-cab">
+        <h2 id="datos-titulo">Tus números</h2>
+        <p>Cargá lo que tengas; con dejar un dato vacío alcanza para que no se use. El resultado se actualiza solo.</p>
+      </div>
+      <form class="form" id="form" novalidate></form>
+    </aside>
+
+    <section class="detalle" id="detalle" aria-labelledby="detalle-titulo">
+      <div class="detalle-cab">
+        <h2 id="detalle-titulo">Las cinco puntas</h2>
+        <p>Cada indicador se puntúa de 0 a 5 estrellas.</p>
+      </div>
+      <div class="puntas" id="puntas"></div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <details>
+      <summary>¿Cómo se calcula la estrella?</summary>
+      <div class="metodo">
+        <p>La estrella mira el negocio desde cinco lados. Cada punta junta dos o tres indicadores clásicos del análisis financiero, y cada indicador se convierte en un puntaje de 0 a 5 estrellas según rangos de referencia. El puntaje de la punta es el promedio de sus indicadores, y el puntaje general es el promedio de las cinco puntas.</p>
+        <ul>
+          <li><strong>Rentabilidad:</strong> margen neto, rentabilidad del patrimonio (ROE) y de los activos (ROA).</li>
+          <li><strong>Liquidez:</strong> liquidez corriente, prueba ácida y meses de gastos cubiertos con la caja.</li>
+          <li><strong>Endeudamiento:</strong> deuda sobre patrimonio y cuántas veces la ganancia cubre los intereses.</li>
+          <li><strong>Eficiencia:</strong> rotación de activos, días que tardás en cobrar y días que tarda en venderse la mercadería.</li>
+          <li><strong>Crecimiento:</strong> cuánto crecieron las ventas y la ganancia contra el período anterior, descontando la inflación si la cargás.</li>
+        </ul>
+        <p>Una punta con 3,5 estrellas o más está en zona sana; entre 2 y 3,5 conviene vigilarla; por debajo de 2 es un punto débil. Los rangos son orientativos para un negocio chico: cada rubro tiene sus números normales, y esto no reemplaza la mirada de un contador.</p>
+        <p>Los datos se guardan solo en este navegador. No se mandan a ningún lado.</p>
+      </div>
+    </details>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ===================== Campos que se cargan =====================
+  // tipo: "dinero" (por defecto), "pct", "meses" o "texto".
+  // resta: se muestra con signo menos en el estado de resultados.
+  // deriv: fila calculada (no se carga).
+  const GRUPOS = [
+    { id: "general", titulo: "El negocio", sub: "Para saber de qué es el análisis.", campos: [
+      { id: "nombre", label: "Nombre", tipo: "texto", ph: "Ej: Estudio de yoga" },
+      { id: "periodo", label: "Período", tipo: "texto", ph: "Ej: Año 2025" },
+      { id: "meses", label: "Meses que abarca", tipo: "meses", ph: "12", ayuda: "Casi siempre 12 (un año completo)." },
+    ]},
+    { id: "resultados", titulo: "Estado de resultados", sub: "Lo que entró y lo que salió durante el período.", campos: [
+      { id: "ventas", label: "Ventas o ingresos", ayuda: "Todo lo que facturaste o cobraste por tu trabajo." },
+      { id: "costoVentas", label: "Costo de lo vendido", resta: true, ayuda: "Lo que cuesta directamente lo que vendés: mercadería, insumos, materiales." },
+      { deriv: "bruta", label: "Ganancia bruta" },
+      { id: "gastosOperativos", label: "Gastos fijos y de funcionamiento", resta: true, ayuda: "Alquiler, sueldos, servicios, publicidad, contador." },
+      { deriv: "operativo", label: "Resultado operativo" },
+      { id: "intereses", label: "Intereses de deudas", resta: true, ayuda: "Intereses de préstamos, tarjetas o descubierto." },
+      { id: "impuestos", label: "Impuestos", resta: true, ayuda: "Ganancias, ingresos brutos y similares." },
+      { deriv: "neta", label: "Ganancia neta", total: true },
+    ]},
+    { id: "balance", titulo: "Balance", sub: "Lo que el negocio tiene y lo que debe, al cierre del período.", campos: [
+      { id: "caja", label: "Caja y bancos", ayuda: "Efectivo, cuentas bancarias, billeteras virtuales." },
+      { id: "cobrar", label: "Lo que te deben", ayuda: "Ventas hechas que todavía no cobraste." },
+      { id: "inventario", label: "Mercadería o stock", ayuda: "Lo que tenés para vender, a lo que te costó. Si no vendés productos, dejalo vacío." },
+      { deriv: "activoCorriente", label: "Activo corriente" },
+      { id: "activoFijo", label: "Equipos, muebles y otros bienes", ayuda: "Lo que usás para trabajar, a lo que vale hoy." },
+      { deriv: "activoTotal", label: "Total de lo que tiene", total: true },
+      { id: "deudaCorto", label: "Deudas a menos de un año", ayuda: "Proveedores, tarjeta, impuestos a pagar, cuotas de este año." },
+      { id: "deudaLargo", label: "Deudas a más de un año", ayuda: "Préstamos largos." },
+      { deriv: "pasivoTotal", label: "Total de deudas" },
+      { deriv: "patrimonio", label: "Patrimonio neto", total: true, ayuda: "Lo que es de los dueños: lo que tiene menos lo que debe." },
+    ]},
+    { id: "anterior", titulo: "Período anterior", sub: "Para ver si el negocio crece. Es opcional.", campos: [
+      { id: "ventasAnt", label: "Ventas del período anterior" },
+      { id: "gananciaAnt", label: "Ganancia neta del período anterior", negativo: true, ayuda: "Si hubo pérdida, ponela con signo menos." },
+      { id: "inflacion", label: "Inflación del período", tipo: "pct", ayuda: "Para no confundir suba de precios con crecimiento real." },
+    ]},
+  ];
+  const CAMPOS = GRUPOS.flatMap((g) => g.campos.filter((c) => c.id));
+  const CAMPO = Object.fromEntries(CAMPOS.map((c) => [c.id, c]));
+
+  // Numeros inventados para mostrar la herramienta funcionando.
+  const EJEMPLO = {
+    nombre: "Estudio de yoga y masajes (ejemplo)",
+    periodo: "Año 2025",
+    meses: "12",
+    ventas: "48.000.000",
+    costoVentas: "6.000.000",
+    gastosOperativos: "36.000.000",
+    intereses: "1.200.000",
+    impuestos: "1.500.000",
+    caja: "2.500.000",
+    cobrar: "900.000",
+    inventario: "600.000",
+    activoFijo: "9.000.000",
+    deudaCorto: "3.800.000",
+    deudaLargo: "2.200.000",
+    ventasAnt: "30.000.000",
+    gananciaAnt: "3.000.000",
+    inflacion: "30",
+  };
+
+  // Cada escala es una lista de [valor, estrellas]; entre puntos se interpola.
+  const ESCALAS = {
+    margenNeto: [[-10, 0], [0, 1], [5, 2.5], [10, 4], [20, 5]],
+    roe: [[-10, 0], [0, 1], [8, 2.5], [15, 4], [25, 5]],
+    roa: [[-5, 0], [0, 1], [4, 2.5], [8, 4], [15, 5]],
+    liquidez: [[0.5, 0], [1, 2], [1.5, 4], [2, 5]],
+    acida: [[0.3, 0], [0.7, 2], [1, 4], [1.3, 5]],
+    colchon: [[0, 0], [0.5, 1], [1, 2], [3, 4], [6, 5]],
+    deudaPatrimonio: [[0.5, 5], [1, 4], [1.5, 2.5], [2.5, 1], [4, 0]],
+    cobertura: [[1, 0], [1.5, 1.5], [3, 3.5], [5, 5]],
+    rotacion: [[0.2, 0.5], [0.5, 2], [1, 3.5], [2, 5]],
+    diasCobro: [[15, 5], [30, 4], [60, 2.5], [90, 1], [120, 0]],
+    diasStock: [[30, 5], [60, 4], [90, 2.5], [180, 1], [270, 0]],
+    crecVentas: [[-20, 0], [-5, 1.5], [0, 2.5], [5, 3.5], [15, 5]],
+    crecGanancia: [[-30, 0], [-5, 1.5], [0, 2.5], [10, 4], [25, 5]],
+  };
+
+  const CONSEJOS = {
+    rentabilidad: "Revisá precios y costos. Subir un poco los precios o bajar el costo de lo que vendés mejora el margen enseguida; después mirá qué gasto fijo no está aportando.",
+    liquidez: "Armá un colchón de al menos tres meses de gastos, cobrá más rápido y negociá más plazo con los proveedores antes de que falte plata para pagar.",
+    endeudamiento: "Priorizá cancelar las deudas más caras (tarjeta, descubierto) y evitá deuda nueva hasta que la ganancia cubra con holgura los intereses.",
+    eficiencia: "Buscá plata dormida: mercadería que no rota, clientes que tardan en pagar, equipos que casi no se usan.",
+    crecimiento: "Compará tus precios contra la inflación y pensá cómo sumar clientes nuevos o venderles más a los que ya tenés.",
+  };
+
+  const CLAVE = "estrella-financiera:v1";
+  const $ = (sel) => document.querySelector(sel);
+  let estado = { datos: {}, ejemplo: false };
+
+  // ===================== Numeros =====================
+  // Acepta 1.200.000 / 1200000 / 1.200.000,50 / 1,200,000.50 / -300 / (300)
+  function parseNumero(txt) {
+    let s = String(txt == null ? "" : txt).trim().replace(/[$%\s]/g, "").replace(/−/g, "-");
+    if (!s) return null;
+    let neg = false;
+    if (/^\(.*\)$/.test(s)) { neg = true; s = s.slice(1, -1); }
+    if (s.startsWith("-")) { neg = !neg; s = s.slice(1); }
+    const ultPunto = s.lastIndexOf(".");
+    const ultComa = s.lastIndexOf(",");
+    if (ultPunto >= 0 && ultComa >= 0) {
+      const dec = ultPunto > ultComa ? "." : ",";
+      const mil = dec === "." ? "," : ".";
+      s = s.split(mil).join("").replace(dec, ".");
+    } else if (ultComa >= 0) {
+      // En Argentina la coma es decimal, salvo que haya varias (1,200,000)
+      s = s.split(",").length > 2 ? s.split(",").join("") : s.replace(",", ".");
+    } else if (ultPunto >= 0) {
+      const partes = s.split(".");
+      // 1.200 o 1.200.000 son miles; 3.5 es decimal
+      if (partes.length > 2 || partes[1].length === 3) s = partes.join("");
+    }
+    if (!/^\d*\.?\d+$/.test(s)) return NaN;
+    const n = Number(s);
+    return neg ? -n : n;
+  }
+
+  // Devuelve { valor, error } para un campo segun sus reglas
+  function leerCampo(campo, crudo) {
+    if (campo.tipo === "texto") return { valor: String(crudo || "").trim() || null, error: null };
+    const n = parseNumero(crudo);
+    if (n === null) return { valor: null, error: null };
+    if (Number.isNaN(n)) return { valor: null, error: "No entiendo este número." };
+    if (campo.tipo === "meses" && (n <= 0 || n > 120)) return { valor: null, error: "Poné entre 1 y 120 meses." };
+    if (n < 0 && !campo.negativo && campo.tipo !== "pct") return { valor: null, error: "Tiene que ser un número positivo." };
+    return { valor: n, error: null };
+  }
+
+  const nf = {};
+  function fmtN(v, dec) {
+    const d = dec == null ? 1 : dec;
+    nf[d] = nf[d] || new Intl.NumberFormat("es-AR", { minimumFractionDigits: d, maximumFractionDigits: d });
+    return nf[d].format(v);
+  }
+  const fmtMiles = (v) => new Intl.NumberFormat("es-AR", { maximumFractionDigits: 2 }).format(v);
+  const fmtPlata = (v) => (v < 0 ? "−$ " : "$ ") + new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 }).format(Math.abs(v));
+  const fmtPct = (v) => fmtN(v, 1) + " %";
+  const fmtEstrellas = (v) => fmtN(v, 1);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+
+  function puntuar(escala, v) {
+    if (v <= escala[0][0]) return escala[0][1];
+    for (let i = 1; i < escala.length; i++) {
+      const [x0, y0] = escala[i - 1];
+      const [x1, y1] = escala[i];
+      if (v <= x1) return y0 + ((y1 - y0) * (v - x0)) / (x1 - x0);
+    }
+    return escala[escala.length - 1][1];
+  }
+
+  // ===================== Calculo =====================
+  function calcular(datos) {
+    const val = (id) => leerCampo(CAMPO[id], datos[id]).valor;
+    const tiene = (id) => val(id) !== null;
+    const z = (id) => val(id) || 0;
+
+    const c = {};
+    c.meses = val("meses") || 12;
+    c.anualizar = 12 / c.meses;
+    c.dias = (c.meses * 365) / 12;
+    c.ventas = val("ventas");
+    c.hayResultados = c.ventas !== null && c.ventas > 0;
+    c.costoVentas = z("costoVentas");
+    c.gastosOperativos = z("gastosOperativos");
+    c.intereses = z("intereses");
+    c.tieneIntereses = tiene("intereses");
+    c.impuestos = z("impuestos");
+    c.bruta = c.hayResultados ? c.ventas - c.costoVentas : null;
+    c.operativo = c.hayResultados ? c.bruta - c.gastosOperativos : null;
+    c.neta = c.hayResultados ? c.operativo - c.intereses - c.impuestos : null;
+    c.gastosMensuales = (c.costoVentas + c.gastosOperativos + c.intereses) / c.meses;
+
+    c.hayBalance = ["caja", "cobrar", "inventario", "activoFijo", "deudaCorto", "deudaLargo"].some(tiene);
+    c.caja = z("caja");
+    c.tieneCaja = tiene("caja");
+    c.cobrar = z("cobrar");
+    c.tieneCobrar = tiene("cobrar");
+    c.inventario = z("inventario");
+    c.deudaCorto = z("deudaCorto");
+    c.tieneDeudaCorto = tiene("deudaCorto");
+    c.activoCorriente = c.hayBalance ? c.caja + c.cobrar + c.inventario : null;
+    c.activoTotal = c.hayBalance ? c.activoCorriente + z("activoFijo") : null;
+    c.pasivoTotal = c.hayBalance ? c.deudaCorto + z("deudaLargo") : null;
+    c.patrimonio = c.hayBalance ? c.activoTotal - c.pasivoTotal : null;
+
+    c.ventasAnt = val("ventasAnt");
+    c.gananciaAnt = val("gananciaAnt");
+    c.inflacion = val("inflacion");
+    return c;
+  }
+
+  const falta = (nombre, que) => ({ nombre, falta: "Falta cargar " + que + "." });
+  const noAplica = (nombre, motivo) => ({ nombre, falta: motivo });
+
+  // Pasa un crecimiento nominal (%) a real usando la inflacion del periodo (%)
+  const real = (nominal, inflacion) => ((1 + nominal / 100) / (1 + inflacion / 100) - 1) * 100;
+
+  function evaluar(datos) {
+    const c = calcular(datos);
+    const aspectos = [];
+
+    // --- Rentabilidad ---
+    const rent = [];
+    if (c.hayResultados) {
+      const m = (c.neta / c.ventas) * 100;
+      rent.push({
+        nombre: "Margen neto", valor: fmtPct(m), estrellas: puntuar(ESCALAS.margenNeto, m),
+        texto: m >= 0 ? `De cada $100 que vendés, te quedan $${fmtN(m)} de ganancia limpia.` : `De cada $100 que vendés, perdés $${fmtN(-m)}.`,
+        ref: "Bueno: más de 10 %. Por debajo de 5 % el margen es finito.",
+      });
+    } else rent.push(falta("Margen neto", "las ventas y los gastos"));
+    if (c.hayResultados && c.hayBalance) {
+      if (c.patrimonio > 0) {
+        const roePeriodo = (c.neta / c.patrimonio) * 100;
+        const roe = roePeriodo * c.anualizar;
+        const roeReal = c.inflacion !== null ? real(roePeriodo, c.inflacion) * c.anualizar : null;
+        rent.push({
+          nombre: "Rentabilidad del patrimonio (ROE)", valor: fmtPct(roe), estrellas: puntuar(ESCALAS.roe, roeReal !== null ? roeReal : roe),
+          texto: `Por cada $100 que son de los dueños, el negocio ganó $${fmtN(roe)} en el año` + (roeReal !== null ? `; descontando la inflación, ${fmtPct(roeReal)}.` : "."),
+          ref: "Bueno: más de 15 % por año y siempre por encima de la inflación." + (c.inflacion === null ? " Si hubo inflación, cargala para medirlo en términos reales." : ""),
+        });
+      } else rent.push(noAplica("Rentabilidad del patrimonio (ROE)", "No se puede calcular: el negocio debe más de lo que tiene."));
+      if (c.activoTotal > 0) {
+        const roa = (c.neta / c.activoTotal) * 100 * c.anualizar;
+        rent.push({
+          nombre: "Rentabilidad de los activos (ROA)", valor: fmtPct(roa), estrellas: puntuar(ESCALAS.roa, roa),
+          texto: roa >= 0 ? `Cada $100 de bienes del negocio generan $${fmtN(roa)} de ganancia por año.` : `Cada $100 de bienes del negocio pierden $${fmtN(-roa)} por año.`,
+          ref: "Bueno: más de 8 % por año.",
+        });
+      }
+    } else {
+      rent.push(falta("Rentabilidad del patrimonio (ROE)", "las ventas, los gastos y el balance"));
+      rent.push(falta("Rentabilidad de los activos (ROA)", "las ventas, los gastos y el balance"));
+    }
+    aspectos.push({ id: "rentabilidad", nombre: "Rentabilidad", pregunta: "¿Gana plata?", inds: rent });
+
+    // --- Liquidez ---
+    const liq = [];
+    if (c.hayBalance && c.tieneDeudaCorto) {
+      if (c.deudaCorto > 0) {
+        const v = c.activoCorriente / c.deudaCorto;
+        liq.push({
+          nombre: "Liquidez corriente", valor: fmtN(v, 2), estrellas: puntuar(ESCALAS.liquidez, v),
+          texto: `Por cada $1 que tenés que pagar este año, tenés $${fmtN(v, 2)} entre caja, lo que te deben y la mercadería.`,
+          ref: "Bueno: 1,5 o más. Menos de 1 es una alarma.",
+        });
+        if (c.inventario > 0) {
+          const a = (c.caja + c.cobrar) / c.deudaCorto;
+          liq.push({
+            nombre: "Prueba ácida", valor: fmtN(a, 2), estrellas: puntuar(ESCALAS.acida, a),
+            texto: `Sin contar la mercadería, que todavía hay que vender, tenés $${fmtN(a, 2)} por cada $1 a pagar.`,
+            ref: "Bueno: 1 o más.",
+          });
+        }
+      } else {
+        liq.push({ nombre: "Liquidez corriente", valor: "sin deudas", estrellas: 5, texto: "No tenés deudas para pagar en el año.", ref: "Bueno: 1,5 o más. Menos de 1 es una alarma." });
+      }
+    } else liq.push(falta("Liquidez corriente", "la caja, lo que te deben y las deudas a menos de un año"));
+    if (c.tieneCaja && c.hayResultados && c.gastosMensuales > 0) {
+      const m = c.caja / c.gastosMensuales;
+      liq.push({
+        nombre: "Colchón de caja", valor: fmtN(m, 1) + " meses", estrellas: puntuar(ESCALAS.colchon, m),
+        texto: `Con la plata disponible cubrís ${fmtN(m, 1)} meses de gastos sin vender nada.`,
+        ref: "Ideal: 3 meses o más.",
+      });
+    } else liq.push(falta("Colchón de caja", "la caja y los gastos del período"));
+    aspectos.push({ id: "liquidez", nombre: "Liquidez", pregunta: "¿Puede pagar lo del día a día?", inds: liq });
+
+    // --- Endeudamiento ---
+    const deu = [];
+    if (c.hayBalance) {
+      if (c.patrimonio <= 0) {
+        deu.push({
+          nombre: "Deuda sobre patrimonio", valor: "negativo", estrellas: 0,
+          texto: `El negocio debe más de lo que tiene: le faltan ${fmtPlata(-c.patrimonio)} para cubrir todas sus deudas.`,
+          ref: "Bueno: menos de 1. Más de 2 es mucho.",
+        });
+      } else {
+        const v = c.pasivoTotal / c.patrimonio;
+        deu.push({
+          nombre: "Deuda sobre patrimonio", valor: fmtN(v, 2), estrellas: puntuar(ESCALAS.deudaPatrimonio, v),
+          texto: v === 0 ? "El negocio no tiene deudas." : `Por cada $1 que es de los dueños, el negocio debe $${fmtN(v, 2)}.`,
+          ref: "Bueno: menos de 1. Más de 2 es mucho.",
+        });
+      }
+    } else deu.push(falta("Deuda sobre patrimonio", "lo que tiene y lo que debe el negocio"));
+    if (c.hayResultados && c.tieneIntereses) {
+      if (c.intereses > 0) {
+        const v = c.operativo / c.intereses;
+        deu.push({
+          nombre: "Cobertura de intereses", valor: fmtN(v, 1) + " veces", estrellas: puntuar(ESCALAS.cobertura, v),
+          texto: v <= 0 ? "El negocio no gana lo suficiente para pagar los intereses: salen de otro lado." : `La ganancia del negocio alcanza para pagar ${fmtN(v, 1)} veces los intereses.`,
+          ref: "Bueno: 3 veces o más. Menos de 1,5 es riesgoso.",
+        });
+      } else if (c.operativo > 0) {
+        deu.push({ nombre: "Cobertura de intereses", valor: "sin intereses", estrellas: 5, texto: "No pagás intereses por deudas.", ref: "Bueno: 3 veces o más. Menos de 1,5 es riesgoso." });
+      } else deu.push(noAplica("Cobertura de intereses", "No pagás intereses, pero el negocio todavía no tiene ganancia operativa."));
+    } else deu.push(falta("Cobertura de intereses", "las ventas, los gastos y los intereses (aunque sean 0)"));
+    aspectos.push({ id: "endeudamiento", nombre: "Endeudamiento", pregunta: "¿Depende demasiado de deudas?", inds: deu });
+
+    // --- Eficiencia ---
+    const efi = [];
+    if (c.hayResultados && c.hayBalance && c.activoTotal > 0) {
+      const v = (c.ventas * c.anualizar) / c.activoTotal;
+      efi.push({
+        nombre: "Rotación de activos", valor: fmtN(v, 2) + " veces", estrellas: puntuar(ESCALAS.rotacion, v),
+        texto: `Cada $1 que hay en el negocio genera $${fmtN(v, 2)} de ventas por año.`,
+        ref: "Depende mucho del rubro; en servicios y comercio suele pasar de 1.",
+      });
+    } else efi.push(falta("Rotación de activos", "las ventas y lo que tiene el negocio"));
+    if (c.hayResultados && c.tieneCobrar) {
+      const d = (c.cobrar / c.ventas) * c.dias;
+      efi.push({
+        nombre: "Días de cobro", valor: fmtN(d, 0) + " días", estrellas: puntuar(ESCALAS.diasCobro, d),
+        texto: d < 1 ? "Cobrás todo en el momento." : `En promedio tardás ${fmtN(d, 0)} días en cobrar lo que vendés.`,
+        ref: "Bueno: menos de 30 días.",
+      });
+    } else efi.push(falta("Días de cobro", "las ventas y lo que te deben (aunque sea 0)"));
+    if (c.inventario > 0) {
+      if (c.costoVentas > 0) {
+        const d = (c.inventario / c.costoVentas) * c.dias;
+        efi.push({
+          nombre: "Días de stock", valor: fmtN(d, 0) + " días", estrellas: puntuar(ESCALAS.diasStock, d),
+          texto: `La mercadería tarda unos ${fmtN(d, 0)} días en venderse.`,
+          ref: "Bueno: menos de 60 días, aunque depende del rubro.",
+        });
+      } else efi.push(falta("Días de stock", "el costo de lo vendido"));
+    }
+    aspectos.push({ id: "eficiencia", nombre: "Eficiencia", pregunta: "¿Usa bien lo que tiene?", inds: efi });
+
+    // --- Crecimiento ---
+    const cre = [];
+    const notaInflacion = c.inflacion === null ? " Si hubo inflación, cargala para ver el crecimiento real." : "";
+    if (c.hayResultados && c.ventasAnt !== null && c.ventasAnt > 0) {
+      const g = (c.ventas / c.ventasAnt - 1) * 100;
+      const r = c.inflacion !== null ? real(g, c.inflacion) : null;
+      const base = r !== null ? r : g;
+      cre.push({
+        nombre: "Crecimiento de las ventas", valor: fmtPct(base) + (r !== null ? " real" : ""), estrellas: puntuar(ESCALAS.crecVentas, base),
+        texto: r !== null
+          ? `Las ventas ${g >= 0 ? "subieron" : "bajaron"} ${fmtPct(Math.abs(g))} en pesos; descontando la inflación, ${r >= 0 ? "crecieron" : "cayeron"} ${fmtPct(Math.abs(r))} de verdad.`
+          : `Las ventas ${g >= 0 ? "subieron" : "bajaron"} ${fmtPct(Math.abs(g))} contra el período anterior.` + notaInflacion,
+        ref: "Bueno: crecer por encima de la inflación.",
+      });
+    } else cre.push(falta("Crecimiento de las ventas", "las ventas de este período y del anterior"));
+    if (c.hayResultados && c.gananciaAnt !== null) {
+      if (c.gananciaAnt > 0) {
+        const g = (c.neta / c.gananciaAnt - 1) * 100;
+        const r = c.inflacion !== null ? real(g, c.inflacion) : null;
+        const base = r !== null ? r : g;
+        cre.push({
+          nombre: "Crecimiento de la ganancia", valor: fmtPct(base) + (r !== null ? " real" : ""), estrellas: puntuar(ESCALAS.crecGanancia, base),
+          texto: r !== null
+            ? `La ganancia ${g >= 0 ? "subió" : "bajó"} ${fmtPct(Math.abs(g))} en pesos; descontando la inflación, ${r >= 0 ? "creció" : "cayó"} ${fmtPct(Math.abs(r))} de verdad.`
+            : `La ganancia ${g >= 0 ? "subió" : "bajó"} ${fmtPct(Math.abs(g))} contra el período anterior.` + notaInflacion,
+          ref: "Bueno: que la ganancia crezca más que la inflación.",
+        });
+      } else if (c.neta > 0) {
+        cre.push({ nombre: "Crecimiento de la ganancia", valor: "a ganancia", estrellas: 5, texto: "El negocio pasó de perder plata a ganar.", ref: "Bueno: que la ganancia crezca más que la inflación." });
+      } else if (c.neta > c.gananciaAnt) {
+        cre.push({ nombre: "Crecimiento de la ganancia", valor: "pierde menos", estrellas: 2, texto: "Sigue perdiendo plata, pero menos que antes.", ref: "Bueno: que la ganancia crezca más que la inflación." });
+      } else {
+        cre.push({ nombre: "Crecimiento de la ganancia", valor: "pierde más", estrellas: 0, texto: "Sigue perdiendo plata, y más que antes.", ref: "Bueno: que la ganancia crezca más que la inflación." });
+      }
+    } else cre.push(falta("Crecimiento de la ganancia", "la ganancia del período anterior"));
+    aspectos.push({ id: "crecimiento", nombre: "Crecimiento", pregunta: "¿Está creciendo?", inds: cre });
+
+    for (const a of aspectos) {
+      const puntajes = a.inds.filter((i) => typeof i.estrellas === "number").map((i) => i.estrellas);
+      a.puntaje = puntajes.length ? puntajes.reduce((s, x) => s + x, 0) / puntajes.length : null;
+    }
+    return { c, aspectos };
+  }
+
+  function nivel(v) {
+    if (v === null || v === undefined) return { cls: "nd", txt: "Sin datos" };
+    if (v >= 3.5) return { cls: "ok", txt: "Bien" };
+    if (v >= 2) return { cls: "ojo", txt: "A vigilar" };
+    return { cls: "mal", txt: "Débil" };
+  }
+
+  const ICONOS = {
+    ok: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.2 4.7-5"/></svg>',
+    ojo: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 2.5v4.2M6 9.3v.1"/></svg>',
+    mal: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6"/></svg>',
+    nd: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 6h6"/></svg>',
+  };
+  const chip = (cls, txt) => `<span class="chip ${cls}">${ICONOS[cls]}${esc(txt)}</span>`;
+  const estrellas = (v, tam) => `<span class="stars ${tam || ""}" style="--v:${(v || 0).toFixed(2)}" role="img" aria-label="${fmtEstrellas(v || 0)} de 5 estrellas"></span>`;
+
+  // ===================== Pintar resultado =====================
+  function pintarVeredicto(res) {
+    const { c, aspectos } = res;
+    const nombre = (estado.datos.nombre || "").trim();
+    const periodo = (estado.datos.periodo || "").trim();
+    const ficha = nombre || periodo
+      ? `<div class="ficha">${nombre ? `<strong>${esc(nombre)}</strong>` : ""}${periodo ? `<span>${esc(periodo)}</span>` : ""}</div>`
+      : "";
+    const conDatos = aspectos.filter((a) => a.puntaje !== null);
+    const el = $("#veredicto");
+
+    if (!c.hayResultados || conDatos.length < 2) {
+      el.innerHTML = `${ficha}
+        <div class="vacio">
+          <p class="eyebrow">Todavía sin resultado</p>
+          <h3>Cargá los números del negocio</h3>
+          <p>Con las ventas, los gastos y lo que el negocio tiene y debe ya se arma la estrella. Lo del período anterior es opcional.</p>
+          <a class="btn btn-primario solo-celular" href="#datos">Ir a cargar los datos</a>
+        </div>`;
+      return;
+    }
+
+    const general = conDatos.reduce((s, a) => s + a.puntaje, 0) / conDatos.length;
+    const nv = nivel(general);
+    const etiqueta = general >= 4 ? "Sano y rentable" : general >= 3 ? "Aceptable, con cosas para mejorar" : general >= 2 ? "Con señales de alerta" : "En riesgo";
+    const ordenados = conDatos.slice().sort((a, b) => b.puntaje - a.puntaje);
+    const fuerte = ordenados[0];
+    const debil = ordenados[ordenados.length - 1];
+
+    let resumen = `Lo más fuerte es la ${fuerte.nombre.toLowerCase()}; lo que más hay que cuidar es la ${debil.nombre.toLowerCase()}.`;
+    if (fuerte === debil || fuerte.puntaje - debil.puntaje < 0.3) resumen = "Las puntas están parejas: ninguna se despega mucho de las otras.";
+    if (conDatos.length < 5) resumen += ` Calculado con ${conDatos.length} de las 5 puntas; completá los datos que faltan para un veredicto completo.`;
+
+    // ¿Es rentable?
+    const rent = aspectos[0];
+    let rCls, rTxt, rDet;
+    if (c.neta < 0) { rCls = "mal"; rTxt = "No"; rDet = `Está perdiendo plata: ${fmtPlata(c.neta)} en el período.`; }
+    else if (c.neta === 0) { rCls = "ojo"; rTxt = "Justo"; rDet = "Sale hecho: no gana ni pierde."; }
+    else if (rent.puntaje >= 3.5) { rCls = "ok"; rTxt = "Sí"; rDet = `Gana ${fmtPlata(c.neta)} en el período, con buen margen.`; }
+    else if (rent.puntaje >= 2) { rCls = "ojo"; rTxt = "Sí, pero poco"; rDet = `Gana ${fmtPlata(c.neta)} en el período, con un margen finito.`; }
+    else { rCls = "ojo"; rTxt = "Apenas"; rDet = `Gana ${fmtPlata(c.neta)} en el período, muy poco para lo que vende y lo que tiene.`; }
+
+    // ¿Es saludable? Mira liquidez y endeudamiento, con alarmas puntuales.
+    const salud = [aspectos[1], aspectos[2]].filter((a) => a.puntaje !== null);
+    const alarmas = [];
+    if (c.hayBalance && c.patrimonio <= 0) alarmas.push("debe más de lo que tiene");
+    if (c.hayBalance && c.tieneDeudaCorto && c.deudaCorto > 0 && c.activoCorriente / c.deudaCorto < 1) alarmas.push("no le alcanza lo que tiene a mano para las deudas del año");
+    if (c.hayResultados && c.intereses > 0 && c.operativo / c.intereses < 1.5) alarmas.push("los intereses se comen casi toda la ganancia");
+    let sCls, sTxt, sDet;
+    if (!salud.length) { sCls = "nd"; sTxt = "Faltan datos"; sDet = "Cargá el balance (lo que tiene y lo que debe) para saberlo."; }
+    else {
+      const s = salud.reduce((t, a) => t + a.puntaje, 0) / salud.length;
+      if (c.hayBalance && c.patrimonio <= 0) { sCls = "mal"; sTxt = "No"; sDet = "El negocio debe más de lo que tiene."; }
+      else if (s >= 3.5 && !alarmas.length) { sCls = "ok"; sTxt = "Sí"; sDet = "Puede pagar lo del día a día y no depende demasiado de deudas."; }
+      else if (s >= 2.5) { sCls = "ojo"; sTxt = "Más o menos"; sDet = alarmas.length ? "Ojo: " + alarmas.join(" y ") + "." : `Está bien parado, pero la ${(aspectos[1].puntaje !== null && aspectos[1].puntaje < (aspectos[2].puntaje ?? 5) ? "liquidez" : "deuda")} pide atención.`; }
+      else { sCls = "mal"; sTxt = "No"; sDet = alarmas.length ? "Está frágil: " + alarmas.join(" y ") + "." : "Está frágil: le cuesta pagar lo del día a día o depende mucho de deudas."; }
+    }
+
+    const foco = debil.puntaje < 3.5
+      ? `<p class="foco"><strong>Lo primero a mirar: ${esc(debil.nombre.toLowerCase())} (${fmtEstrellas(debil.puntaje)}).</strong> ${esc(CONSEJOS[debil.id])}</p>`
+      : `<p class="foco"><strong>Todas las puntas están en zona sana.</strong> Repetí el análisis cada año para ver la tendencia.</p>`;
+
+    el.innerHTML = `${ficha}
+      <div class="nota">
+        <p class="eyebrow">Puntaje general</p>
+        <div class="nota-fila"><span class="nota-num">${fmtEstrellas(general)}</span><span class="nota-de">/ 5</span></div>
+        ${estrellas(general, "stars-lg")}
+        ${chip(nv.cls, etiqueta)}
+        <p class="nota-texto">${esc(resumen)}</p>
+      </div>
+      <dl class="respuestas">
+        <div class="resp"><dt>¿Es rentable? ${chip(rCls, rTxt)}</dt><dd>${esc(rDet)}</dd></div>
+        <div class="resp"><dt>¿Es saludable? ${chip(sCls, sTxt)}</dt><dd>${esc(sDet)}</dd></div>
+      </dl>
+      ${foco}
+      <a class="btn btn-texto solo-celular" href="#datos">Editar los números</a>`;
+  }
+
+  // Grafico de estrella: un pentagono con un eje por punta, de 0 (centro) a 5 estrellas (borde).
+  const RADAR = { W: 420, H: 304, cx: 210, cy: 164, R: 112 };
+  function puntoRadar(i, v) {
+    const ang = ((-90 + 72 * i) * Math.PI) / 180;
+    return [RADAR.cx + ((RADAR.R * v) / 5) * Math.cos(ang), RADAR.cy + ((RADAR.R * v) / 5) * Math.sin(ang)];
+  }
+  const poligono = (vals) => vals.map((v, i) => puntoRadar(i, v).map((n) => n.toFixed(1)).join(",")).join(" ");
+
+  function pintarRadar(aspectos) {
+    const { W, H, cx, cy, R } = RADAR;
+    const vals = aspectos.map((a) => (a.puntaje === null ? 0 : a.puntaje));
+    const etiquetaAria = "Estrella del negocio: " + aspectos.map((a) => `${a.nombre} ${a.puntaje === null ? "sin datos" : fmtEstrellas(a.puntaje) + " de 5"}`).join("; ");
+    let s = `<svg class="radar" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(etiquetaAria)}">`;
+    s += `<polygon class="r-fondo" points="${poligono([5, 5, 5, 5, 5])}"/>`;
+    for (let k = 1; k <= 5; k++) s += `<polygon class="r-anillo" points="${poligono([k, k, k, k, k])}"/>`;
+    for (let i = 0; i < 5; i++) {
+      const [x, y] = puntoRadar(i, 5);
+      s += `<line class="r-eje" x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`;
+    }
+    for (let k = 1; k <= 5; k++) s += `<text class="r-escala" x="${cx + 5}" y="${(cy - (R * k) / 5 + 11).toFixed(1)}">${k}</text>`;
+    s += `<polygon class="r-sano" points="${poligono([3.5, 3.5, 3.5, 3.5, 3.5])}"/>`;
+    s += `<polygon class="r-area" points="${poligono(vals)}"/>`;
+    aspectos.forEach((a, i) => {
+      const [x, y] = puntoRadar(i, vals[i]);
+      s += `<circle class="r-punto ${nivel(a.puntaje).cls}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5.5"/>`;
+    });
+    aspectos.forEach((a, i) => {
+      const ang = ((-90 + 72 * i) * Math.PI) / 180;
+      const lx = cx + (R + 18) * Math.cos(ang);
+      const ly = cy + (R + 18) * Math.sin(ang);
+      const cos = Math.cos(ang), sin = Math.sin(ang);
+      const anchor = cos > 0.2 ? "start" : cos < -0.2 ? "end" : "middle";
+      const y1 = sin < -0.9 ? ly - 18 : sin > 0.5 ? ly + 10 : ly - 3;
+      const valor = a.puntaje === null ? "sin datos" : fmtEstrellas(a.puntaje) + " ★";
+      s += `<text class="r-nombre" x="${lx.toFixed(1)}" y="${y1.toFixed(1)}" text-anchor="${anchor}">${a.nombre}</text>`;
+      s += `<text class="r-valor" x="${lx.toFixed(1)}" y="${(y1 + 16).toFixed(1)}" text-anchor="${anchor}">${valor}</text>`;
+    });
+    // Zonas de toque mas grandes que el punto, para el tooltip
+    aspectos.forEach((a, i) => {
+      const [x, y] = puntoRadar(i, vals[i]);
+      s += `<circle class="r-hit" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="16" tabindex="0" data-i="${i}" aria-label="${esc(a.nombre)}: ${a.puntaje === null ? "sin datos" : fmtEstrellas(a.puntaje) + " de 5"}"/>`;
+    });
+    s += "</svg>";
+    $("#radar").innerHTML = s;
+  }
+
+  function mostrarTip(i) {
+    const a = ultimo.aspectos[i];
+    const [x, y] = puntoRadar(i, a.puntaje === null ? 0 : a.puntaje);
+    const svg = $("#radar svg");
+    const caja = svg.getBoundingClientRect();
+    const cont = $("#grafico").getBoundingClientRect();
+    const tip = $("#tip");
+    tip.innerHTML = `<b>${esc(a.nombre)}</b> · ${a.puntaje === null ? "sin datos" : fmtEstrellas(a.puntaje) + " de 5"} · ${nivel(a.puntaje).txt}`;
+    tip.style.left = caja.left - cont.left + (x / RADAR.W) * caja.width + "px";
+    tip.style.top = caja.top - cont.top + (y / RADAR.H) * caja.height + "px";
+    tip.hidden = false;
+  }
+  const ocultarTip = () => { $("#tip").hidden = true; };
+
+  function irAPunta(i) {
+    const card = document.getElementById("punta-" + ultimo.aspectos[i].id);
+    if (!card) return;
+    card.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    card.classList.add("resaltada");
+    setTimeout(() => card.classList.remove("resaltada"), 1600);
+  }
+
+  function pintarPuntas(aspectos) {
+    $("#puntas").innerHTML = aspectos.map((a) => {
+      const nv = nivel(a.puntaje);
+      const inds = a.inds.map((i) => i.falta
+        ? `<li class="ind falta"><div class="ind-top"><span class="ind-nombre">${esc(i.nombre)}</span><span class="ind-valor">—</span></div><p class="ind-texto">${esc(i.falta)}</p></li>`
+        : `<li class="ind">
+            <div class="ind-top"><span class="ind-nombre">${esc(i.nombre)}</span><span class="ind-valor">${esc(i.valor)}</span>${estrellas(i.estrellas, "stars-sm")}</div>
+            <p class="ind-texto">${esc(i.texto)}</p>
+            <p class="ind-ref">${esc(i.ref)}</p>
+          </li>`).join("");
+      const consejo = a.puntaje !== null && a.puntaje < 3.5 ? `<p class="consejo"><strong>Para mejorar:</strong> ${esc(CONSEJOS[a.id])}</p>` : "";
+      return `<article class="punta" id="punta-${a.id}">
+        <div class="punta-cab">
+          <div class="punta-tit"><h3>${esc(a.nombre)}</h3><p>${esc(a.pregunta)}</p></div>
+          <div class="punta-nota">
+            ${a.puntaje === null ? "" : `${estrellas(a.puntaje)}<span class="punta-num">${fmtEstrellas(a.puntaje)}</span>`}
+            ${chip(nv.cls, nv.txt)}
+          </div>
+        </div>
+        <ul class="inds">${inds}</ul>
+        ${consejo}
+      </article>`;
+    }).join("");
+  }
+
+  function pintarDerivados(c) {
+    const set = (id, v) => {
+      const out = document.getElementById("d-" + id);
+      if (!out) return;
+      out.textContent = v === null ? "—" : fmtPlata(v);
+      out.classList.toggle("neg", v !== null && v < 0);
+    };
+    set("bruta", c.bruta);
+    set("operativo", c.operativo);
+    set("neta", c.neta);
+    set("activoCorriente", c.activoCorriente);
+    set("activoTotal", c.activoTotal);
+    set("pasivoTotal", c.pasivoTotal);
+    set("patrimonio", c.patrimonio);
+  }
+
+  let ultimo = null;
+  function actualizar() {
+    ultimo = evaluar(estado.datos);
+    pintarDerivados(ultimo.c);
+    pintarVeredicto(ultimo);
+    pintarRadar(ultimo.aspectos);
+    pintarPuntas(ultimo.aspectos);
+    $("#aviso-ejemplo").hidden = !estado.ejemplo;
+    if (!$("#io").hidden) $("#io-salida").value = exportarCSV();
+  }
+
+  // ===================== Formulario =====================
+  function filaHTML(c) {
+    if (c.deriv) {
+      return `<div class="fila deriv${c.total ? " total" : ""}">
+        <span class="signo" aria-hidden="true">=</span>
+        <span class="fila-label"><span class="lbl">${c.label}</span>${c.ayuda ? `<span class="ayuda">${c.ayuda}</span>` : ""}</span>
+        <output class="deriv-valor" id="d-${c.deriv}">—</output>
+      </div>`;
+    }
+    const tipo = c.tipo || "dinero";
+    const pre = tipo === "dinero" ? '<span class="pre">$</span>' : "";
+    const suf = tipo === "pct" ? '<span class="suf">%</span>' : tipo === "meses" ? '<span class="suf">meses</span>' : "";
+    const describe = [c.ayuda ? "h-" + c.id : "", "e-" + c.id].filter(Boolean).join(" ");
+    return `<div class="fila${tipo === "texto" ? " fila-texto" : ""}">
+      <span class="signo" aria-hidden="true">${c.resta ? "−" : ""}</span>
+      <label class="fila-label" for="f-${c.id}"><span class="lbl">${c.label}</span>${c.ayuda ? `<span class="ayuda" id="h-${c.id}">${c.ayuda}</span>` : ""}</label>
+      <span class="entrada">${pre}<input id="f-${c.id}" name="${c.id}" type="text" inputmode="${tipo === "texto" ? "text" : "decimal"}" autocomplete="off"${c.ph ? ` placeholder="${c.ph}"` : ""} aria-describedby="${describe}">${suf}</span>
+      <span class="error" id="e-${c.id}" hidden></span>
+    </div>`;
+  }
+
+  function construirFormulario() {
+    $("#form").innerHTML = GRUPOS.map((g) => `
+      <section class="grupo" role="group" aria-labelledby="g-${g.id}">
+        <div class="grupo-cab"><h3 id="g-${g.id}">${g.titulo}</h3><p>${g.sub}</p></div>
+        ${g.campos.map(filaHTML).join("")}
+      </section>`).join("") +
+      `<a class="btn btn-primario ver-resultado solo-celular" href="#resumen">Ver el resultado</a>`;
+  }
+
+  function validar(input) {
+    const campo = CAMPO[input.name];
+    const { error } = leerCampo(campo, input.value);
+    const msg = document.getElementById("e-" + campo.id);
+    msg.textContent = error || "";
+    msg.hidden = !error;
+    input.closest(".entrada").classList.toggle("invalida", !!error);
+    if (error) input.setAttribute("aria-invalid", "true"); else input.removeAttribute("aria-invalid");
+  }
+
+  function llenarFormulario() {
+    for (const c of CAMPOS) {
+      const input = document.getElementById("f-" + c.id);
+      input.value = estado.datos[c.id] || "";
+      validar(input);
+    }
+  }
+
+  // Al salir de un campo numerico, lo dejamos prolijo: 48000000 -> 48.000.000
+  function prolijar(input) {
+    const campo = CAMPO[input.name];
+    if (!campo || campo.tipo === "texto") return;
+    const { valor, error } = leerCampo(campo, input.value);
+    if (error || valor === null) return;
+    input.value = fmtMiles(valor);
+    estado.datos[campo.id] = input.value;
+    guardar();
+  }
+
+  // ===================== Guardado local =====================
+  function guardar() {
+    try { localStorage.setItem(CLAVE, JSON.stringify(estado)); } catch (e) { /* sin almacenamiento: se trabaja igual */ }
+  }
+  function leerGuardado() {
+    try {
+      const raw = localStorage.getItem(CLAVE);
+      const obj = raw ? JSON.parse(raw) : null;
+      return obj && typeof obj.datos === "object" ? obj : null;
+    } catch (e) { return null; }
+  }
+
+  // ===================== Importar / exportar =====================
+  const normalizar = (s) => String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const ALIAS = {};
+  for (const c of CAMPOS) { ALIAS[normalizar(c.id)] = c.id; ALIAS[normalizar(c.label)] = c.id; }
+
+  const csvCelda = (v) => (/[";\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v);
+  function exportarCSV() {
+    const filas = ["campo;valor;descripcion"];
+    for (const c of CAMPOS) filas.push([c.id, estado.datos[c.id] || "", c.label].map(csvCelda).join(";"));
+    return filas.join("\n");
+  }
+
+  // Separa una linea de CSV respetando comillas
+  function partirLinea(linea, sep) {
+    const out = [];
+    let cur = "", comillas = false;
+    for (let i = 0; i < linea.length; i++) {
+      const ch = linea[i];
+      if (comillas) {
+        if (ch === '"' && linea[i + 1] === '"') { cur += '"'; i++; }
+        else if (ch === '"') comillas = false;
+        else cur += ch;
+      } else if (ch === '"') comillas = true;
+      else if (ch === sep) { out.push(cur); cur = ""; }
+      else cur += ch;
+    }
+    out.push(cur);
+    return out;
+  }
+
+  function leerImportado(texto) {
+    const limpio = String(texto || "").replace(/^﻿/, "").trim();
+    if (!limpio) return null;
+    const nuevos = {};
+    if (limpio.startsWith("{")) {
+      let obj;
+      try { obj = JSON.parse(limpio); } catch (e) { return null; }
+      const fuente = obj && typeof obj.datos === "object" ? obj.datos : obj;
+      for (const [k, v] of Object.entries(fuente || {})) {
+        const id = ALIAS[normalizar(k)];
+        if (id && v !== null && v !== undefined && String(v).trim() !== "") nuevos[id] = String(v).trim();
+      }
+    } else {
+      const lineas = limpio.split(/\r?\n/).filter((l) => l.trim());
+      const primera = lineas[0] || "";
+      const sep = primera.includes(";") ? ";" : primera.includes("\t") ? "\t" : ",";
+      for (const linea of lineas) {
+        const cols = partirLinea(linea, sep);
+        const id = ALIAS[normalizar(cols[0])];
+        if (!id) continue;
+        // Con coma como separador, el valor puede traer comas decimales: se junta el resto
+        const valor = (sep === "," ? cols.slice(1).join(",") : cols[1] || "").trim();
+        if (valor) nuevos[id] = valor;
+      }
+    }
+    return Object.keys(nuevos).length ? nuevos : null;
+  }
+
+  function importar(texto) {
+    const nuevos = leerImportado(texto);
+    const msg = $("#io-estado");
+    if (!nuevos) {
+      msg.className = "io-estado mal";
+      msg.textContent = "No encontré datos para cargar. Revisá que cada fila tenga el nombre del campo y el valor, por ejemplo: ventas;48000000";
+      return;
+    }
+    estado = { datos: nuevos, ejemplo: false };
+    guardar();
+    llenarFormulario();
+    for (const c of CAMPOS) prolijar(document.getElementById("f-" + c.id));
+    actualizar();
+    const n = Object.keys(nuevos).length;
+    msg.className = "io-estado ok";
+    msg.textContent = `Listo: se cargaron ${n} ${n === 1 ? "dato" : "datos"}.`;
+  }
+
+  function descargar(nombreArchivo, texto) {
+    const blob = new Blob(["﻿" + texto], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = nombreArchivo;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  // Botones que piden un segundo toque para confirmar (en vez de confirm())
+  function conConfirmacion(boton, textoConfirmar, accion, necesita) {
+    const original = boton.textContent;
+    let timer = null;
+    boton.addEventListener("click", () => {
+      if (necesita && !necesita()) { accion(); return; }
+      if (boton.classList.contains("armado")) {
+        clearTimeout(timer);
+        boton.classList.remove("armado");
+        boton.textContent = original;
+        accion();
+        return;
+      }
+      boton.classList.add("armado");
+      boton.textContent = textoConfirmar;
+      timer = setTimeout(() => { boton.classList.remove("armado"); boton.textContent = original; }, 4000);
+    });
+  }
+
+  const hayDatosPropios = () => !estado.ejemplo && Object.values(estado.datos).some((v) => String(v || "").trim());
+
+  function cargar(datos, ejemplo) {
+    estado = { datos: Object.assign({}, datos), ejemplo };
+    guardar();
+    llenarFormulario();
+    actualizar();
+  }
+
+  // ===================== Arranque =====================
+  construirFormulario();
+  const guardado = leerGuardado();
+  if (guardado) estado = { datos: guardado.datos || {}, ejemplo: !!guardado.ejemplo };
+  else estado = { datos: Object.assign({}, EJEMPLO), ejemplo: true };
+  llenarFormulario();
+  actualizar();
+
+  const form = $("#form");
+  form.addEventListener("submit", (e) => e.preventDefault());
+  form.addEventListener("input", (e) => {
+    const input = e.target;
+    if (!input.name || !CAMPO[input.name]) return;
+    estado.datos[input.name] = input.value;
+    estado.ejemplo = false;
+    validar(input);
+    guardar();
+    actualizar();
+  });
+  form.addEventListener("focusout", (e) => {
+    if (e.target.name && CAMPO[e.target.name]) prolijar(e.target);
+  });
+
+  conConfirmacion($("#btn-ejemplo"), "¿Reemplazar tus datos? Tocá de nuevo", () => cargar(EJEMPLO, true), hayDatosPropios);
+  conConfirmacion($("#btn-borrar"), "¿Borrar todo? Tocá de nuevo", () => cargar({ meses: "12" }, false));
+  $("#btn-empezar").addEventListener("click", () => {
+    cargar({ meses: "12" }, false);
+    const primero = document.getElementById("f-nombre");
+    primero.focus();
+    primero.scrollIntoView({ block: "center" });
+  });
+
+  const panelIO = $("#io");
+  function abrirIO(abrir) {
+    panelIO.hidden = !abrir;
+    $("#btn-io").setAttribute("aria-expanded", String(abrir));
+    if (abrir) { $("#io-salida").value = exportarCSV(); $("#io-estado").textContent = ""; }
+  }
+  $("#btn-io").addEventListener("click", () => abrirIO(panelIO.hidden));
+  $("#io-cerrar").addEventListener("click", () => abrirIO(false));
+  $("#io-importar").addEventListener("click", () => importar($("#io-pegar").value));
+  $("#io-archivo").addEventListener("change", (e) => {
+    const archivo = e.target.files && e.target.files[0];
+    if (!archivo) return;
+    const lector = new FileReader();
+    lector.onload = () => { importar(lector.result); e.target.value = ""; };
+    lector.onerror = () => { $("#io-estado").className = "io-estado mal"; $("#io-estado").textContent = "No pude leer el archivo. Probá pegando su contenido."; };
+    lector.readAsText(archivo);
+  });
+  $("#io-copiar").addEventListener("click", () => {
+    const area = $("#io-salida");
+    const msg = $("#io-estado");
+    const fallback = () => { area.focus(); area.select(); msg.className = "io-estado"; msg.textContent = "Seleccioné el texto: copialo con Ctrl+C (o mantené apretado en el celular)."; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(area.value).then(() => { msg.className = "io-estado ok"; msg.textContent = "Copiado."; }, fallback);
+    } else fallback();
+  });
+  $("#io-descargar").addEventListener("click", () => {
+    const base = normalizar(estado.datos.nombre || "") || "negocio";
+    descargar(`estrella-${base}.csv`, exportarCSV());
+  });
+
+  // Tooltip y navegacion desde el grafico
+  const radar = $("#radar");
+  radar.addEventListener("pointerover", (e) => { if (e.target.classList.contains("r-hit")) mostrarTip(+e.target.dataset.i); });
+  radar.addEventListener("pointerout", (e) => { if (e.target.classList.contains("r-hit")) ocultarTip(); });
+  radar.addEventListener("focusin", (e) => { if (e.target.classList.contains("r-hit")) mostrarTip(+e.target.dataset.i); });
+  radar.addEventListener("focusout", ocultarTip);
+  radar.addEventListener("click", (e) => { if (e.target.classList.contains("r-hit")) irAPunta(+e.target.dataset.i); });
+  radar.addEventListener("keydown", (e) => {
+    if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("r-hit")) { e.preventDefault(); irAPunta(+e.target.dataset.i); }
+  });
+})();
+</script>
+</body>
+</html>

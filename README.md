@@ -298,3 +298,39 @@ El cartel de Configuración muestra el motivo exacto. Los más comunes:
 
 Si preferís no configurar nada: **Exportar CSV (Notion/Excel)** baja todos los movimientos y
 posiciones en un archivo que Notion importa como base de datos.
+
+---
+
+## 8. Estrella financiera: ¿el negocio es rentable y saludable? (`/finanzas/estrella.html`)
+
+Otra herramienta suelta, en un solo archivo (`finanzas/estrella.html`), para analizar **cualquier
+negocio** con la técnica de la estrella: se mira el negocio desde cinco lados (las cinco puntas) y
+cada uno se puntúa de 0 a 5 estrellas.
+
+| Punta | La pregunta | Qué mide |
+| --- | --- | --- |
+| Rentabilidad | ¿Gana plata? | Margen neto, rentabilidad del patrimonio (ROE) y de los activos (ROA) |
+| Liquidez | ¿Puede pagar lo del día a día? | Liquidez corriente, prueba ácida y meses de gastos cubiertos con la caja |
+| Endeudamiento | ¿Depende demasiado de deudas? | Deuda sobre patrimonio y cuántas veces la ganancia cubre los intereses |
+| Eficiencia | ¿Usa bien lo que tiene? | Rotación de activos, días de cobro y días de stock |
+| Crecimiento | ¿Está creciendo? | Crecimiento de ventas y de ganancia contra el período anterior, descontando la inflación |
+
+Cómo se usa:
+
+1. Abrí `/finanzas/estrella.html` (o en GitHub Pages, `.../Turnos-Reflexolog-a-y-Yoga/estrella.html`).
+   Arranca con un **ejemplo inventado** para que se vea cómo funciona; con *Empezar con mis datos*
+   se borra y queda listo para cargar.
+2. Cargá los números del negocio en *Tus números*: ventas y gastos del período (estado de
+   resultados), lo que tiene y lo que debe al cierre (balance) y, si querés medir el crecimiento,
+   lo del período anterior y la inflación. Lo que no tengas, dejalo vacío: esos indicadores no se
+   usan y el resultado avisa qué falta.
+3. Arriba aparece el **puntaje general**, la respuesta directa a *¿es rentable?* y *¿es saludable?*,
+   la estrella dibujada (la línea punteada marca el mínimo sano, 3,5 estrellas) y qué conviene
+   mirar primero. Abajo está el detalle de cada punta explicado en criollo.
+
+**Importar / exportar**: el botón de arriba permite cargar un archivo `.csv` (una fila por dato,
+`campo;valor`) o `.json`, o pegar el contenido directamente. Lo exportado sirve también como
+plantilla para completar en Excel o Google Sheets y volver a importar.
+
+Los rangos de cada indicador son orientativos para un negocio chico (cada rubro tiene sus números
+normales) y no reemplazan a un contador. Los datos se guardan sólo en ese navegador.

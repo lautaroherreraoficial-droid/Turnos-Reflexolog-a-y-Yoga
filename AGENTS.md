@@ -17,7 +17,7 @@ acceso a Notion, leelos también.
 
 ## Qué hay en el repo
 
-Dos cosas independientes servidas por el mismo servidor Express (`src/server.js`, Node con ES
+Tres cosas independientes servidas por el mismo servidor Express (`src/server.js`, Node con ES
 modules, sin build):
 
 1. **Turnos (lo principal)**
@@ -40,6 +40,12 @@ modules, sin build):
      Movimientos** vía `/api/finanzas` (`src/finanzasApi.js`, `src/notionFinanzas.js`), protegido
      por `FINANZAS_TOKEN`. El token de Notion nunca va al navegador.
    - Se publica también en GitHub Pages con `.github/workflows/pages.yml` (solo `finanzas/`).
+3. **Estrella financiera** (`finanzas/estrella.html`, ruta `/finanzas/estrella.html`)
+   - Herramienta suelta para analizar cualquier negocio en 5 puntas (rentabilidad, liquidez,
+     endeudamiento, eficiencia, crecimiento), cada una de 0 a 5 estrellas. Un solo HTML sin
+     dependencias, datos en `localStorage`, importa/exporta CSV o JSON.
+   - Escalas de puntaje en `ESCALAS` y consejos en `CONSEJOS`, dentro del mismo archivo.
+   - Como vive en `finanzas/`, también sale en GitHub Pages.
 
 ## Cómo correrlo
 
@@ -74,6 +80,8 @@ Hecho:
   probados localmente.
 - Base "Movimientos" creada en Notion y sincronización implementada.
 - Workflow de GitHub Pages para el dashboard.
+- Estrella financiera (`finanzas/estrella.html`): análisis de 5 puntas con carga manual,
+  importación CSV/JSON y gráfico de estrella.
 
 Pendiente (lo hace Lautaro, no se resuelve con código):
 - Crear la app en Meta y conseguir las credenciales de WhatsApp.
