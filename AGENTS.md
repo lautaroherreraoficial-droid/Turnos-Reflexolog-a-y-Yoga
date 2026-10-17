@@ -40,6 +40,12 @@ modules, sin build):
      Movimientos** vía `/api/finanzas` (`src/finanzasApi.js`, `src/notionFinanzas.js`), protegido
      por `FINANZAS_TOKEN`. El token de Notion nunca va al navegador.
    - Se publica también en GitHub Pages con `.github/workflows/pages.yml` (solo `finanzas/`).
+3. **Simulador de curvatura del espacio-tiempo** (`simulador/index.html`)
+   - Tampoco tiene que ver con los turnos ni lo sirve Express: es un HTML suelto que se abre
+     directo en el navegador. Three.js 0.160 por CDN (import map), todo lo demás adentro.
+   - Visualización pedagógica 3D: vista escolar, Sol en movimiento (hélices) y espacio-tiempo
+     (tubo de mundo); capas de curvatura (malla 3D, capas, halo, geodésicas, vectores) y modos
+     Newton / Einstein. Textos en castellano rioplatense.
 
 ## Cómo correrlo
 
@@ -67,13 +73,14 @@ explicadas en `.env.example`.
 
 ## Estado actual
 
-_Última actualización: 2026-10-11_
+_Última actualización: 2026-10-17_
 
 Hecho:
 - Código del bot, la web pública, el panel `/admin` y el dashboard `/finanzas` completos y
   probados localmente.
 - Base "Movimientos" creada en Notion y sincronización implementada.
 - Workflow de GitHub Pages para el dashboard.
+- Simulador 3D de curvatura del espacio-tiempo en `simulador/index.html` (probado en Chromium).
 
 Pendiente (lo hace Lautaro, no se resuelve con código):
 - Crear la app en Meta y conseguir las credenciales de WhatsApp.
