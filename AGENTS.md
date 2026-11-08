@@ -17,8 +17,8 @@ acceso a Notion, leelos también.
 
 ## Qué hay en el repo
 
-Dos cosas independientes servidas por el mismo servidor Express (`src/server.js`, Node con ES
-modules, sin build):
+Dos cosas servidas por el servidor Express (`src/server.js`, Node con ES modules, sin build) y dos
+páginas sueltas que se publican como artifacts (`local/` y `dumme/`):
 
 1. **Turnos (lo principal)**
    - Bot de WhatsApp (WhatsApp Cloud API de Meta): el cliente escribe, el bot pregunta servicio →
@@ -48,10 +48,24 @@ modules, sin build):
      ángulo con aberturas, muebles con giro). `local/generar_modelo.py` (Python + `ifcopenshell`,
      aparte del proyecto Node) lo lee y genera `casa-negocio.ifc` (Revit) y `visor.html`.
    - `visor.html` está publicado como artifact: https://claude.ai/artifact/QdHqXFLhr8wXBGwt1suP6x
-     Es **editable** (muebles, paredes, pisos) y guarda en su base, documento `planos/actual`
-     (capacidades `db` + `user`, solo editores escriben). Lo que Lautaro edita vive ahí, no en
-     el repo: para pasarlo a Revit, bajar ese documento y correr
-     `python generar_modelo.py --desde plano.json`. Al republicar, usar la misma URL.
+     Es **editable** (muebles, paredes, pisos; también editar o borrar desde la tarjeta de un
+     mueble) y guarda en su base, documento `planos/actual` (capacidades `db` + `user`, solo
+     editores escriben). Lo que Lautaro edita vive ahí, no en el repo: para pasarlo a Revit,
+     bajar ese documento y correr `python generar_modelo.py --desde plano.json`. Al republicar,
+     usar la misma URL y no pisar ese documento sin leerlo antes.
+   - Desde el 2026-11-08 el local es de **Dumme** (la consultora de Lautaro): sala de asesoría,
+     showroom de productos para negocios con venta por pedido, y oficina.
+4. **Dumme: software de análisis de procesos** (`dumme/`, no lo sirve Express)
+   - `dumme/procesos.html`: toma de tiempos con cronómetro, cursograma actual vs. propuesto,
+     centro de gravedad (con punto óptimo de Weiszfeld) y generador del certificado y del cartel
+     «Negocio optimizado por Dumme». Un solo HTML con las fuentes embebidas, sin librerías.
+   - Publicado como artifact: https://claude.ai/artifact/JXxfS9Fk5p2V9QzywPowCq. Guarda cada
+     estudio en la colección `estudios` de su base (solo editores leen y escriben) y descarga
+     CSV, SVG y PNG con la capacidad `downloads`.
+   - `dumme/descargar/`: las mismas páginas listas para abrir sueltas en el navegador (ahí no
+     guardan; el guardado funciona solo dentro de Claude).
+   - El sistema de la consultora (clientes, servicios, técnicos, red de referidos, productos)
+     vive en Notion, página **Dumme**, no en este repo.
 
 ## Cómo correrlo
 
@@ -86,8 +100,9 @@ Hecho:
   probados localmente.
 - Base "Movimientos" creada en Notion y sincronización implementada.
 - Workflow de GitHub Pages para el dashboard.
-- Modelo 3D del local (`local/`): IFC para Revit, visor web editable (guarda en el artifact) y
-  plan de productos y venta online. Tienda en la esquina con ochava (2026-11-08).
+- Modelo 3D del local (`local/`): IFC para Revit, visor web editable (guarda en el artifact).
+  Tienda en la esquina con ochava, convertida en showroom de Dumme (2026-11-08).
+- Software de análisis de procesos de Dumme (`dumme/procesos.html`), publicado como artifact.
 
 Pendiente (lo hace Lautaro, no se resuelve con código):
 - Crear la app en Meta y conseguir las credenciales de WhatsApp.
