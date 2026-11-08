@@ -40,6 +40,13 @@ modules, sin build):
      Movimientos** vía `/api/finanzas` (`src/finanzasApi.js`, `src/notionFinanzas.js`), protegido
      por `FINANZAS_TOKEN`. El token de Notion nunca va al navegador.
    - Se publica también en GitHub Pages con `.github/workflows/pages.yml` (solo `finanzas/`).
+3. **Modelo 3D del local** (`local/`, no lo sirve Express)
+   - Diseño de la casa + local: tienda a la calle, gabinete de masajes/reflexología y la oficina
+     como depósito para venta online. Incluye el plan de qué productos vender.
+   - `local/generar_modelo.py` (Python + `ifcopenshell`, aparte del proyecto Node) tiene las
+     medidas y genera `casa-negocio.ifc` (para Revit), `modelo.json` y `visor.html`.
+   - `visor.html` está publicado como artifact: https://claude.ai/artifact/QdHqXFLhr8wXBGwt1suP6x
+     (para actualizarlo, regenerar y volver a publicar ese archivo en la misma URL).
 
 ## Cómo correrlo
 
@@ -67,13 +74,14 @@ explicadas en `.env.example`.
 
 ## Estado actual
 
-_Última actualización: 2026-10-11_
+_Última actualización: 2026-11-08_
 
 Hecho:
 - Código del bot, la web pública, el panel `/admin` y el dashboard `/finanzas` completos y
   probados localmente.
 - Base "Movimientos" creada en Notion y sincronización implementada.
 - Workflow de GitHub Pages para el dashboard.
+- Modelo 3D del local (`local/`): IFC para Revit, visor web y plan de productos y venta online.
 
 Pendiente (lo hace Lautaro, no se resuelve con código):
 - Crear la app en Meta y conseguir las credenciales de WhatsApp.
@@ -87,5 +95,9 @@ Pendiente en el código antes de recibir clientes reales:
 - `frontend/script.js`: número real en `NUMERO_WHATSAPP` (hoy es `5490000000000`).
 - Confirmar `duracionTurnoMinutos`.
 
+Pendiente en el modelo del local:
+- Medidas reales del terreno y de cada ambiente (hoy son estimadas desde capturas).
+
 Ideas a futuro (sin decidir):
+- Que el bot ofrezca gift cards o productos al confirmar un turno (catálogo en `src/config.js`).
 - Guardar las sesiones del bot en una base en vez de en memoria si crece el volumen.

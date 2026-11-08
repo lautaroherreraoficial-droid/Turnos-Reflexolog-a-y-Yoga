@@ -1,0 +1,884 @@
+{
+ "ancho": 10.5,
+ "fondo": 11.0,
+ "alto": 2.6,
+ "zonas": {
+  "servicio": "Servicio",
+  "tienda": "Tienda",
+  "ecommerce": "Venta online",
+  "casa": "Casa",
+  "exterior": "Exterior"
+ },
+ "ambientes": [
+  {
+   "id": "dorm",
+   "num": "1",
+   "nombre": "Dormitorio principal",
+   "zona": "casa",
+   "rects": [
+    [
+     0,
+     0,
+     4.4,
+     3.8
+    ]
+   ],
+   "info": "Queda igual. Es la parte más privada, lejos del local.",
+   "area": 16.7
+  },
+  {
+   "id": "ofi",
+   "num": "2",
+   "nombre": "Oficina + depósito",
+   "zona": "ecommerce",
+   "rects": [
+    [
+     0,
+     3.8,
+     3.4,
+     7.2
+    ]
+   ],
+   "info": "El motor de la venta online: stock en estantería, mesa de empaque, rincón para sacar fotos y la compu para responder pedidos. Tiene puerta directa a la tienda.",
+   "area": 11.6
+  },
+  {
+   "id": "bano",
+   "num": "3",
+   "nombre": "Baño",
+   "zona": "casa",
+   "rects": [
+    [
+     3.4,
+     4.8,
+     4.9,
+     7.2
+    ]
+   ],
+   "info": "Lo usan también los clientes del gabinete.",
+   "area": 3.6
+  },
+  {
+   "id": "coc",
+   "num": "4",
+   "nombre": "Cocina",
+   "zona": "casa",
+   "rects": [
+    [
+     4.4,
+     0,
+     8.0,
+     3.8
+    ]
+   ],
+   "info": "Abierta al living. Ventana al patio.",
+   "area": 13.7
+  },
+  {
+   "id": "tienda",
+   "num": "5a",
+   "nombre": "Tienda",
+   "zona": "tienda",
+   "rects": [
+    [
+     0,
+     7.2,
+     4.3,
+     11
+    ]
+   ],
+   "info": "Local a la calle: vidriera, góndola de productos, mesa de kits y mostrador donde se cobra y se retiran pedidos online. También es la sala de espera del gabinete.",
+   "area": 16.3
+  },
+  {
+   "id": "gab",
+   "num": "5b",
+   "nombre": "Gabinete",
+   "zona": "servicio",
+   "rects": [
+    [
+     4.3,
+     7.2,
+     8.0,
+     11
+    ]
+   ],
+   "info": "Masajes y reflexología. Separado de la tienda con tabique y puerta para que haya silencio y privacidad. Ventana alta esmerilada.",
+   "area": 14.1
+  },
+  {
+   "id": "living",
+   "num": "6",
+   "nombre": "Living comedor",
+   "zona": "casa",
+   "rects": [
+    [
+     4.4,
+     3.8,
+     8.0,
+     4.8
+    ],
+    [
+     4.9,
+     4.8,
+     8.0,
+     7.2
+    ]
+   ],
+   "info": "Conecta la casa con el gabinete (puerta privada) y con el ingreso.",
+   "area": 11.0
+  },
+  {
+   "id": "paso",
+   "num": "",
+   "nombre": "Paso",
+   "zona": "casa",
+   "rects": [
+    [
+     3.4,
+     3.8,
+     4.4,
+     4.8
+    ]
+   ],
+   "info": "Distribuidor de 1 × 1 m.",
+   "area": 1.0
+  },
+  {
+   "id": "patio",
+   "num": "",
+   "nombre": "Patio",
+   "zona": "exterior",
+   "rects": [
+    [
+     8.0,
+     0,
+     10.5,
+     6.0
+    ]
+   ],
+   "info": "15 m². Entran 2 o 3 colchonetas: clases de yoga individuales o de a dos.",
+   "area": 15.0
+  },
+  {
+   "id": "ingreso",
+   "num": "",
+   "nombre": "Ingreso y despacho",
+   "zona": "exterior",
+   "rects": [
+    [
+     8.0,
+     6.0,
+     10.5,
+     11
+    ]
+   ],
+   "info": "Por el portón entra la gente de la casa y sale la mercadería: el correo o la moto retira los pedidos sin pasar por el local.",
+   "area": 12.5
+  }
+ ],
+ "paredes": [
+  {
+   "x0": 0,
+   "y0": 0,
+   "x1": 10.5,
+   "y1": 0,
+   "t": 0.2,
+   "aberturas": [
+    {
+     "a": 1.2,
+     "b": 3.2,
+     "antepecho": 1.0,
+     "dintel": 2.2,
+     "tipo": "ventana",
+     "nombre": "Ventana dormitorio"
+    },
+    {
+     "a": 5.2,
+     "b": 6.7,
+     "antepecho": 1.1,
+     "dintel": 2.1,
+     "tipo": "ventana",
+     "nombre": "Ventana cocina"
+    }
+   ]
+  },
+  {
+   "x0": 0,
+   "y0": 0,
+   "x1": 0,
+   "y1": 11.0,
+   "t": 0.2,
+   "aberturas": []
+  },
+  {
+   "x0": 10.5,
+   "y0": 0,
+   "x1": 10.5,
+   "y1": 11.0,
+   "t": 0.2,
+   "aberturas": []
+  },
+  {
+   "x0": 0,
+   "y0": 11.0,
+   "x1": 10.5,
+   "y1": 11.0,
+   "t": 0.2,
+   "aberturas": [
+    {
+     "a": 0.3,
+     "b": 2.5,
+     "antepecho": 0.3,
+     "dintel": 2.4,
+     "tipo": "ventana",
+     "nombre": "Vidriera"
+    },
+    {
+     "a": 2.8,
+     "b": 3.7,
+     "antepecho": 0,
+     "dintel": 2.2,
+     "tipo": "puerta",
+     "nombre": "Puerta del local"
+    },
+    {
+     "a": 4.9,
+     "b": 7.4,
+     "antepecho": 1.5,
+     "dintel": 2.2,
+     "tipo": "ventana",
+     "nombre": "Ventana alta gabinete"
+    },
+    {
+     "a": 8.2,
+     "b": 10.3,
+     "antepecho": 0,
+     "dintel": 2.2,
+     "tipo": "porton",
+     "nombre": "Portón"
+    }
+   ]
+  },
+  {
+   "x0": 8.0,
+   "y0": 0,
+   "x1": 8.0,
+   "y1": 11.0,
+   "t": 0.2,
+   "aberturas": [
+    {
+     "a": 1.2,
+     "b": 2.4,
+     "antepecho": 1.0,
+     "dintel": 2.1,
+     "tipo": "ventana",
+     "nombre": "Ventana cocina al patio"
+    },
+    {
+     "a": 4.0,
+     "b": 4.9,
+     "antepecho": 0,
+     "dintel": 2.1,
+     "tipo": "puerta",
+     "nombre": "Puerta ventana al patio"
+    },
+    {
+     "a": 6.2,
+     "b": 7.0,
+     "antepecho": 0,
+     "dintel": 2.1,
+     "tipo": "puerta",
+     "nombre": "Puerta de la casa"
+    }
+   ]
+  },
+  {
+   "x0": 0,
+   "y0": 3.8,
+   "x1": 8.0,
+   "y1": 3.8,
+   "t": 0.12,
+   "aberturas": [
+    {
+     "a": 3.5,
+     "b": 4.3,
+     "antepecho": 0,
+     "dintel": 2.05,
+     "tipo": "puerta",
+     "nombre": "Puerta dormitorio"
+    },
+    {
+     "a": 5.6,
+     "b": 7.2,
+     "antepecho": 0,
+     "dintel": 2.1,
+     "tipo": "pase",
+     "nombre": "Pase cocina-living"
+    }
+   ]
+  },
+  {
+   "x0": 4.4,
+   "y0": 0,
+   "x1": 4.4,
+   "y1": 3.8,
+   "t": 0.12,
+   "aberturas": []
+  },
+  {
+   "x0": 3.4,
+   "y0": 3.8,
+   "x1": 3.4,
+   "y1": 7.2,
+   "t": 0.12,
+   "aberturas": [
+    {
+     "a": 0.1,
+     "b": 0.9,
+     "antepecho": 0,
+     "dintel": 2.05,
+     "tipo": "puerta",
+     "nombre": "Puerta oficina"
+    }
+   ]
+  },
+  {
+   "x0": 3.4,
+   "y0": 4.8,
+   "x1": 4.9,
+   "y1": 4.8,
+   "t": 0.12,
+   "aberturas": [
+    {
+     "a": 0.05,
+     "b": 0.7,
+     "antepecho": 0,
+     "dintel": 2.05,
+     "tipo": "puerta",
+     "nombre": "Puerta baño"
+    }
+   ]
+  },
+  {
+   "x0": 4.9,
+   "y0": 4.8,
+   "x1": 4.9,
+   "y1": 7.2,
+   "t": 0.12,
+   "aberturas": []
+  },
+  {
+   "x0": 0,
+   "y0": 7.2,
+   "x1": 8.0,
+   "y1": 7.2,
+   "t": 0.12,
+   "aberturas": [
+    {
+     "a": 2.2,
+     "b": 3.0,
+     "antepecho": 0,
+     "dintel": 2.05,
+     "tipo": "puerta",
+     "nombre": "Puerta depósito-tienda"
+    },
+    {
+     "a": 5.4,
+     "b": 6.2,
+     "antepecho": 0,
+     "dintel": 2.05,
+     "tipo": "puerta",
+     "nombre": "Puerta privada al gabinete"
+    }
+   ]
+  },
+  {
+   "x0": 4.3,
+   "y0": 7.2,
+   "x1": 4.3,
+   "y1": 11.0,
+   "t": 0.12,
+   "aberturas": [
+    {
+     "a": 0.8,
+     "b": 1.6,
+     "antepecho": 0,
+     "dintel": 2.05,
+     "tipo": "puerta",
+     "nombre": "Puerta del gabinete"
+    }
+   ]
+  }
+ ],
+ "muebles": [
+  {
+   "id": "cama",
+   "nombre": "Cama 2 plazas",
+   "zona": "casa",
+   "x0": 1.4,
+   "y0": 0.15,
+   "x1": 3.0,
+   "y1": 2.15,
+   "z": 0,
+   "h": 0.5,
+   "tipo": "cama",
+   "info": ""
+  },
+  {
+   "id": "luz1",
+   "nombre": "Mesa de luz",
+   "zona": "casa",
+   "x0": 0.85,
+   "y0": 0.15,
+   "x1": 1.3,
+   "y1": 0.6,
+   "z": 0,
+   "h": 0.5,
+   "tipo": "madera",
+   "info": ""
+  },
+  {
+   "id": "luz2",
+   "nombre": "Mesa de luz",
+   "zona": "casa",
+   "x0": 3.1,
+   "y0": 0.15,
+   "x1": 3.55,
+   "y1": 0.6,
+   "z": 0,
+   "h": 0.5,
+   "tipo": "madera",
+   "info": ""
+  },
+  {
+   "id": "placard",
+   "nombre": "Placard",
+   "zona": "casa",
+   "x0": 3.75,
+   "y0": 0.9,
+   "x1": 4.32,
+   "y1": 3.0,
+   "z": 0,
+   "h": 2.2,
+   "tipo": "madera",
+   "info": ""
+  },
+  {
+   "id": "stock",
+   "nombre": "Estantería de stock",
+   "zona": "ecommerce",
+   "x0": 0.1,
+   "y0": 3.9,
+   "x1": 2.5,
+   "y1": 4.35,
+   "z": 0,
+   "h": 2.0,
+   "tipo": "estante",
+   "info": "2,40 m · 5 estantes con cajas rotuladas por producto. Acá vive todo lo que se vende online."
+  },
+  {
+   "id": "escritorio",
+   "nombre": "Escritorio y compu",
+   "zona": "ecommerce",
+   "x0": 0.1,
+   "y0": 4.6,
+   "x1": 0.8,
+   "y1": 6.0,
+   "z": 0,
+   "h": 0.75,
+   "tipo": "mesa",
+   "info": "Para responder WhatsApp, cargar productos a la tienda online e imprimir etiquetas."
+  },
+  {
+   "id": "silla",
+   "nombre": "Silla",
+   "zona": "ecommerce",
+   "x0": 0.95,
+   "y0": 5.05,
+   "x1": 1.4,
+   "y1": 5.5,
+   "z": 0,
+   "h": 0.45,
+   "tipo": "tela",
+   "info": ""
+  },
+  {
+   "id": "empaque",
+   "nombre": "Mesa de empaque",
+   "zona": "ecommerce",
+   "x0": 2.75,
+   "y0": 5.0,
+   "x1": 3.35,
+   "y1": 6.4,
+   "z": 0,
+   "h": 0.9,
+   "tipo": "mesa_blanca",
+   "info": "Cajas, cinta, papel de seda, tarjetita escrita a mano y etiqueta de envío."
+  },
+  {
+   "id": "fotos",
+   "nombre": "Rincón de fotos",
+   "zona": "ecommerce",
+   "x0": 0.15,
+   "y0": 6.35,
+   "x1": 0.85,
+   "y1": 7.05,
+   "z": 0,
+   "h": 0.75,
+   "tipo": "mesa_blanca",
+   "info": "Mesita con fondo blanco y una luz. Con fotos parejas, la tienda online se ve profesional."
+  },
+  {
+   "id": "fondo",
+   "nombre": "Fondo blanco",
+   "zona": "ecommerce",
+   "x0": 0.1,
+   "y0": 6.3,
+   "x1": 0.16,
+   "y1": 7.1,
+   "z": 0.75,
+   "h": 0.9,
+   "tipo": "panel",
+   "info": ""
+  },
+  {
+   "id": "cajas",
+   "nombre": "Cajas de envío",
+   "zona": "ecommerce",
+   "x0": 1.2,
+   "y0": 6.55,
+   "x1": 1.8,
+   "y1": 7.05,
+   "z": 0,
+   "h": 0.5,
+   "tipo": "cajas",
+   "info": ""
+  },
+  {
+   "id": "inodoro",
+   "nombre": "Inodoro",
+   "zona": "casa",
+   "x0": 3.55,
+   "y0": 6.5,
+   "x1": 3.95,
+   "y1": 7.1,
+   "z": 0,
+   "h": 0.4,
+   "tipo": "blanco",
+   "info": ""
+  },
+  {
+   "id": "lavatorio",
+   "nombre": "Lavatorio",
+   "zona": "casa",
+   "x0": 4.35,
+   "y0": 6.6,
+   "x1": 4.82,
+   "y1": 7.08,
+   "z": 0,
+   "h": 0.85,
+   "tipo": "blanco",
+   "info": ""
+  },
+  {
+   "id": "ducha",
+   "nombre": "Ducha",
+   "zona": "casa",
+   "x0": 4.15,
+   "y0": 4.88,
+   "x1": 4.82,
+   "y1": 5.9,
+   "z": 0,
+   "h": 0.06,
+   "tipo": "blanco",
+   "info": ""
+  },
+  {
+   "id": "mesada",
+   "nombre": "Mesada",
+   "zona": "casa",
+   "x0": 4.5,
+   "y0": 0.1,
+   "x1": 7.2,
+   "y1": 0.7,
+   "z": 0,
+   "h": 0.9,
+   "tipo": "blanco",
+   "info": ""
+  },
+  {
+   "id": "heladera",
+   "nombre": "Heladera",
+   "zona": "casa",
+   "x0": 7.3,
+   "y0": 0.1,
+   "x1": 7.9,
+   "y1": 0.75,
+   "z": 0,
+   "h": 1.8,
+   "tipo": "gris",
+   "info": ""
+  },
+  {
+   "id": "desayunador",
+   "nombre": "Desayunador",
+   "zona": "casa",
+   "x0": 5.6,
+   "y0": 2.2,
+   "x1": 6.8,
+   "y1": 2.9,
+   "z": 0,
+   "h": 0.9,
+   "tipo": "mesa",
+   "info": ""
+  },
+  {
+   "id": "sofa",
+   "nombre": "Sofá",
+   "zona": "casa",
+   "x0": 4.98,
+   "y0": 5.2,
+   "x1": 5.8,
+   "y1": 6.9,
+   "z": 0,
+   "h": 0.8,
+   "tipo": "tela",
+   "info": ""
+  },
+  {
+   "id": "ratona",
+   "nombre": "Mesa ratona",
+   "zona": "casa",
+   "x0": 6.0,
+   "y0": 5.7,
+   "x1": 6.5,
+   "y1": 6.5,
+   "z": 0,
+   "h": 0.4,
+   "tipo": "mesa",
+   "info": ""
+  },
+  {
+   "id": "comedor",
+   "nombre": "Mesa comedor",
+   "zona": "casa",
+   "x0": 6.4,
+   "y0": 4.3,
+   "x1": 7.4,
+   "y1": 5.1,
+   "z": 0,
+   "h": 0.75,
+   "tipo": "mesa",
+   "info": ""
+  },
+  {
+   "id": "gondola",
+   "nombre": "Góndola de productos",
+   "zona": "tienda",
+   "x0": 0.1,
+   "y0": 7.45,
+   "x1": 0.5,
+   "y1": 10.3,
+   "z": 0,
+   "h": 2.1,
+   "tipo": "estante",
+   "info": "5 estantes a la vista: aceites, cremas, velas, sahumerios y accesorios de yoga."
+  },
+  {
+   "id": "vidriera",
+   "nombre": "Exhibidor de vidriera",
+   "zona": "tienda",
+   "x0": 0.4,
+   "y0": 10.45,
+   "x1": 2.4,
+   "y1": 10.85,
+   "z": 0,
+   "h": 0.45,
+   "tipo": "madera",
+   "info": "Tarima baja detrás del vidrio. Se cambia según la fecha: Navidad, Día de la Madre, invierno."
+  },
+  {
+   "id": "kits",
+   "nombre": "Mesa de kits y regalos",
+   "zona": "tienda",
+   "x0": 1.1,
+   "y0": 8.5,
+   "x1": 2.3,
+   "y1": 9.5,
+   "z": 0,
+   "h": 0.85,
+   "tipo": "mesa",
+   "info": "Kits armados y gift cards a la mano: lo que se lleva alguien que entra a mirar."
+  },
+  {
+   "id": "mostrador",
+   "nombre": "Mostrador",
+   "zona": "tienda",
+   "x0": 3.35,
+   "y0": 8.9,
+   "x1": 4.2,
+   "y1": 10.2,
+   "z": 0,
+   "h": 1.0,
+   "tipo": "blanco",
+   "info": "Caja con QR de Mercado Pago, bolsas y el estante de pedidos online listos para retirar."
+  },
+  {
+   "id": "banco",
+   "nombre": "Banco de espera",
+   "zona": "tienda",
+   "x0": 3.15,
+   "y0": 7.3,
+   "x1": 4.2,
+   "y1": 7.72,
+   "z": 0,
+   "h": 0.45,
+   "tipo": "tela",
+   "info": "Quien espera su turno mira los productos. La espera también vende."
+  },
+  {
+   "id": "planta1",
+   "nombre": "Planta",
+   "zona": "tienda",
+   "x0": 2.45,
+   "y0": 10.45,
+   "x1": 2.75,
+   "y1": 10.75,
+   "z": 0,
+   "h": 1.1,
+   "tipo": "planta",
+   "info": ""
+  },
+  {
+   "id": "camilla",
+   "nombre": "Camilla de masajes",
+   "zona": "servicio",
+   "x0": 5.7,
+   "y0": 8.3,
+   "x1": 6.4,
+   "y1": 10.2,
+   "z": 0,
+   "h": 0.75,
+   "tipo": "camilla",
+   "info": "Con 70 cm libres alrededor para moverse cómoda."
+  },
+  {
+   "id": "reflexo",
+   "nombre": "Sillón de reflexología",
+   "zona": "servicio",
+   "x0": 7.0,
+   "y0": 7.6,
+   "x1": 7.8,
+   "y1": 9.2,
+   "z": 0,
+   "h": 0.6,
+   "tipo": "tela",
+   "info": "Reclinable, con los pies a la altura de las manos."
+  },
+  {
+   "id": "banqueta",
+   "nombre": "Banqueta con ruedas",
+   "zona": "servicio",
+   "x0": 6.6,
+   "y0": 9.6,
+   "x1": 6.95,
+   "y1": 9.95,
+   "z": 0,
+   "h": 0.5,
+   "tipo": "cilindro",
+   "info": ""
+  },
+  {
+   "id": "apoyo",
+   "nombre": "Mueble de apoyo",
+   "zona": "servicio",
+   "x0": 4.45,
+   "y0": 9.5,
+   "x1": 4.9,
+   "y1": 10.8,
+   "z": 0,
+   "h": 0.9,
+   "tipo": "madera",
+   "info": "Toallas, aceites en uso, parlante. Lo que se usa en la sesión se puede comprar en la tienda."
+  },
+  {
+   "id": "planta2",
+   "nombre": "Planta",
+   "zona": "servicio",
+   "x0": 7.45,
+   "y0": 10.35,
+   "x1": 7.8,
+   "y1": 10.7,
+   "z": 0,
+   "h": 1.2,
+   "tipo": "planta",
+   "info": ""
+  },
+  {
+   "id": "mat1",
+   "nombre": "Colchoneta de yoga",
+   "zona": "servicio",
+   "x0": 8.35,
+   "y0": 0.8,
+   "x1": 8.95,
+   "y1": 2.6,
+   "z": 0,
+   "h": 0.01,
+   "tipo": "mat",
+   "info": "En el patio entran 2 o 3 colchonetas para clases individuales o de a dos."
+  },
+  {
+   "id": "mat2",
+   "nombre": "Colchoneta de yoga",
+   "zona": "servicio",
+   "x0": 9.5,
+   "y0": 0.8,
+   "x1": 10.1,
+   "y1": 2.6,
+   "z": 0,
+   "h": 0.01,
+   "tipo": "mat",
+   "info": ""
+  },
+  {
+   "id": "planta3",
+   "nombre": "Planta",
+   "zona": "exterior",
+   "x0": 8.2,
+   "y0": 5.3,
+   "x1": 8.6,
+   "y1": 5.7,
+   "z": 0,
+   "h": 1.0,
+   "tipo": "planta",
+   "info": ""
+  },
+  {
+   "id": "planta4",
+   "nombre": "Planta",
+   "zona": "exterior",
+   "x0": 9.95,
+   "y0": 5.3,
+   "x1": 10.3,
+   "y1": 5.65,
+   "z": 0,
+   "h": 0.9,
+   "tipo": "planta",
+   "info": ""
+  },
+  {
+   "id": "despacho",
+   "nombre": "Pedidos listos para despachar",
+   "zona": "ecommerce",
+   "x0": 9.85,
+   "y0": 8.9,
+   "x1": 10.35,
+   "y1": 10.0,
+   "z": 0,
+   "h": 0.6,
+   "tipo": "cajas",
+   "info": "El correo o la moto retiran por el portón sin entrar al local."
+  }
+ ]
+}

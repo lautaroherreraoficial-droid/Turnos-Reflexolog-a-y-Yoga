@@ -1,0 +1,799 @@
+<title>Casa + negocio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Lamina de obra: el modelo 3D es la lamina principal, abajo el plan de negocio en una columna de lectura */
+:root {
+  --bg: #F1F3EF;
+  --surface: #FFFFFF;
+  --stage: #E6EAE4;
+  --ink: #17221E;
+  --muted: #55625C;
+  --line: #D5DCD6;
+  --accent: #1D5A4B;
+  --accent-ink: #FFFFFF;
+  --grid: #CBD3CC;
+  --z-servicio: #7A62B8;
+  --z-tienda: #B9761F;
+  --z-ecommerce: #2C6CA6;
+  --z-casa: #7C8882;
+  --z-exterior: #5E8C4B;
+  --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111814; --surface: #19221E; --stage: #1D2723; --ink: #E4EBE6; --muted: #9AA9A1;
+    --line: #2C3832; --accent: #6CC2A6; --accent-ink: #0E1A15; --grid: #33413A;
+    --z-servicio: #A994E0; --z-tienda: #E0A452; --z-ecommerce: #6FA9DE; --z-casa: #A3AEA8; --z-exterior: #8CBD76;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111814; --surface: #19221E; --stage: #1D2723; --ink: #E4EBE6; --muted: #9AA9A1;
+  --line: #2C3832; --accent: #6CC2A6; --accent-ink: #0E1A15; --grid: #33413A;
+  --z-servicio: #A994E0; --z-tienda: #E0A452; --z-ecommerce: #6FA9DE; --z-casa: #A3AEA8; --z-exterior: #8CBD76;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.02; font-weight: 700; }
+h2 { font-size: clamp(1.45rem, 3.6vw, 1.9rem); line-height: 1.1; font-weight: 700; }
+h3 { font-size: 1.12rem; line-height: 1.25; font-weight: 700; }
+p { margin: 0; }
+.eyebrow { font-family: var(--font-data); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lead { font-size: 1.08rem; color: var(--muted); max-width: 62ch; }
+.mono { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+header.top { display: grid; gap: 12px; }
+
+/* ---------- visor ---------- */
+.sheet { display: grid; gap: 10px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 2px; flex-wrap: wrap; }
+.seg button, .toggle, .chip {
+  font: 500 0.88rem/1 var(--font-body); color: var(--ink); background: transparent;
+  border: 0; border-radius: 7px; padding: 9px 12px; cursor: pointer; min-height: 36px;
+}
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.toggle { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.toggle[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.stage {
+  position: relative; height: min(620px, 68vh, max(380px, 112vw)); border-radius: 14px; overflow: hidden;
+  background: var(--stage); border: 1px solid var(--line);
+}
+.stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.tags { position: absolute; inset: 0; pointer-events: none; }
+.tag {
+  position: absolute; left: 0; top: 0; pointer-events: auto; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px 4px 4px;
+  font: 500 0.78rem/1 var(--font-body); color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.12); cursor: pointer; transition: opacity .2s;
+}
+.tag.sinnum { padding-left: 9px; }
+.tag b { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 999px; color: #fff; font: 600 0.72rem/1 var(--font-data); }
+.tag .m2 { color: var(--muted); font-family: var(--font-data); font-size: 0.7rem; }
+.tag.dim { opacity: 0.25; }
+.tag.solo { padding: 3px; gap: 0; }
+.tag.solo .nom, .tag.solo .m2, .tag.corto .m2 { display: none; }
+.clave { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 2px 16px; }
+.clave button { width: 100%; display: flex; align-items: center; gap: 8px; padding: 6px 2px; background: none; border: 0; border-bottom: 1px solid var(--line); color: var(--ink); font: 400 0.9rem/1.2 var(--font-body); text-align: left; cursor: pointer; }
+.clave b { display: inline-grid; place-items: center; min-width: 24px; height: 22px; padding: 0 5px; border-radius: 999px; color: #fff; font: 600 0.72rem/1 var(--font-data); flex: none; }
+.clave b.vacio { background: transparent !important; border: 1px dashed var(--line); }
+.clave .m2 { margin-left: auto; color: var(--muted); font: 400 0.8rem/1 var(--font-data); font-variant-numeric: tabular-nums; }
+.hint {
+  position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%);
+  font-size: 0.78rem; color: var(--muted); background: var(--surface); border: 1px solid var(--line);
+  padding: 6px 12px; border-radius: 999px; white-space: nowrap; pointer-events: none; max-width: calc(100% - 24px); overflow: hidden; text-overflow: ellipsis;
+}
+.card {
+  position: absolute; left: 10px; right: 10px; bottom: 10px; max-width: 420px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 44px 14px 14px;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.16); display: grid; gap: 6px;
+}
+.card .close { position: absolute; top: 6px; right: 6px; width: 34px; height: 34px; border: 0; background: transparent; color: var(--muted); font-size: 1.3rem; border-radius: 8px; cursor: pointer; }
+.card .medida { font-family: var(--font-data); font-size: 0.78rem; color: var(--muted); }
+.card p { font-size: 0.92rem; }
+.zpill { display: inline-flex; align-items: center; gap: 6px; font: 500 0.72rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.dot { width: 10px; height: 10px; border-radius: 3px; background: var(--c, var(--muted)); flex: none; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 7px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; }
+.chip[aria-pressed="true"] { border-color: var(--c); box-shadow: inset 0 0 0 1px var(--c); }
+.rotulo {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface);
+}
+.rotulo div { padding: 8px 12px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 0 -1px -1px 0; display: grid; gap: 2px; }
+.rotulo span { font: 400 0.66rem/1.2 var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.rotulo strong { font: 500 0.9rem/1.3 var(--font-data); font-variant-numeric: tabular-nums; }
+.nogl { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--muted); }
+
+/* ---------- lectura ---------- */
+.col { max-width: 760px; display: grid; gap: 18px; }
+section { display: grid; gap: 18px; }
+.cambios { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.cambio { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.cambio .zpill { margin-bottom: 2px; }
+.cambio p { font-size: 0.93rem; color: var(--muted); }
+
+.tesis { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.25rem, 3.2vw, 1.6rem); line-height: 1.25; max-width: 30ch; }
+.ranking { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--line); }
+.ranking li { display: grid; grid-template-columns: 2.6rem 1fr; gap: 4px 12px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.ranking .n { font: 700 1.9rem/1 var(--font-display); color: var(--accent); grid-row: span 3; }
+.ranking h3 { padding-top: 4px; }
+.ranking p { color: var(--muted); font-size: 0.95rem; min-width: 0; }
+.tags-row { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 4px; }
+.t { font: 400 0.72rem/1 var(--font-data); padding: 5px 8px; border-radius: 6px; border: 1px solid var(--line); color: var(--muted); background: var(--surface); }
+.t.si { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.later { font-size: 0.95rem; color: var(--muted); }
+.evitar { display: grid; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.evitar ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 4px; color: var(--muted); font-size: 0.95rem; }
+
+.canales { display: grid; border-top: 1px solid var(--line); }
+.canal { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: 4px 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.canal h3 { font-size: 1rem; }
+.canal p { color: var(--muted); font-size: 0.95rem; }
+.canal .cuando { font: 400 0.72rem/1.3 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); padding-top: 3px; }
+@media (max-width: 560px) { .canal { grid-template-columns: 1fr; } }
+
+.plan { display: grid; gap: 14px; }
+.etapa { display: grid; grid-template-columns: 7.2rem minmax(0, 1fr); gap: 12px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.etapa .cuando { font: 500 0.8rem/1.35 var(--font-data); color: var(--muted); padding-top: 3px; }
+.etapa .cuando strong { display: block; color: var(--ink); font-size: 0.86rem; }
+.etapa ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 6px; }
+.etapa li::marker { color: var(--accent); }
+@media (max-width: 560px) { .etapa { grid-template-columns: 1fr; gap: 6px; } }
+.ojo { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 10px; }
+.ojo ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 6px; color: var(--muted); font-size: 0.95rem; }
+.ojo strong { color: var(--ink); }
+
+.revit ol { margin: 0; padding-left: 1.3rem; display: grid; gap: 6px; }
+.revit .archivo { font-family: var(--font-data); font-size: 0.86rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; white-space: nowrap; }
+footer { color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--line); padding-top: 14px; }
+@media (prefers-reduced-motion: reduce) { .tag { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">Planta baja · servicio + producto + venta online</p>
+    <h1>Casa + negocio</h1>
+    <p class="lead">Tu distribución pasada a modelo 3D. El local se parte en tienda y gabinete, y la oficina pasa a ser el depósito desde donde salen los pedidos online.</p>
+  </header>
+
+  <section class="sheet" aria-label="Modelo 3D">
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Vista">
+        <button id="v-general" data-view="general" aria-pressed="true">3D</button>
+        <button id="v-planta" data-view="planta" aria-pressed="false">Planta</button>
+        <button id="v-local" data-view="local" aria-pressed="false">Local</button>
+        <button id="v-deposito" data-view="deposito" aria-pressed="false">Depósito</button>
+      </div>
+      <button class="toggle" id="t-paredes" aria-pressed="false">Paredes bajas</button>
+    </div>
+    <div class="stage" id="stage">
+      <canvas id="c3d" aria-label="Modelo 3D de la casa con el local. Arrastrá para girar."></canvas>
+      <div class="tags" id="tags"></div>
+      <div class="hint" id="hint">Arrastrá para girar · tocá un mueble</div>
+      <div class="card" id="card" hidden>
+        <button class="close" id="card-close" aria-label="Cerrar">×</button>
+        <span class="zpill" id="card-zona"><i class="dot"></i><span></span></span>
+        <h3 id="card-titulo"></h3>
+        <span class="medida" id="card-medida"></span>
+        <p id="card-texto"></p>
+      </div>
+    </div>
+    <div class="chips" role="group" aria-label="Resaltar zona">
+      <button class="chip" id="z-servicio" data-zona="servicio" aria-pressed="false" style="--c: var(--z-servicio)"><i class="dot"></i>Servicio</button>
+      <button class="chip" id="z-tienda" data-zona="tienda" aria-pressed="false" style="--c: var(--z-tienda)"><i class="dot"></i>Tienda</button>
+      <button class="chip" id="z-ecommerce" data-zona="ecommerce" aria-pressed="false" style="--c: var(--z-ecommerce)"><i class="dot"></i>Venta online</button>
+      <button class="chip" id="z-casa" data-zona="casa" aria-pressed="false" style="--c: var(--z-casa)"><i class="dot"></i>Casa</button>
+    </div>
+    <ul class="clave" id="clave" aria-label="Ambientes"></ul>
+    <div class="rotulo" aria-label="Rótulo">
+      <div><span>Terreno</span><strong>10,50 × 11,00 m</strong></div>
+      <div><span>Cubierto</span><strong>88,0 m²</strong></div>
+      <div><span>Local</span><strong>30,4 m²</strong></div>
+      <div><span>Patio + ingreso</span><strong>27,5 m²</strong></div>
+      <div><span>Altura</span><strong>2,60 m</strong></div>
+    </div>
+  </section>
+
+  <div class="col">
+    <section>
+      <h2>Qué cambié de tu plano</h2>
+      <div class="cambios">
+        <div class="cambio" style="--c: var(--z-servicio)">
+          <span class="zpill"><i class="dot"></i>5b · Gabinete · <span class="mono">14,1 m²</span></span>
+          <h3>El servicio, en un cuarto aparte</h3>
+          <p>Un tabique de durlock con puerta separa la camilla y el sillón de reflexología de la tienda. Los masajes necesitan silencio; la tienda, gente entrando.</p>
+        </div>
+        <div class="cambio" style="--c: var(--z-tienda)">
+          <span class="zpill"><i class="dot"></i>5a · Tienda · <span class="mono">16,3 m²</span></span>
+          <h3>La tienda es la sala de espera</h3>
+          <p>Vidriera, góndola, mesa de kits y mostrador. Quien espera su turno mira productos: ahí se vende sin esfuerzo.</p>
+        </div>
+        <div class="cambio" style="--c: var(--z-ecommerce)">
+          <span class="zpill"><i class="dot"></i>2 · Oficina + depósito · <span class="mono">11,6 m²</span></span>
+          <h3>La oficina mueve los pedidos</h3>
+          <p>Stock, mesa de empaque y rincón de fotos, con puerta directa a la tienda. Los envíos salen por el portón sin cruzar el local.</p>
+        </div>
+      </div>
+      <p class="later">Tomé como servicio los masajes, la reflexología y el yoga, que es lo que ya está en el bot de turnos. El yoga grupal sigue en el estudio; en el patio entran clases individuales o de a dos.</p>
+    </section>
+
+    <section>
+      <h2>Qué vender</h2>
+      <p class="tesis">Vendé lo que la gente ya usa en la sesión.</p>
+      <p>El que compra un aceite en tu local ya confía en tu masaje. Si vendés cualquier cosa por internet, competís contra Mercado Libre por precio y perdés. Por eso todo lo de abajo está atado al servicio. Está ordenado por qué conviene hacer primero.</p>
+      <ol class="ranking">
+        <li>
+          <span class="n">1</span>
+          <h3>Gift cards y packs de sesiones</h3>
+          <p>Navidad está a 7 semanas. No necesitan stock ni obra: se cobran con un link de Mercado Pago y se mandan en PDF por WhatsApp o impresas en la tienda. El pack de 4 sesiones te adelanta plata y asegura que vuelvan.</p>
+          <div class="tags-row"><span class="t si">Stock: nada</span><span class="t si">Empezar: esta semana</span><span class="t">Se vende 100% online</span></div>
+        </li>
+        <li>
+          <span class="n">2</span>
+          <h3>Kit «Reflexología en casa»</h3>
+          <p>Pelota con pinchos, rodillo para el pie, un aceite y una tarjeta con QR a un video corto de tu mamá mostrando 5 puntos. Es producto propio: nadie más tiene ese video, así que no se compara por precio. Es el mejor producto online de la lista.</p>
+          <div class="tags-row"><span class="t">Stock: poco</span><span class="t si">Envío: fácil</span><span class="t si">Margen: alto</span></div>
+        </li>
+        <li>
+          <span class="n">3</span>
+          <h3>Aceites y cremas de masaje</h3>
+          <p>Reventa de marcas con registro de ANMAT. Es lo que más se recompra: el que lo prueba en la camilla y se lo lleva vuelve a buscar otro.</p>
+          <div class="tags-row"><span class="t">Stock: medio</span><span class="t si">Envío: fácil</span><span class="t si">Recompra</span></div>
+        </li>
+        <li>
+          <span class="n">4</span>
+          <h3>Aromas y ambiente</h3>
+          <p>Velas de soja, sahumerios, difusores, sales de baño. Es lo que se lleva el que entra a mirar o busca un regalo, y lo que arma la vidriera.</p>
+          <div class="tags-row"><span class="t">Stock: medio</span><span class="t si">Regalo</span><span class="t">Más venta en el local</span></div>
+        </li>
+        <li>
+          <span class="n">5</span>
+          <h3>Almohadillas térmicas de semillas</h3>
+          <p>Baratas, livianas y muy vendidas en otoño e invierno. Se le pueden encargar a una costurera de la zona y venderlas con tu marca.</p>
+          <div class="tags-row"><span class="t">De temporada</span><span class="t si">Envío: fácil</span><span class="t">Arrancar en marzo</span></div>
+        </li>
+        <li>
+          <span class="n">6</span>
+          <h3>Accesorios de yoga</h3>
+          <p>Colchonetas, bloques, cintos y almohadones de meditación, para tus alumnas y en el local. Online no conviene: ocupan mucho, el envío sale caro y en Mercado Libre están más baratos.</p>
+          <div class="tags-row"><span class="t">Solo en el local</span><span class="t">Envío: voluminoso</span></div>
+        </li>
+      </ol>
+      <p class="later"><strong>Más adelante:</strong> clases grabadas, por ejemplo «15 minutos de yoga para la espalda» o una rutina de autorreflexología. No tienen stock y se venden a cualquier distancia, pero lleva tiempo grabarlas bien. Conviene cuando los kits ya se vendan solos.</p>
+      <div class="evitar">
+        <h3>Qué no vender</h3>
+        <ul>
+          <li>Suplementos o yuyos con promesas de salud: piden habilitaciones y traen problemas.</li>
+          <li>Cremas o aceites hechos en casa: para venderlos hace falta laboratorio habilitado.</li>
+          <li>Ropa: talles, cambios y devoluciones.</li>
+          <li>Aparatitos electrónicos de masaje baratos: fallan y vuelven.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Cómo venderlo online</h2>
+      <p>Arrancá donde ya tenés clientes y sumá canales cuando el anterior quede chico.</p>
+      <div class="canales">
+        <div class="canal"><div><h3>WhatsApp Business</h3><span class="cuando">Desde el día 1</span></div><p>Catálogo con fotos y precios. El bot de turnos ya habla con tus clientes: al confirmar un turno puede ofrecer la gift card o el kit.</p></div>
+        <div class="canal"><div><h3>Instagram</h3><span class="cuando">Desde el día 1</span></div><p>La vidriera online: fotos del rincón de fotos, videos cortos de la sesión y link al catálogo.</p></div>
+        <div class="canal"><div><h3>Mercado Pago</h3><span class="cuando">Desde el día 1</span></div><p>Link de pago para lo que se vende por chat y QR en el mostrador.</p></div>
+        <div class="canal"><div><h3>Tiendanube</h3><span class="cuando">Cuando WhatsApp no dé abasto</span></div><p>Tienda propia con carrito y envíos integrados. Sirve para vender a gente que todavía no te conoce.</p></div>
+        <div class="canal"><div><h3>Mercado Libre</h3><span class="cuando">Solo si sobra stock</span></div><p>Para liquidar accesorios de yoga. Ahí se compite por precio, no por confianza.</p></div>
+      </div>
+      <p><strong>Entregas:</strong> retiro en el local (gratis y además trae gente a la tienda), moto para la zona y correo para el resto. Todo sale por el portón.</p>
+    </section>
+
+    <section>
+      <h2>Qué hacer en las próximas 12 semanas</h2>
+      <div class="plan">
+        <div class="etapa"><div class="cuando"><strong>Semanas 1–2</strong>hasta el 22 nov</div>
+          <ul>
+            <li>Lanzar las gift cards de Navidad: diseño simple, precio y link de pago. Es lo único que se puede vender ya.</li>
+            <li>Preguntar en el municipio qué habilitación pide un local en tu casa (venta de productos + gabinete de masajes).</li>
+            <li>Consultar con un contador cómo sumar la venta de productos al monotributo.</li>
+          </ul></div>
+        <div class="etapa"><div class="cuando"><strong>Semanas 3–4</strong>hasta el 6 dic</div>
+          <ul>
+            <li>Elegir 3 proveedores: aceites y cremas con ANMAT, velas y sahumerios, accesorios de reflexología.</li>
+            <li>Comprar poco de cada cosa para ver qué rota.</li>
+            <li>Armar el kit de reflexología y grabar el video del QR con el celular.</li>
+          </ul></div>
+        <div class="etapa"><div class="cuando"><strong>Semanas 5–8</strong>hasta el 3 ene</div>
+          <ul>
+            <li>Obra liviana: tabique con puerta para el gabinete, góndola, mostrador y estantería de stock.</li>
+            <li>Sacar fotos de todo y cargar el catálogo de WhatsApp e Instagram.</li>
+            <li>Si los kits están antes del 15 de diciembre, venderlos para Navidad. Si no, abrir en enero sin apuro.</li>
+          </ul></div>
+        <div class="etapa"><div class="cuando"><strong>Semanas 9–12</strong>hasta el 31 ene</div>
+          <ul>
+            <li>Mirar qué se vendió: reponer lo que rota y liquidar lo que no.</li>
+            <li>Si los pedidos por WhatsApp desbordan, pasar a Tiendanube.</li>
+            <li>Preparar San Valentín (gift card para dos) y pensar el stock de invierno.</li>
+          </ul></div>
+      </div>
+      <div class="ojo">
+        <h3>Antes de gastar en obra</h3>
+        <ul>
+          <li><strong>Habilitación:</strong> que se pueda tener comercio en tu casa depende de la zona. Preguntá antes de comprar muebles.</li>
+          <li><strong>Etiquetas:</strong> cremas y aceites, solo con registro de ANMAT impreso.</li>
+          <li><strong>Publicaciones:</strong> hablá de relajarse y sentirse bien, no de curar nada.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="revit">
+      <h2>Abrirlo en Revit</h2>
+      <p>Te pasé el modelo en el chat como archivo IFC, el formato abierto de BIM que Revit importa. No se puede generar un .rvt nativo fuera de Revit, pero al abrir el IFC lo guardás como .rvt y seguís trabajando ahí.</p>
+      <div class="archivo">local/casa-negocio.ifc</div>
+      <ol>
+        <li>En Revit: <strong>Archivo → Abrir → IFC</strong> y elegí <span class="mono">casa-negocio.ifc</span>.</li>
+        <li>Trae paredes, 10 puertas, 5 ventanas, los 10 ambientes con sus m² y 36 muebles.</li>
+        <li>Cada ambiente y mueble tiene la propiedad <span class="mono">Casa_Negocio → Zona</span> (Servicio, Tienda, Venta online, Casa) para filtrar o sacar tablas.</li>
+        <li>Sin Revit, se abre gratis con BIMvision (Windows) o cualquier visor IFC.</li>
+      </ol>
+      <p class="later">Las medidas salen de tus capturas, así que son estimadas. Pasame las reales (frente, fondo y cada ambiente) y regenero el modelo con un comando.</p>
+    </section>
+  </div>
+
+  <footer>Modelo conceptual · medidas en metros · generado con <span class="mono">local/generar_modelo.py</span> del repo de turnos</footer>
+</div>
+
+<script type="application/json" id="modelo">{"ancho":10.5,"fondo":11.0,"alto":2.6,"zonas":{"servicio":"Servicio","tienda":"Tienda","ecommerce":"Venta online","casa":"Casa","exterior":"Exterior"},"ambientes":[{"id":"dorm","num":"1","nombre":"Dormitorio principal","zona":"casa","rects":[[0,0,4.4,3.8]],"info":"Queda igual. Es la parte más privada, lejos del local.","area":16.7},{"id":"ofi","num":"2","nombre":"Oficina + depósito","zona":"ecommerce","rects":[[0,3.8,3.4,7.2]],"info":"El motor de la venta online: stock en estantería, mesa de empaque, rincón para sacar fotos y la compu para responder pedidos. Tiene puerta directa a la tienda.","area":11.6},{"id":"bano","num":"3","nombre":"Baño","zona":"casa","rects":[[3.4,4.8,4.9,7.2]],"info":"Lo usan también los clientes del gabinete.","area":3.6},{"id":"coc","num":"4","nombre":"Cocina","zona":"casa","rects":[[4.4,0,8.0,3.8]],"info":"Abierta al living. Ventana al patio.","area":13.7},{"id":"tienda","num":"5a","nombre":"Tienda","zona":"tienda","rects":[[0,7.2,4.3,11]],"info":"Local a la calle: vidriera, góndola de productos, mesa de kits y mostrador donde se cobra y se retiran pedidos online. También es la sala de espera del gabinete.","area":16.3},{"id":"gab","num":"5b","nombre":"Gabinete","zona":"servicio","rects":[[4.3,7.2,8.0,11]],"info":"Masajes y reflexología. Separado de la tienda con tabique y puerta para que haya silencio y privacidad. Ventana alta esmerilada.","area":14.1},{"id":"living","num":"6","nombre":"Living comedor","zona":"casa","rects":[[4.4,3.8,8.0,4.8],[4.9,4.8,8.0,7.2]],"info":"Conecta la casa con el gabinete (puerta privada) y con el ingreso.","area":11.0},{"id":"paso","num":"","nombre":"Paso","zona":"casa","rects":[[3.4,3.8,4.4,4.8]],"info":"Distribuidor de 1 × 1 m.","area":1.0},{"id":"patio","num":"","nombre":"Patio","zona":"exterior","rects":[[8.0,0,10.5,6.0]],"info":"15 m². Entran 2 o 3 colchonetas: clases de yoga individuales o de a dos.","area":15.0},{"id":"ingreso","num":"","nombre":"Ingreso y despacho","zona":"exterior","rects":[[8.0,6.0,10.5,11]],"info":"Por el portón entra la gente de la casa y sale la mercadería: el correo o la moto retira los pedidos sin pasar por el local.","area":12.5}],"paredes":[{"x0":0,"y0":0,"x1":10.5,"y1":0,"t":0.2,"aberturas":[{"a":1.2,"b":3.2,"antepecho":1.0,"dintel":2.2,"tipo":"ventana","nombre":"Ventana dormitorio"},{"a":5.2,"b":6.7,"antepecho":1.1,"dintel":2.1,"tipo":"ventana","nombre":"Ventana cocina"}]},{"x0":0,"y0":0,"x1":0,"y1":11.0,"t":0.2,"aberturas":[]},{"x0":10.5,"y0":0,"x1":10.5,"y1":11.0,"t":0.2,"aberturas":[]},{"x0":0,"y0":11.0,"x1":10.5,"y1":11.0,"t":0.2,"aberturas":[{"a":0.3,"b":2.5,"antepecho":0.3,"dintel":2.4,"tipo":"ventana","nombre":"Vidriera"},{"a":2.8,"b":3.7,"antepecho":0,"dintel":2.2,"tipo":"puerta","nombre":"Puerta del local"},{"a":4.9,"b":7.4,"antepecho":1.5,"dintel":2.2,"tipo":"ventana","nombre":"Ventana alta gabinete"},{"a":8.2,"b":10.3,"antepecho":0,"dintel":2.2,"tipo":"porton","nombre":"Portón"}]},{"x0":8.0,"y0":0,"x1":8.0,"y1":11.0,"t":0.2,"aberturas":[{"a":1.2,"b":2.4,"antepecho":1.0,"dintel":2.1,"tipo":"ventana","nombre":"Ventana cocina al patio"},{"a":4.0,"b":4.9,"antepecho":0,"dintel":2.1,"tipo":"puerta","nombre":"Puerta ventana al patio"},{"a":6.2,"b":7.0,"antepecho":0,"dintel":2.1,"tipo":"puerta","nombre":"Puerta de la casa"}]},{"x0":0,"y0":3.8,"x1":8.0,"y1":3.8,"t":0.12,"aberturas":[{"a":3.5,"b":4.3,"antepecho":0,"dintel":2.05,"tipo":"puerta","nombre":"Puerta dormitorio"},{"a":5.6,"b":7.2,"antepecho":0,"dintel":2.1,"tipo":"pase","nombre":"Pase cocina-living"}]},{"x0":4.4,"y0":0,"x1":4.4,"y1":3.8,"t":0.12,"aberturas":[]},{"x0":3.4,"y0":3.8,"x1":3.4,"y1":7.2,"t":0.12,"aberturas":[{"a":0.1,"b":0.9,"antepecho":0,"dintel":2.05,"tipo":"puerta","nombre":"Puerta oficina"}]},{"x0":3.4,"y0":4.8,"x1":4.9,"y1":4.8,"t":0.12,"aberturas":[{"a":0.05,"b":0.7,"antepecho":0,"dintel":2.05,"tipo":"puerta","nombre":"Puerta baño"}]},{"x0":4.9,"y0":4.8,"x1":4.9,"y1":7.2,"t":0.12,"aberturas":[]},{"x0":0,"y0":7.2,"x1":8.0,"y1":7.2,"t":0.12,"aberturas":[{"a":2.2,"b":3.0,"antepecho":0,"dintel":2.05,"tipo":"puerta","nombre":"Puerta depósito-tienda"},{"a":5.4,"b":6.2,"antepecho":0,"dintel":2.05,"tipo":"puerta","nombre":"Puerta privada al gabinete"}]},{"x0":4.3,"y0":7.2,"x1":4.3,"y1":11.0,"t":0.12,"aberturas":[{"a":0.8,"b":1.6,"antepecho":0,"dintel":2.05,"tipo":"puerta","nombre":"Puerta del gabinete"}]}],"muebles":[{"id":"cama","nombre":"Cama 2 plazas","zona":"casa","x0":1.4,"y0":0.15,"x1":3.0,"y1":2.15,"z":0,"h":0.5,"tipo":"cama","info":""},{"id":"luz1","nombre":"Mesa de luz","zona":"casa","x0":0.85,"y0":0.15,"x1":1.3,"y1":0.6,"z":0,"h":0.5,"tipo":"madera","info":""},{"id":"luz2","nombre":"Mesa de luz","zona":"casa","x0":3.1,"y0":0.15,"x1":3.55,"y1":0.6,"z":0,"h":0.5,"tipo":"madera","info":""},{"id":"placard","nombre":"Placard","zona":"casa","x0":3.75,"y0":0.9,"x1":4.32,"y1":3.0,"z":0,"h":2.2,"tipo":"madera","info":""},{"id":"stock","nombre":"Estantería de stock","zona":"ecommerce","x0":0.1,"y0":3.9,"x1":2.5,"y1":4.35,"z":0,"h":2.0,"tipo":"estante","info":"2,40 m · 5 estantes con cajas rotuladas por producto. Acá vive todo lo que se vende online."},{"id":"escritorio","nombre":"Escritorio y compu","zona":"ecommerce","x0":0.1,"y0":4.6,"x1":0.8,"y1":6.0,"z":0,"h":0.75,"tipo":"mesa","info":"Para responder WhatsApp, cargar productos a la tienda online e imprimir etiquetas."},{"id":"silla","nombre":"Silla","zona":"ecommerce","x0":0.95,"y0":5.05,"x1":1.4,"y1":5.5,"z":0,"h":0.45,"tipo":"tela","info":""},{"id":"empaque","nombre":"Mesa de empaque","zona":"ecommerce","x0":2.75,"y0":5.0,"x1":3.35,"y1":6.4,"z":0,"h":0.9,"tipo":"mesa_blanca","info":"Cajas, cinta, papel de seda, tarjetita escrita a mano y etiqueta de envío."},{"id":"fotos","nombre":"Rincón de fotos","zona":"ecommerce","x0":0.15,"y0":6.35,"x1":0.85,"y1":7.05,"z":0,"h":0.75,"tipo":"mesa_blanca","info":"Mesita con fondo blanco y una luz. Con fotos parejas, la tienda online se ve profesional."},{"id":"fondo","nombre":"Fondo blanco","zona":"ecommerce","x0":0.1,"y0":6.3,"x1":0.16,"y1":7.1,"z":0.75,"h":0.9,"tipo":"panel","info":""},{"id":"cajas","nombre":"Cajas de envío","zona":"ecommerce","x0":1.2,"y0":6.55,"x1":1.8,"y1":7.05,"z":0,"h":0.5,"tipo":"cajas","info":""},{"id":"inodoro","nombre":"Inodoro","zona":"casa","x0":3.55,"y0":6.5,"x1":3.95,"y1":7.1,"z":0,"h":0.4,"tipo":"blanco","info":""},{"id":"lavatorio","nombre":"Lavatorio","zona":"casa","x0":4.35,"y0":6.6,"x1":4.82,"y1":7.08,"z":0,"h":0.85,"tipo":"blanco","info":""},{"id":"ducha","nombre":"Ducha","zona":"casa","x0":4.15,"y0":4.88,"x1":4.82,"y1":5.9,"z":0,"h":0.06,"tipo":"blanco","info":""},{"id":"mesada","nombre":"Mesada","zona":"casa","x0":4.5,"y0":0.1,"x1":7.2,"y1":0.7,"z":0,"h":0.9,"tipo":"blanco","info":""},{"id":"heladera","nombre":"Heladera","zona":"casa","x0":7.3,"y0":0.1,"x1":7.9,"y1":0.75,"z":0,"h":1.8,"tipo":"gris","info":""},{"id":"desayunador","nombre":"Desayunador","zona":"casa","x0":5.6,"y0":2.2,"x1":6.8,"y1":2.9,"z":0,"h":0.9,"tipo":"mesa","info":""},{"id":"sofa","nombre":"Sofá","zona":"casa","x0":4.98,"y0":5.2,"x1":5.8,"y1":6.9,"z":0,"h":0.8,"tipo":"tela","info":""},{"id":"ratona","nombre":"Mesa ratona","zona":"casa","x0":6.0,"y0":5.7,"x1":6.5,"y1":6.5,"z":0,"h":0.4,"tipo":"mesa","info":""},{"id":"comedor","nombre":"Mesa comedor","zona":"casa","x0":6.4,"y0":4.3,"x1":7.4,"y1":5.1,"z":0,"h":0.75,"tipo":"mesa","info":""},{"id":"gondola","nombre":"Góndola de productos","zona":"tienda","x0":0.1,"y0":7.45,"x1":0.5,"y1":10.3,"z":0,"h":2.1,"tipo":"estante","info":"5 estantes a la vista: aceites, cremas, velas, sahumerios y accesorios de yoga."},{"id":"vidriera","nombre":"Exhibidor de vidriera","zona":"tienda","x0":0.4,"y0":10.45,"x1":2.4,"y1":10.85,"z":0,"h":0.45,"tipo":"madera","info":"Tarima baja detrás del vidrio. Se cambia según la fecha: Navidad, Día de la Madre, invierno."},{"id":"kits","nombre":"Mesa de kits y regalos","zona":"tienda","x0":1.1,"y0":8.5,"x1":2.3,"y1":9.5,"z":0,"h":0.85,"tipo":"mesa","info":"Kits armados y gift cards a la mano: lo que se lleva alguien que entra a mirar."},{"id":"mostrador","nombre":"Mostrador","zona":"tienda","x0":3.35,"y0":8.9,"x1":4.2,"y1":10.2,"z":0,"h":1.0,"tipo":"blanco","info":"Caja con QR de Mercado Pago, bolsas y el estante de pedidos online listos para retirar."},{"id":"banco","nombre":"Banco de espera","zona":"tienda","x0":3.15,"y0":7.3,"x1":4.2,"y1":7.72,"z":0,"h":0.45,"tipo":"tela","info":"Quien espera su turno mira los productos. La espera también vende."},{"id":"planta1","nombre":"Planta","zona":"tienda","x0":2.45,"y0":10.45,"x1":2.75,"y1":10.75,"z":0,"h":1.1,"tipo":"planta","info":""},{"id":"camilla","nombre":"Camilla de masajes","zona":"servicio","x0":5.7,"y0":8.3,"x1":6.4,"y1":10.2,"z":0,"h":0.75,"tipo":"camilla","info":"Con 70 cm libres alrededor para moverse cómoda."},{"id":"reflexo","nombre":"Sillón de reflexología","zona":"servicio","x0":7.0,"y0":7.6,"x1":7.8,"y1":9.2,"z":0,"h":0.6,"tipo":"tela","info":"Reclinable, con los pies a la altura de las manos."},{"id":"banqueta","nombre":"Banqueta con ruedas","zona":"servicio","x0":6.6,"y0":9.6,"x1":6.95,"y1":9.95,"z":0,"h":0.5,"tipo":"cilindro","info":""},{"id":"apoyo","nombre":"Mueble de apoyo","zona":"servicio","x0":4.45,"y0":9.5,"x1":4.9,"y1":10.8,"z":0,"h":0.9,"tipo":"madera","info":"Toallas, aceites en uso, parlante. Lo que se usa en la sesión se puede comprar en la tienda."},{"id":"planta2","nombre":"Planta","zona":"servicio","x0":7.45,"y0":10.35,"x1":7.8,"y1":10.7,"z":0,"h":1.2,"tipo":"planta","info":""},{"id":"mat1","nombre":"Colchoneta de yoga","zona":"servicio","x0":8.35,"y0":0.8,"x1":8.95,"y1":2.6,"z":0,"h":0.01,"tipo":"mat","info":"En el patio entran 2 o 3 colchonetas para clases individuales o de a dos."},{"id":"mat2","nombre":"Colchoneta de yoga","zona":"servicio","x0":9.5,"y0":0.8,"x1":10.1,"y1":2.6,"z":0,"h":0.01,"tipo":"mat","info":""},{"id":"planta3","nombre":"Planta","zona":"exterior","x0":8.2,"y0":5.3,"x1":8.6,"y1":5.7,"z":0,"h":1.0,"tipo":"planta","info":""},{"id":"planta4","nombre":"Planta","zona":"exterior","x0":9.95,"y0":5.3,"x1":10.3,"y1":5.65,"z":0,"h":0.9,"tipo":"planta","info":""},{"id":"despacho","nombre":"Pedidos listos para despachar","zona":"ecommerce","x0":9.85,"y0":8.9,"x1":10.35,"y1":10.0,"z":0,"h":0.6,"tipo":"cajas","info":"El correo o la moto retiran por el portón sin entrar al local."}]}</script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  const M = JSON.parse(document.getElementById('modelo').textContent);
+  const W = M.ancho, D = M.fondo, H = M.alto;
+  const stage = document.getElementById('stage');
+  const canvas = document.getElementById('c3d');
+  const tagsEl = document.getElementById('tags');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function noGL(msg) {
+    const d = document.createElement('div'); d.className = 'nogl'; d.textContent = msg; stage.appendChild(d);
+    document.getElementById('hint').hidden = true;
+  }
+  if (!window.THREE || !THREE.OrbitControls) { noGL('No se pudo cargar el visor 3D. Recargá la página.'); return; }
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); }
+  catch (e) { noGL('Este dispositivo no muestra 3D (WebGL). El plan de abajo está completo igual.'); return; }
+
+  const fmt = (n, d) => n.toLocaleString('es-AR', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 300);
+  const controls = new THREE.OrbitControls(camera, canvas);
+  controls.maxPolarAngle = Math.PI * 0.47;
+  controls.minDistance = 3;
+  controls.maxDistance = 60;
+  controls.screenSpacePanning = true;
+
+  // luces
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xcfd6cc, 0.78));
+  const sol = new THREE.DirectionalLight(0xffffff, 0.62);
+  sol.position.set(-7, 16, 9);
+  sol.castShadow = true;
+  sol.shadow.mapSize.set(2048, 2048);
+  Object.assign(sol.shadow.camera, { left: -10, right: 10, top: 10, bottom: -10, near: 1, far: 50 });
+  sol.shadow.bias = -0.0008;
+  scene.add(sol);
+
+  const COL = {
+    madera: 0xC9A27A, blanco: 0xF3F2EE, tela: 0x9DB4A7, gris: 0xB7BDB9, kraft: 0xC49A68,
+    panel: 0xFBFBF9, maceta: 0xB98257, hoja: 0x5E9156, mat: 0x9C86D0, vidrio: 0xA9CFDA,
+    porton: 0x36413C, pared: 0xF5F3EE, poche: 0x3A4540, losa: 0xD9D6CC
+  };
+  const PISO = { servicio: 0xE8E1F4, tienda: 0xF6E6CC, ecommerce: 0xDBE8F4, casa: 0xEEEDE7, exterior: 0xD8E5CE };
+  const PISO_OFF = 0xE5E5E1;
+  const ZCSS = { servicio: '--z-servicio', tienda: '--z-tienda', ecommerce: '--z-ecommerce', casa: '--z-casa', exterior: '--z-exterior' };
+
+  const mat = (c, extra) => new THREE.MeshLambertMaterial(Object.assign({ color: c }, extra || {}));
+  // plano (x, y hacia la calle) -> escena (x, z), centrado
+  function caja(x0, y0, x1, y1, z0, h, material, sombra) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(Math.max(x1 - x0, 0.001), Math.max(h, 0.001), Math.max(y1 - y0, 0.001)), material);
+    m.position.set((x0 + x1) / 2 - W / 2, z0 + h / 2, (y0 + y1) / 2 - D / 2);
+    m.castShadow = sombra !== false; m.receiveShadow = true;
+    return m;
+  }
+  function cilindro(cx, cy, r, z0, h, material, segs) {
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 0.92, h, segs || 20), material);
+    m.position.set(cx - W / 2, z0 + h / 2, cy - D / 2);
+    m.castShadow = m.receiveShadow = true;
+    return m;
+  }
+
+  // suelo y grilla
+  const suelo = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.ShadowMaterial({ opacity: 0.12 }));
+  suelo.rotation.x = -Math.PI / 2; suelo.position.y = -0.15; suelo.receiveShadow = true; scene.add(suelo);
+  let grilla = null;
+  function ponerGrilla() {
+    if (grilla) scene.remove(grilla);
+    grilla = new THREE.GridHelper(60, 60, css('--grid') || '#cccccc', css('--grid') || '#cccccc');
+    grilla.position.y = -0.152; scene.add(grilla);
+  }
+  ponerGrilla();
+  scene.add(caja(-0.1, -0.1, W + 0.1, D + 0.1, -0.15, 0.15, mat(COL.losa), false));
+
+  // pisos por ambiente
+  const pisos = [];
+  M.ambientes.forEach(a => {
+    a.rects.forEach(r => {
+      const m = mat(PISO[a.zona]);
+      const p = caja(r[0], r[1], r[2], r[3], 0, 0.02, m, false);
+      p.userData.ambiente = a; scene.add(p); pisos.push({ a, m });
+    });
+  });
+
+  // paredes
+  const paredes = new THREE.Group(); scene.add(paredes);
+  let corte = H;
+  function armarParedes() {
+    while (paredes.children.length) {
+      const c = paredes.children.pop(); c.geometry.dispose();
+    }
+    const lado = mat(COL.pared), tope = mat(COL.poche);
+    const mats = [lado, lado, tope, lado, lado, lado];
+    const vidrio = mat(COL.vidrio, { transparent: true, opacity: 0.35 });
+    const reja = mat(COL.porton);
+    M.paredes.forEach(p => {
+      const horiz = p.y0 === p.y1;
+      const ext = p.t >= 0.2 ? p.t / 2 : 0;
+      const L = horiz ? p.x1 - p.x0 : p.y1 - p.y0;
+      const ab = p.aberturas.slice().sort((a, b) => a.a - b.a);
+      const piezas = [];
+      let cur = -ext;
+      ab.forEach(o => {
+        if (o.a > cur) piezas.push([cur, o.a, 0, H]);
+        if (o.antepecho > 0) piezas.push([o.a, o.b, 0, o.antepecho]);
+        if (o.dintel < H) piezas.push([o.a, o.b, o.dintel, H]);
+        cur = o.b;
+      });
+      if (cur < L + ext) piezas.push([cur, L + ext, 0, H]);
+      const rect = (a, b, t) => horiz
+        ? [p.x0 + a, p.y0 - t / 2, p.x0 + b, p.y0 + t / 2]
+        : [p.x0 - t / 2, p.y0 + a, p.x0 + t / 2, p.y0 + b];
+      piezas.forEach(([a, b, z0, z1]) => {
+        z1 = Math.min(z1, corte); if (z1 - z0 < 0.01) return;
+        const r = rect(a, b, p.t);
+        paredes.add(caja(r[0], r[1], r[2], r[3], z0, z1 - z0, mats));
+      });
+      ab.forEach(o => {
+        const top = Math.min(o.dintel, corte);
+        if (o.tipo === 'ventana' && top > o.antepecho) {
+          const r = rect(o.a, o.b, 0.03);
+          paredes.add(caja(r[0], r[1], r[2], r[3], o.antepecho, top - o.antepecho, vidrio, false));
+        }
+        if (o.tipo === 'porton') {
+          const alto = Math.min(2.0, corte);
+          for (let s = o.a + 0.06; s < o.b - 0.02; s += 0.14) {
+            const r = rect(s, s + 0.04, 0.05);
+            paredes.add(caja(r[0], r[1], r[2], r[3], 0, alto, reja));
+          }
+          const r = rect(o.a, o.b, 0.06);
+          paredes.add(caja(r[0], r[1], r[2], r[3], alto - 0.08, 0.08, reja));
+        }
+      });
+    });
+  }
+  armarParedes();
+
+  // muebles
+  let semilla = 7;
+  const azar = () => { semilla = (semilla * 16807) % 2147483647; return (semilla - 1) / 2147483646; };
+  const PROD = [0xD9A15B, 0x9C86D0, 0x8FB39E, 0xF2EFE8, 0xE3B7A8, 0x6F9FC9, 0xC9CF8A];
+  const muebles = [];
+
+  function estante(m, g, mk) {
+    const largoX = (m.x1 - m.x0) >= (m.y1 - m.y0);
+    const L = largoX ? m.x1 - m.x0 : m.y1 - m.y0;
+    const P = largoX ? m.y1 - m.y0 : m.x1 - m.x0;
+    const at = (a0, a1, p0, p1, z0, h, material) => largoX
+      ? caja(m.x0 + a0, m.y0 + p0, m.x0 + a1, m.y0 + p1, z0, h, material)
+      : caja(m.x0 + p0, m.y0 + a0, m.x0 + p1, m.y0 + a1, z0, h, material);
+    const madera = mk(COL.madera);
+    const nPost = Math.max(2, Math.round(L / 0.9) + 1);
+    for (let i = 0; i < nPost; i++) {
+      const a = (L - 0.04) * i / (nPost - 1);
+      g.add(at(a, a + 0.04, 0, P, 0, m.h, madera));
+    }
+    const niveles = 5, paso = (m.h - 0.06) / (niveles - 1);
+    const esStock = m.zona === 'ecommerce';
+    for (let k = 0; k < niveles; k++) {
+      const z = k * paso;
+      g.add(at(0, L, 0, P, z, 0.03, madera));
+      if (k === niveles - 1) break;
+      let a = 0.08;
+      while (a < L - 0.12) {
+        const w = esStock ? 0.32 + azar() * 0.1 : 0.06 + azar() * 0.12;
+        const hh = Math.min(paso - 0.08, esStock ? 0.26 : 0.1 + azar() * 0.2);
+        const c = esStock ? (azar() > 0.5 ? COL.kraft : 0xBFC7C2) : PROD[Math.floor(azar() * PROD.length)];
+        if (a + w > L - 0.06) break;
+        g.add(at(a, a + w, P * 0.15, P * 0.85, z + 0.03, hh, mk(c)));
+        a += w + (esStock ? 0.05 : 0.03 + azar() * 0.05);
+      }
+    }
+  }
+
+  M.muebles.forEach(m => {
+    const g = new THREE.Group();
+    const propios = [];
+    const mk = c => { const x = mat(c); propios.push(x); return x; };
+    const w = m.x1 - m.x0, d = m.y1 - m.y0;
+    switch (m.tipo) {
+      case 'cama':
+        g.add(caja(m.x0, m.y0, m.x1, m.y1, 0, 0.28, mk(COL.madera)));
+        g.add(caja(m.x0 + 0.03, m.y0 + 0.03, m.x1 - 0.03, m.y1 - 0.03, 0.28, 0.2, mk(COL.blanco)));
+        g.add(caja(m.x0 + 0.03, m.y0 + 0.9, m.x1 - 0.03, m.y1 - 0.03, 0.48, 0.04, mk(0xA9BFB1)));
+        g.add(caja(m.x0, m.y0 - 0.06, m.x1, m.y0, 0, 0.95, mk(COL.madera)));
+        break;
+      case 'estante': estante(m, g, mk); break;
+      case 'mesa': case 'mesa_blanca': {
+        const c = mk(m.tipo === 'mesa' ? COL.madera : COL.blanco), pata = mk(0x8E8A82);
+        g.add(caja(m.x0, m.y0, m.x1, m.y1, m.h - 0.04, 0.04, c));
+        [[m.x0 + 0.04, m.y0 + 0.04], [m.x1 - 0.08, m.y0 + 0.04], [m.x0 + 0.04, m.y1 - 0.08], [m.x1 - 0.08, m.y1 - 0.08]]
+          .forEach(([a, b]) => g.add(caja(a, b, a + 0.04, b + 0.04, 0, m.h - 0.04, pata)));
+        const sobre = (x0, y0, x1, y1, h, col) => g.add(caja(x0, y0, x1, y1, m.h, h, mk(col)));
+        if (m.id === 'kits') {
+          for (let i = 0; i < 3; i++) for (let j = 0; j < 2; j++) {
+            const x = m.x0 + 0.12 + i * 0.36, y = m.y0 + 0.18 + j * 0.42;
+            sobre(x, y, x + 0.26, y + 0.2, 0.1 + ((i + j) % 2) * 0.06, PROD[(i * 2 + j) % PROD.length]);
+          }
+        }
+        if (m.id === 'escritorio') sobre(m.x0 + 0.08, m.y0 + 0.4, m.x0 + 0.13, m.y1 - 0.4, 0.38, 0x2F3532);
+        if (m.id === 'empaque') { sobre(m.x0 + 0.1, m.y0 + 0.2, m.x1 - 0.12, m.y0 + 0.6, 0.22, COL.kraft); sobre(m.x0 + 0.15, m.y0 + 0.85, m.x1 - 0.2, m.y0 + 1.15, 0.02, 0xFFFFFF); }
+        if (m.id === 'fotos') sobre(m.x0 + 0.25, m.y0 + 0.28, m.x0 + 0.37, m.y0 + 0.4, 0.16, 0x9C86D0);
+        break;
+      }
+      case 'camilla': {
+        const pata = mk(0xD8D4CC);
+        [[0.06, 0.1], [w - 0.11, 0.1], [0.06, d - 0.15], [w - 0.11, d - 0.15]].forEach(([a, b]) =>
+          g.add(caja(m.x0 + a, m.y0 + b, m.x0 + a + 0.05, m.y0 + b + 0.05, 0, m.h - 0.1, pata)));
+        g.add(caja(m.x0, m.y0, m.x1, m.y1, m.h - 0.12, 0.12, mk(0xEDE8F5)));
+        g.add(caja(m.x0 + 0.12, m.y0 + 0.04, m.x1 - 0.12, m.y0 + 0.3, m.h, 0.06, mk(0xF9F8F5)));
+        break;
+      }
+      case 'mat': g.add(caja(m.x0, m.y0, m.x1, m.y1, 0.02, 0.015, mk(COL.mat), false)); break;
+      case 'cajas': {
+        const k = mk(COL.kraft), n = Math.max(2, Math.round(m.h / 0.22));
+        for (let i = 0; i < n; i++) {
+          const s = (i % 2) * 0.04;
+          g.add(caja(m.x0 + s, m.y0 + 0.02 + s, m.x1 - 0.04 + s, m.y1 - 0.02 - s, i * (m.h / n), m.h / n - 0.01, k));
+        }
+        break;
+      }
+      case 'planta': {
+        const r = Math.min(w, d) / 2, cx = (m.x0 + m.x1) / 2, cy = (m.y0 + m.y1) / 2;
+        g.add(cilindro(cx, cy, r * 0.7, 0, 0.32, mk(COL.maceta)));
+        const hoja = new THREE.Mesh(new THREE.IcosahedronGeometry(r * 1.15, 0), mk(COL.hoja));
+        hoja.position.set(cx - W / 2, 0.32 + (m.h - 0.32) / 2 + 0.05, cy - D / 2);
+        hoja.scale.set(1, (m.h - 0.32) / (r * 2), 1);
+        hoja.castShadow = true; g.add(hoja);
+        break;
+      }
+      case 'cilindro':
+        g.add(cilindro((m.x0 + m.x1) / 2, (m.y0 + m.y1) / 2, Math.min(w, d) / 2, 0, m.h, mk(COL.tela)));
+        break;
+      default:
+        g.add(caja(m.x0, m.y0, m.x1, m.y1, m.z, m.h, mk(COL[m.tipo] || COL.blanco)));
+    }
+    g.traverse(o => { if (o.isMesh) o.userData.item = m; });
+    scene.add(g);
+    muebles.push({ m, g, propios });
+  });
+
+  // etiquetas de ambientes
+  const etiquetas = M.ambientes.map(a => {
+    const r = a.rects.reduce((best, x) => ((x[2] - x[0]) * (x[3] - x[1]) > (best[2] - best[0]) * (best[3] - best[1]) ? x : best));
+    const el = document.createElement('button');
+    el.className = 'tag' + (a.num ? '' : ' sinnum');
+    el.type = 'button';
+    el.innerHTML = (a.num ? '<b></b>' : '') + '<span class="nom"></span><span class="m2"></span>';
+    if (a.num) { el.querySelector('b').textContent = a.num; el.querySelector('b').style.background = 'var(' + ZCSS[a.zona] + ')'; }
+    el.querySelector('.nom').textContent = a.nombre;
+    if (a.id === 'ingreso') el.dataset.corto = 'Ingreso';
+    el.querySelector('.m2').textContent = fmt(a.area, a.area % 1 ? 1 : 0) + ' m²';
+    el.addEventListener('click', () => mostrar({ tipo: 'ambiente', a }));
+    tagsEl.appendChild(el);
+    return { a, el, pos: new THREE.Vector3((r[0] + r[2]) / 2 - W / 2, 0.4, (r[1] + r[3]) / 2 - D / 2) };
+  });
+
+  // clave de ambientes debajo del visor
+  const clave = document.getElementById('clave');
+  M.ambientes.filter(a => a.id !== 'paso').forEach(a => {
+    const li = document.createElement('li');
+    const b = document.createElement('button'); b.type = 'button';
+    const n = document.createElement('b'); n.textContent = a.num || '';
+    if (a.num) n.style.background = 'var(' + ZCSS[a.zona] + ')'; else n.className = 'vacio';
+    const nom = document.createElement('span'); nom.textContent = a.nombre;
+    const m2 = document.createElement('span'); m2.className = 'm2'; m2.textContent = fmt(a.area, 1) + ' m²';
+    b.append(n, nom, m2);
+    b.addEventListener('click', () => mostrar({ tipo: 'ambiente', a }));
+    li.appendChild(b); clave.appendChild(li);
+  });
+
+  // tarjeta
+  const card = document.getElementById('card');
+  const zonaNombre = M.zonas;
+  function mostrar(sel) {
+    const z = sel.tipo === 'ambiente' ? sel.a.zona : sel.m.zona;
+    const zp = document.getElementById('card-zona');
+    zp.style.setProperty('--c', 'var(' + ZCSS[z] + ')');
+    zp.querySelector('span').textContent = zonaNombre[z];
+    if (sel.tipo === 'ambiente') {
+      document.getElementById('card-titulo').textContent = (sel.a.num ? sel.a.num + ' · ' : '') + sel.a.nombre;
+      document.getElementById('card-medida').textContent = fmt(sel.a.area, 1) + ' m²';
+      document.getElementById('card-texto').textContent = sel.a.info || '';
+    } else {
+      const m = sel.m;
+      document.getElementById('card-titulo').textContent = m.nombre;
+      const a = Math.max(m.x1 - m.x0, m.y1 - m.y0), b = Math.min(m.x1 - m.x0, m.y1 - m.y0);
+      document.getElementById('card-medida').textContent = fmt(a, 2) + ' × ' + fmt(b, 2) + ' m' + (m.h > 0.05 ? ' · alto ' + fmt(m.h, 2) + ' m' : '');
+      document.getElementById('card-texto').textContent = m.info || '';
+    }
+    card.hidden = false;
+    document.getElementById('hint').hidden = true;
+  }
+  document.getElementById('card-close').addEventListener('click', () => { card.hidden = true; });
+
+  // tocar un mueble
+  const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
+  let down = null;
+  canvas.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; });
+  canvas.addEventListener('pointerup', e => {
+    if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 6) return;
+    const r = canvas.getBoundingClientRect();
+    ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(ptr, camera);
+    const objs = [];
+    muebles.forEach(x => x.g.traverse(o => { if (o.isMesh) objs.push(o); }));
+    const hit = ray.intersectObjects(objs, false)[0];
+    if (hit) { mostrar({ tipo: 'mueble', m: hit.object.userData.item }); return; }
+    const piso = ray.intersectObjects(scene.children.filter(o => o.userData && o.userData.ambiente), false)[0];
+    if (piso) mostrar({ tipo: 'ambiente', a: piso.object.userData.ambiente });
+  });
+
+  // filtro por zona
+  let zonaActiva = null;
+  function filtrar(z) {
+    zonaActiva = zonaActiva === z ? null : z;
+    muebles.forEach(({ m, propios }) => {
+      const on = !zonaActiva || m.zona === zonaActiva;
+      propios.forEach(x => { x.transparent = !on; x.opacity = on ? 1 : 0.14; x.depthWrite = on; x.needsUpdate = true; });
+    });
+    pisos.forEach(({ a, m }) => m.color.setHex(!zonaActiva || a.zona === zonaActiva ? PISO[a.zona] : PISO_OFF));
+    etiquetas.forEach(t => t.el.classList.toggle('dim', !!zonaActiva && t.a.zona !== zonaActiva));
+    document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.zona === zonaActiva)));
+    pedir();
+  }
+  document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => filtrar(c.dataset.zona)));
+
+  const tParedes = document.getElementById('t-paredes');
+  // vistas: cada una encuadra su zona segun el tamano de la pantalla
+  const VISTAS = {
+    general: { b: [0, 0, W, D], o: [-7.5, 13.5, 13.5], oRetrato: [-2.2, 17, 9.5], foco: null },
+    planta: { b: [0, 0, W, D], o: [0, 1, 0.001], foco: null },
+    local: { b: [0, 7.2, 8.0, D], o: [-2.2, 9.5, 6.2], oRetrato: [5.5, 11, 2.2], foco: ['tienda', 'gab'], bajas: true },
+    deposito: { b: [0, 3.8, 4.3, 8.0], o: [-3.0, 9, 5.5], oRetrato: [-1.4, 9.5, 5], foco: ['ofi'], bajas: true },
+  };
+  let vista = 'general', anim = null;
+  const tmp = new THREE.PerspectiveCamera();
+  function destino(nombre) {
+    const v = VISTAS[nombre];
+    const o = camera.aspect < 1 && v.oRetrato ? v.oRetrato : v.o;
+    const b = v.b;
+    const t = new THREE.Vector3((b[0] + b[2]) / 2 - W / 2, 0.3, (b[1] + b[3]) / 2 - D / 2);
+    const dir = new THREE.Vector3(o[0], o[1], o[2]).normalize();
+    const esq = [];
+    [b[0], b[2]].forEach(x => [b[1], b[3]].forEach(y => [0, H].forEach(z => esq.push(new THREE.Vector3(x - W / 2, z, y - D / 2)))));
+    tmp.fov = camera.fov; tmp.aspect = camera.aspect; tmp.near = 0.1; tmp.far = 300; tmp.updateProjectionMatrix();
+    const q = new THREE.Vector3();
+    let lo = 2, hi = 140;
+    for (let i = 0; i < 32; i++) {
+      const d = (lo + hi) / 2;
+      tmp.position.copy(t).addScaledVector(dir, d); tmp.lookAt(t); tmp.updateMatrixWorld();
+      const entra = esq.every(c => { q.copy(c).project(tmp); return q.z < 1 && Math.abs(q.x) <= 0.9 && Math.abs(q.y) <= 0.86; });
+      if (entra) hi = d; else lo = d;
+    }
+    return { t, p: t.clone().addScaledVector(dir, hi) };
+  }
+  function ajustarEtiquetas() {
+    const angosto = stage.clientWidth < 600, foco = VISTAS[vista].foco;
+    etiquetas.forEach(({ a, el }) => {
+      const completa = foco ? foco.indexOf(a.id) >= 0 : !angosto;
+      el.classList.toggle('solo', !completa && !!a.num);
+      el.classList.toggle('corto', !completa && !a.num);
+      el.hidden = !completa && !a.num && (a.id === 'paso' || !!foco);
+      el.querySelector('.nom').textContent = !completa && el.dataset.corto ? el.dataset.corto : a.nombre;
+    });
+  }
+  function ir(nombre, instante) {
+    vista = nombre;
+    document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === nombre)));
+    ajustarEtiquetas();
+    const dst = destino(nombre);
+    if (instante || reduce) { anim = null; camera.position.copy(dst.p); controls.target.copy(dst.t); controls.update(); pedir(); return; }
+    anim = { p0: camera.position.clone(), t0: controls.target.clone(), dst, ini: performance.now(), dur: 750 };
+    pedir();
+  }
+  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+    tocado = false; ponerParedes(!!VISTAS[b.dataset.view].bajas); ir(b.dataset.view);
+  }));
+
+  function ponerParedes(bajas) {
+    const nuevo = bajas ? 1.05 : H;
+    tParedes.setAttribute('aria-pressed', String(bajas));
+    if (nuevo !== corte) { corte = nuevo; armarParedes(); pedir(); }
+  }
+  tParedes.addEventListener('click', () => ponerParedes(tParedes.getAttribute('aria-pressed') !== 'true'));
+
+  // render a pedido
+  let pendiente = false;
+  function pedir() { if (!pendiente) { pendiente = true; requestAnimationFrame(dibujar); } }
+  const v3 = new THREE.Vector3();
+  function dibujar(now) {
+    pendiente = false;
+    if (anim) {
+      let u = Math.min(1, ((now || performance.now()) - anim.ini) / anim.dur);
+      u = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+      camera.position.lerpVectors(anim.p0, anim.dst.p, u);
+      controls.target.lerpVectors(anim.t0, anim.dst.t, u);
+      controls.update();
+      if (u >= 1) anim = null; else pedir();
+    }
+    renderer.render(scene, camera);
+    const w = stage.clientWidth, h = stage.clientHeight;
+    etiquetas.forEach(t => {
+      v3.copy(t.pos).project(camera);
+      const vis = v3.z < 1 && Math.abs(v3.x) < 1.05 && Math.abs(v3.y) < 1.05;
+      t.el.style.visibility = vis ? 'visible' : 'hidden';
+      t.el.style.transform = 'translate(' + ((v3.x + 1) / 2 * w) + 'px,' + ((1 - v3.y) / 2 * h) + 'px) translate(-50%,-50%)';
+    });
+  }
+  controls.addEventListener('start', () => { anim = null; });
+  controls.addEventListener('change', pedir);
+
+  let tocado = false;
+  controls.addEventListener('start', () => { tocado = true; });
+  function medir() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+    if (!tocado) ir(vista, true); else ajustarEtiquetas();
+    pedir();
+  }
+  new ResizeObserver(medir).observe(stage);
+  medir();
+
+  // tema: la grilla sigue los colores de la pagina
+  const reTema = () => { ponerGrilla(); pedir(); };
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', reTema);
+  new MutationObserver(reTema).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+})();
+</script>
