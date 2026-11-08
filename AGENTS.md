@@ -41,12 +41,17 @@ modules, sin build):
      por `FINANZAS_TOKEN`. El token de Notion nunca va al navegador.
    - Se publica también en GitHub Pages con `.github/workflows/pages.yml` (solo `finanzas/`).
 3. **Modelo 3D del local** (`local/`, no lo sirve Express)
-   - Diseño de la casa + local: tienda a la calle, gabinete de masajes/reflexología y la oficina
-     como depósito para venta online. Incluye el plan de qué productos vender.
-   - `local/generar_modelo.py` (Python + `ifcopenshell`, aparte del proyecto Node) tiene las
-     medidas y genera `casa-negocio.ifc` (para Revit), `modelo.json` y `visor.html`.
+   - Diseño de la casa + local: tienda en la esquina con entrada por la ochava, gabinete de
+     masajes/reflexología y la oficina como depósito para venta online. Incluye el plan de qué
+     productos vender.
+   - `local/modelo.json` es el plano de partida (ambientes como polígonos, paredes en cualquier
+     ángulo con aberturas, muebles con giro). `local/generar_modelo.py` (Python + `ifcopenshell`,
+     aparte del proyecto Node) lo lee y genera `casa-negocio.ifc` (Revit) y `visor.html`.
    - `visor.html` está publicado como artifact: https://claude.ai/artifact/QdHqXFLhr8wXBGwt1suP6x
-     (para actualizarlo, regenerar y volver a publicar ese archivo en la misma URL).
+     Es **editable** (muebles, paredes, pisos) y guarda en su base, documento `planos/actual`
+     (capacidades `db` + `user`, solo editores escriben). Lo que Lautaro edita vive ahí, no en
+     el repo: para pasarlo a Revit, bajar ese documento y correr
+     `python generar_modelo.py --desde plano.json`. Al republicar, usar la misma URL.
 
 ## Cómo correrlo
 
@@ -81,7 +86,8 @@ Hecho:
   probados localmente.
 - Base "Movimientos" creada en Notion y sincronización implementada.
 - Workflow de GitHub Pages para el dashboard.
-- Modelo 3D del local (`local/`): IFC para Revit, visor web y plan de productos y venta online.
+- Modelo 3D del local (`local/`): IFC para Revit, visor web editable (guarda en el artifact) y
+  plan de productos y venta online. Tienda en la esquina con ochava (2026-11-08).
 
 Pendiente (lo hace Lautaro, no se resuelve con código):
 - Crear la app en Meta y conseguir las credenciales de WhatsApp.

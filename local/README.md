@@ -2,7 +2,12 @@
 
 Esta carpeta no tiene nada que ver con el bot ni con el servidor. Es el diseño del local que
 va en la casa: una parte para dar el **servicio** (gabinete de masajes y reflexología), una
-**tienda** a la calle y la oficina convertida en **depósito** para vender online.
+**tienda** en la esquina, con la entrada en la ochava (la pared en diagonal), y la oficina
+convertida en **depósito** para vender online.
+
+La página se puede **editar**: botón «Editar plano» → pestañas Muebles, Paredes y Pisos.
+Lo que se cambia queda guardado en la base de la propia página (documento `planos/actual`),
+así que se ve igual en el celu y en la PC.
 
 Página con el modelo 3D y el plan completo: https://claude.ai/artifact/QdHqXFLhr8wXBGwt1suP6x
 
@@ -12,8 +17,8 @@ Página con el modelo 3D y el plan completo: https://claude.ai/artifact/QdHqXFLh
 | --- | --- |
 | `casa-negocio.ifc` | El modelo para **Revit** (o ArchiCAD, SketchUp, BIMvision). |
 | `visor.html` | La página del modelo 3D con el plan de negocio. Es lo que está publicado. |
-| `generar_modelo.py` | Tiene todas las medidas. Si cambiás algo, se vuelve a generar todo. |
-| `modelo.json` | Las mismas medidas, para el visor 3D. |
+| `modelo.json` | El plano de partida: ambientes (polígonos), paredes (en cualquier ángulo) y muebles (con giro). |
+| `generar_modelo.py` | Lee `modelo.json` y genera el IFC y `visor.html`. |
 | `visor_plantilla.html` | El diseño de la página (sin los datos). |
 
 ## Abrirlo en Revit
@@ -24,17 +29,18 @@ Página con el modelo 3D y el plan completo: https://claude.ai/artifact/QdHqXFLh
    (Servicio, Tienda, Venta online, Casa) para filtrar o armar tablas.
 4. Guardalo como `.rvt` y seguí trabajando ahí.
 
-## Cambiar medidas
+## Pasar a Revit lo editado en la página
 
-Las medidas están estimadas a partir de capturas (terreno de 10,50 × 11,00 m). Para poner las
-reales, editá las listas `AMBIENTES`, `PAREDES` y `MUEBLES` en `generar_modelo.py` y corré:
+1. Bajar el documento `planos/actual` de la base del artifact (Claude lo hace con su
+   herramienta de datos del artifact) a un archivo, por ejemplo `plano.json`.
+2. Correr:
 
 ```bash
 pip install ifcopenshell
-python generar_modelo.py
+python generar_modelo.py --desde plano.json
 ```
 
-Eso regenera el IFC, el JSON y `visor.html`.
+Eso actualiza `modelo.json`, el IFC y `visor.html` (que queda como nuevo plano de partida).
 
 ## El plan en tres líneas
 
