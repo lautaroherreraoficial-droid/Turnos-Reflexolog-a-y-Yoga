@@ -215,9 +215,9 @@ footer { color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--li
 
 <div class="wrap">
   <header class="top">
-    <p class="eyebrow">Planta baja · servicio + producto + venta online</p>
+    <p class="eyebrow">Planta baja · Dumme: asesoría + showroom</p>
     <h1>Casa + negocio</h1>
-    <p class="lead">Tu distribución pasada a modelo 3D. El local se parte en tienda y gabinete, y la oficina pasa a ser el depósito de la venta online. Tocá «Editar plano» para mover paredes, pisos y muebles.</p>
+    <p class="lead">El local de Dumme en tu casa: sala de asesoría, showroom con venta por pedido y la oficina. Tocá «Editar plano» para mover paredes, pisos y muebles, o tocá cualquier mueble para editarlo o borrarlo.</p>
   </header>
 
   <section class="sheet" aria-label="Modelo 3D">
@@ -243,6 +243,7 @@ footer { color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--li
         <h3 id="card-titulo"></h3>
         <span class="medida" id="card-medida"></span>
         <p id="card-texto"></p>
+        <div class="botones" id="card-acciones"></div>
       </div>
     </div>
     <p class="nota" id="nota-lectura" hidden>Podés mirar el plano, pero solo quien edita esta página puede cambiarlo.</p>
@@ -270,16 +271,16 @@ footer { color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--li
       </div>
     </div>
     <div class="chips" role="group" aria-label="Resaltar zona">
-      <button class="chip" id="z-servicio" data-zona="servicio" aria-pressed="false" style="--c: var(--z-servicio)"><i class="dot"></i>Servicio</button>
-      <button class="chip" id="z-tienda" data-zona="tienda" aria-pressed="false" style="--c: var(--z-tienda)"><i class="dot"></i>Tienda</button>
-      <button class="chip" id="z-ecommerce" data-zona="ecommerce" aria-pressed="false" style="--c: var(--z-ecommerce)"><i class="dot"></i>Venta online</button>
+      <button class="chip" id="z-servicio" data-zona="servicio" aria-pressed="false" style="--c: var(--z-servicio)"><i class="dot"></i>Asesoría</button>
+      <button class="chip" id="z-tienda" data-zona="tienda" aria-pressed="false" style="--c: var(--z-tienda)"><i class="dot"></i>Showroom</button>
+      <button class="chip" id="z-ecommerce" data-zona="ecommerce" aria-pressed="false" style="--c: var(--z-ecommerce)"><i class="dot"></i>Pedidos</button>
       <button class="chip" id="z-casa" data-zona="casa" aria-pressed="false" style="--c: var(--z-casa)"><i class="dot"></i>Casa</button>
     </div>
     <ul class="clave" id="clave" aria-label="Ambientes"></ul>
     <div class="rotulo" aria-label="Rótulo">
       <div><span>Terreno</span><strong id="r-terreno">10,50 × 11,00 m</strong></div>
       <div><span>Cubierto</span><strong id="r-cubierto">87,3 m²</strong></div>
-      <div><span>Local</span><strong id="r-local">29,3 m²</strong></div>
+      <div><span>Asesoría + showroom</span><strong id="r-local">29,3 m²</strong></div>
       <div><span>Patio + ingreso</span><strong id="r-exterior">27,5 m²</strong></div>
       <div><span>Altura</span><strong id="r-altura">2,60 m</strong></div>
     </div>
@@ -287,141 +288,139 @@ footer { color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--li
 
   <div class="col">
     <section>
-      <h2>Qué cambié de tu plano</h2>
+      <h2>Cómo se usa el local</h2>
       <div class="cambios">
         <div class="cambio" style="--c: var(--z-servicio)">
-          <span class="zpill"><i class="dot"></i>5b · Gabinete · <span class="mono">14,1 m²</span></span>
-          <h3>El servicio, del lado de adentro</h3>
-          <p>Un tabique de durlock con puerta separa la camilla y el sillón de reflexología de la tienda, lejos de la puerta de la calle. Los masajes necesitan silencio; la tienda, gente entrando.</p>
+          <span class="zpill"><i class="dot"></i>5b · Sala de asesoría · <span class="mono">14,1 m²</span></span>
+          <h3>La asesoría, del lado de adentro</h3>
+          <p>Mesa para 6, pizarra para dibujar procesos y biblioteca con los estudios. Lejos de la puerta de la calle, para hablar tranquilos.</p>
         </div>
         <div class="cambio" style="--c: var(--z-tienda)">
-          <span class="zpill"><i class="dot"></i>5a · Tienda · <span class="mono">15,2 m²</span></span>
-          <h3>La tienda, en la esquina</h3>
-          <p>Entrada por la ochava (la pared en diagonal), vidriera a la calle, góndolas, mesa de kits y mostrador. Quien espera su turno mira productos: ahí se vende sin esfuerzo.</p>
+          <span class="zpill"><i class="dot"></i>5a · Showroom · <span class="mono">15,2 m²</span></span>
+          <h3>El showroom, en la esquina</h3>
+          <p>Entrada por la ochava. Muestras de productos para negocios, una mesa para probarlos y el mostrador para tomar pedidos. Quien espera la reunión ve los productos.</p>
         </div>
         <div class="cambio" style="--c: var(--z-ecommerce)">
           <span class="zpill"><i class="dot"></i>2 · Oficina + depósito · <span class="mono">11,6 m²</span></span>
-          <h3>La oficina mueve los pedidos</h3>
-          <p>Stock, mesa de empaque y rincón de fotos. Los envíos salen por el portón sin cruzar el local.</p>
+          <h3>Pedidos sin stock</h3>
+          <p>Con la venta por pedido casi no hay stock: un estante para lo que llega del proveedor, mesa de empaque y rincón de fotos para el catálogo.</p>
         </div>
       </div>
-      <p class="later">Tomé como servicio los masajes, la reflexología y el yoga, que es lo que ya está en el bot de turnos. El yoga grupal sigue en el estudio; en el patio entran clases individuales o de a dos.</p>
     </section>
 
     <section>
-      <h2>Qué vender</h2>
-      <p class="tesis">Vendé lo que la gente ya usa en la sesión.</p>
-      <p>El que compra un aceite en tu local ya confía en tu masaje. Si vendés cualquier cosa por internet, competís contra Mercado Libre por precio y perdés. Por eso todo lo de abajo está atado al servicio. Está ordenado por qué conviene hacer primero.</p>
+      <h2>Qué vender en el showroom</h2>
+      <p class="tesis">Vendé la solución al problema que encontraste en la asesoría.</p>
+      <p>El diagnóstico muestra qué se hace mal todos los días. Si el producto que lo arregla está a la vista y el cliente ya confía en vos, la venta sale sola. Por eso cada producto de la lista resuelve un problema concreto. Están ordenados por cuál conviene empezar.</p>
       <ol class="ranking">
         <li>
           <span class="n">1</span>
-          <h3>Gift cards y packs de sesiones</h3>
-          <p>Navidad está a 7 semanas. No necesitan stock ni obra: se cobran con un link de Mercado Pago y se mandan en PDF por WhatsApp o impresas en la tienda. El pack de 4 sesiones te adelanta plata y asegura que vuelvan.</p>
-          <div class="tags-row"><span class="t si">Stock: nada</span><span class="t si">Empezar: esta semana</span><span class="t">Se vende 100% online</span></div>
+          <h3>Kit de orden 5S</h3>
+          <p>Cinta de demarcación de piso, panel de herramientas con siluetas y cajas con etiqueta. Sale de casi todos los diagnósticos: menos tiempo buscando cosas y menos golpes.</p>
+          <div class="tags-row"><span class="t si">Muestra en showroom</span><span class="t">Por pedido</span><span class="t si">En casi todos los clientes</span></div>
         </li>
         <li>
           <span class="n">2</span>
-          <h3>Kit «Reflexología en casa»</h3>
-          <p>Pelota con pinchos, rodillo para el pie, un aceite y una tarjeta con QR a un video corto de tu mamá mostrando 5 puntos. Es producto propio: nadie más tiene ese video, así que no se compara por precio. Es el mejor producto online de la lista.</p>
-          <div class="tags-row"><span class="t">Stock: poco</span><span class="t si">Envío: fácil</span><span class="t si">Margen: alto</span></div>
+          <h3>Etiquetado y control de stock</h3>
+          <p>Lector de códigos e impresora de etiquetas. Se prueba en la mesa de demostración. Es el ticket más alto de la lista y termina con el stock contado a mano.</p>
+          <div class="tags-row"><span class="t si">Ticket alto</span><span class="t">Por pedido</span><span class="t">Se prueba en el local</span></div>
         </li>
         <li>
           <span class="n">3</span>
-          <h3>Aceites y cremas de masaje</h3>
-          <p>Reventa de marcas con registro de ANMAT. Es lo que más se recompra: el que lo prueba en la camilla y se lo lleva vuelve a buscar otro.</p>
-          <div class="tags-row"><span class="t">Stock: medio</span><span class="t si">Envío: fácil</span><span class="t si">Recompra</span></div>
+          <h3>Seguridad y señalética</h3>
+          <p>Carteles, botiquín y kit de protección personal. Es lo que se repone: el cliente vuelve a comprar.</p>
+          <div class="tags-row"><span class="t si">Se recompra</span><span class="t">Por pedido</span></div>
         </li>
         <li>
           <span class="n">4</span>
-          <h3>Aromas y ambiente</h3>
-          <p>Velas de soja, sahumerios, difusores, sales de baño. Es lo que se lleva el que entra a mirar o busca un regalo, y lo que arma la vidriera.</p>
-          <div class="tags-row"><span class="t">Stock: medio</span><span class="t si">Regalo</span><span class="t">Más venta en el local</span></div>
+          <h3>Tableros y medición</h3>
+          <p>Pizarras kanban, tableros de producción y cronómetros. Son las mismas herramientas que usás en la asesoría: el cliente las ve funcionar antes de comprarlas.</p>
+          <div class="tags-row"><span class="t si">Muestra en showroom</span><span class="t">Por pedido</span></div>
         </li>
         <li>
           <span class="n">5</span>
-          <h3>Almohadillas térmicas de semillas</h3>
-          <p>Baratas, livianas y muy vendidas en otoño e invierno. Se le pueden encargar a una costurera de la zona y venderlas con tu marca.</p>
-          <div class="tags-row"><span class="t">De temporada</span><span class="t si">Envío: fácil</span><span class="t">Arrancar en marzo</span></div>
+          <h3>Energía e iluminación</h3>
+          <p>Medidores de consumo y luminarias LED. El ahorro se ve en la factura, y eso se vende fácil.</p>
+          <div class="tags-row"><span class="t">Por pedido</span><span class="t si">Ahorro medible</span></div>
         </li>
         <li>
           <span class="n">6</span>
-          <h3>Accesorios de yoga</h3>
-          <p>Colchonetas, bloques, cintos y almohadones de meditación, para tus alumnas y en el local. Online no conviene: ocupan mucho, el envío sale caro y en Mercado Libre están más baratos.</p>
-          <div class="tags-row"><span class="t">Solo en el local</span><span class="t">Envío: voluminoso</span></div>
+          <h3>Kit para ordenar tu negocio</h3>
+          <p>Plantilla de caja, mapa de procesos y guía, en digital. No tiene proveedor ni envío. Al que lo compra y se traba le ofrecés el diagnóstico.</p>
+          <div class="tags-row"><span class="t si">Sin stock</span><span class="t si">Se vende online</span></div>
         </li>
       </ol>
-      <p class="later"><strong>Más adelante:</strong> clases grabadas, por ejemplo «15 minutos de yoga para la espalda» o una rutina de autorreflexología. No tienen stock y se venden a cualquier distancia, pero lleva tiempo grabarlas bien. Conviene cuando los kits ya se vendan solos.</p>
       <div class="evitar">
         <h3>Qué no vender</h3>
         <ul>
-          <li>Suplementos o yuyos con promesas de salud: piden habilitaciones y traen problemas.</li>
-          <li>Cremas o aceites hechos en casa: para venderlos hace falta laboratorio habilitado.</li>
-          <li>Ropa: talles, cambios y devoluciones.</li>
-          <li>Aparatitos electrónicos de masaje baratos: fallan y vuelven.</li>
+          <li>Equipos que necesitan una instalación complicada, salvo que la haga un técnico de tu red.</li>
+          <li>Productos sin garantía del proveedor: si fallan, el que queda mal sos vos.</li>
+          <li>Cosas que no podés mostrar funcionando o explicar en un minuto.</li>
         </ul>
       </div>
     </section>
 
     <section>
-      <h2>Cómo venderlo online</h2>
-      <p>Arrancá donde ya tenés clientes y sumá canales cuando el anterior quede chico.</p>
-      <div class="canales">
-        <div class="canal"><div><h3>WhatsApp Business</h3><span class="cuando">Desde el día 1</span></div><p>Catálogo con fotos y precios. El bot de turnos ya habla con tus clientes: al confirmar un turno puede ofrecer la gift card o el kit.</p></div>
-        <div class="canal"><div><h3>Instagram</h3><span class="cuando">Desde el día 1</span></div><p>La vidriera online: fotos del rincón de fotos, videos cortos de la sesión y link al catálogo.</p></div>
-        <div class="canal"><div><h3>Mercado Pago</h3><span class="cuando">Desde el día 1</span></div><p>Link de pago para lo que se vende por chat y QR en el mostrador.</p></div>
-        <div class="canal"><div><h3>Tiendanube</h3><span class="cuando">Cuando WhatsApp no dé abasto</span></div><p>Tienda propia con carrito y envíos integrados. Sirve para vender a gente que todavía no te conoce.</p></div>
-        <div class="canal"><div><h3>Mercado Libre</h3><span class="cuando">Solo si sobra stock</span></div><p>Para liquidar accesorios de yoga. Ahí se compite por precio, no por confianza.</p></div>
+      <h2>Cómo funciona la venta por pedido</h2>
+      <p>No comprás stock: mostrás la muestra, cobrás una seña y le pedís al proveedor.</p>
+      <div class="plan">
+        <div class="etapa"><div class="cuando"><strong>1. Mostrar</strong>en el local</div>
+          <ul><li>El cliente ve la muestra o el catálogo completo en la pantalla del showroom.</li></ul></div>
+        <div class="etapa"><div class="cuando"><strong>2. Cobrar la seña</strong>en el mostrador</div>
+          <ul><li>Tomás el pedido y cobrás una parte por Mercado Pago o transferencia. Antes confirmás que el proveedor tiene stock.</li></ul></div>
+        <div class="etapa"><div class="cuando"><strong>3. Pedir</strong>al proveedor</div>
+          <ul><li>El proveedor manda directo al cliente o al local. El plazo de entrega lo dejás escrito.</li></ul></div>
+        <div class="etapa"><div class="cuando"><strong>4. Entregar</strong>y cobrar el resto</div>
+          <ul><li>Si hace falta instalarlo, lo hace un técnico tercerizado de la red Dumme y lo cobrás aparte.</li></ul></div>
       </div>
-      <p><strong>Entregas:</strong> retiro en el local (gratis y además trae gente a la tienda), moto para la zona y correo para el resto. Todo sale por el portón.</p>
+      <div class="ojo">
+        <h3>Reglas para que no te salga caro</h3>
+        <ul>
+          <li><strong>Margen:</strong> cada producto con su costo y su precio cargados en la lista de Notion.</li>
+          <li><strong>Proveedor:</strong> acordá por escrito quién responde si llega roto o falla.</li>
+          <li><strong>Plazo:</strong> nunca prometas una fecha que el proveedor no te confirmó.</li>
+        </ul>
+      </div>
     </section>
 
     <section>
-      <h2>Qué hacer en las próximas 12 semanas</h2>
+      <h2>Las tres patas de Dumme</h2>
+      <div class="canales">
+        <div class="canal"><div><h3>Asesoría</h3><span class="cuando">Lo principal</span></div><p>Análisis de procesos y de lo que se hace mal día a día, con el software de tiempos, flujos y centro de gravedad. Termina con el certificado y el cartel «Negocio optimizado por Dumme».</p></div>
+        <div class="canal"><div><h3>Instalaciones, limpieza y reparaciones</h3><span class="cuando">Tercerizado</span></div><p>Las hacen técnicos de confianza. Los trabajos llegan por la red de referidos: quien trae uno cobra comisión, y quien sumó a esa persona también.</p></div>
+        <div class="canal"><div><h3>Showroom y productos</h3><span class="cuando">Por pedido</span></div><p>Productos que resuelven lo que encontrás en la asesoría, con muestras en el local y el resto por pedido al proveedor.</p></div>
+      </div>
+      <p><a href="https://claude.ai/artifact/JXxfS9Fk5p2V9QzywPowCq" target="_blank" rel="noopener">Abrir el software de análisis de procesos</a> · <a href="https://app.notion.com/p/41287034c69d814bb5dcc8f4fbcc0089" target="_blank" rel="noopener">Abrir el sistema en Notion</a></p>
+    </section>
+
+    <section>
+      <h2>Próximos pasos</h2>
       <div class="plan">
-        <div class="etapa"><div class="cuando"><strong>Semanas 1–2</strong>hasta el 22 nov</div>
-          <ul>
-            <li>Lanzar las gift cards de Navidad: diseño simple, precio y link de pago. Es lo único que se puede vender ya.</li>
-            <li>Preguntar en el municipio qué habilitación pide un local en tu casa (venta de productos + gabinete de masajes).</li>
-            <li>Consultar con un contador cómo sumar la venta de productos al monotributo.</li>
-          </ul></div>
-        <div class="etapa"><div class="cuando"><strong>Semanas 3–4</strong>hasta el 6 dic</div>
-          <ul>
-            <li>Elegir 3 proveedores: aceites y cremas con ANMAT, velas y sahumerios, accesorios de reflexología.</li>
-            <li>Comprar poco de cada cosa para ver qué rota.</li>
-            <li>Armar el kit de reflexología y grabar el video del QR con el celular.</li>
-          </ul></div>
-        <div class="etapa"><div class="cuando"><strong>Semanas 5–8</strong>hasta el 3 ene</div>
-          <ul>
-            <li>Obra liviana: tabique con puerta para el gabinete, góndola, mostrador y estantería de stock.</li>
-            <li>Sacar fotos de todo y cargar el catálogo de WhatsApp e Instagram.</li>
-            <li>Si los kits están antes del 15 de diciembre, venderlos para Navidad. Si no, abrir en enero sin apuro.</li>
-          </ul></div>
-        <div class="etapa"><div class="cuando"><strong>Semanas 9–12</strong>hasta el 31 ene</div>
-          <ul>
-            <li>Mirar qué se vendió: reponer lo que rota y liquidar lo que no.</li>
-            <li>Si los pedidos por WhatsApp desbordan, pasar a Tiendanube.</li>
-            <li>Preparar San Valentín (gift card para dos) y pensar el stock de invierno.</li>
-          </ul></div>
+        <div class="etapa"><div class="cuando"><strong>Proveedores</strong>primero</div>
+          <ul><li>Conseguir 3 proveedores con envío directo: orden 5S, etiquetado y seguridad.</li><li>Cargar costo, precio y plazo de cada producto en Notion.</li></ul></div>
+        <div class="etapa"><div class="cuando"><strong>Local</strong>después</div>
+          <ul><li>Obra liviana: tabique de la sala de asesoría, exhibidor de muestras y mesa de demostración.</li><li>Sacar las fotos del catálogo.</li></ul></div>
+        <div class="etapa"><div class="cuando"><strong>Clientes</strong>en paralelo</div>
+          <ul><li>Cada diagnóstico termina con la lista de productos que le sirven a ese negocio.</li></ul></div>
       </div>
       <div class="ojo">
-        <h3>Antes de gastar en obra</h3>
+        <h3>Antes de abrir al público</h3>
         <ul>
-          <li><strong>Habilitación:</strong> que se pueda tener comercio en tu casa depende de la zona. Preguntá antes de comprar muebles.</li>
-          <li><strong>Etiquetas:</strong> cremas y aceites, solo con registro de ANMAT impreso.</li>
-          <li><strong>Publicaciones:</strong> hablá de relajarse y sentirse bien, no de curar nada.</li>
+          <li><strong>Habilitación:</strong> preguntá en el municipio qué pide un local comercial en tu casa.</li>
+          <li><strong>Impuestos:</strong> consultá con un contador cómo facturar asesoría, comisiones y venta de productos.</li>
+          <li><strong>Seguro:</strong> responsabilidad civil para el local y para los trabajos tercerizados.</li>
         </ul>
       </div>
     </section>
 
     <section class="revit">
       <h2>Abrirlo en Revit</h2>
-      <p>Te pasé el modelo en el chat como archivo IFC, el formato abierto de BIM que Revit importa. No se puede generar un .rvt nativo fuera de Revit, pero al abrir el IFC lo guardás como .rvt y seguís trabajando ahí.</p>
+      <p>El modelo se exporta como archivo IFC, el formato abierto de BIM que Revit importa. Al abrirlo lo guardás como .rvt y seguís trabajando ahí.</p>
       <div class="archivo">local/casa-negocio.ifc</div>
       <ol>
         <li>En Revit: <strong>Archivo → Abrir → IFC</strong> y elegí <span class="mono">casa-negocio.ifc</span>.</li>
-        <li>Trae paredes, 10 puertas, 5 ventanas, los 10 ambientes con sus m² y 36 muebles.</li>
-        <li>Cada ambiente y mueble tiene la propiedad <span class="mono">Casa_Negocio → Zona</span> (Servicio, Tienda, Venta online, Casa) para filtrar o sacar tablas.</li>
-        <li>Sin Revit, se abre gratis con BIMvision (Windows) o cualquier visor IFC.</li>
+        <li>Trae paredes, puertas, ventanas, los ambientes con sus m² y los muebles.</li>
+        <li>Cada ambiente y mueble tiene la propiedad <span class="mono">Casa_Negocio → Zona</span> para filtrar o sacar tablas.</li>
       </ol>
       <p class="later">Lo que cambies con «Editar plano» queda guardado en esta página, en el celu y en la PC. Para pasarlo a Revit, pedile a Claude que regenere el IFC con el plano guardado.</p>
     </section>
@@ -794,8 +793,34 @@ footer { color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--li
       document.getElementById('card-medida').textContent = fmt(Math.max(m.w, m.d), 2) + ' × ' + fmt(Math.min(m.w, m.d), 2) + ' m' + (m.h > 0.05 ? ' · alto ' + fmt(m.h, 2) + ' m' : '');
       document.getElementById('card-texto').textContent = m.info || '';
     }
+    cardSel = s.tipo === 'ambiente' ? { tipo: 'piso', id: s.a.id } : { tipo: 'mueble', id: s.m.id };
+    pintarAcciones(false);
     card.hidden = false;
     document.getElementById('hint').hidden = true;
+  }
+  let cardSel = null;
+  function pintarAcciones(confirmando) {
+    const box = document.getElementById('card-acciones');
+    box.textContent = '';
+    const b = (t, fn, cls) => { const x = document.createElement('button'); x.type = 'button'; x.className = 'btn ' + (cls || ''); x.textContent = t; x.addEventListener('click', fn); box.appendChild(x); };
+    if (!cardSel) return;
+    const nombre = cardSel.tipo === 'mueble' ? 'este mueble' : 'este ambiente';
+    if (confirmando) {
+      const t = document.createElement('span'); t.className = 'nota'; t.textContent = '¿Borrar ' + nombre + '?'; box.appendChild(t);
+      b('Sí, borrar', () => {
+        if (cardSel.tipo === 'mueble') M.muebles = M.muebles.filter(m => m.id !== cardSel.id);
+        else M.ambientes = M.ambientes.filter(a => a.id !== cardSel.id);
+        card.hidden = true; cardSel = null;
+        armarPisos(); armarMuebles(); confirmar(); pedir();
+      }, 'peligro');
+      b('Cancelar', () => pintarAcciones(false));
+      return;
+    }
+    b(cardSel.tipo === 'mueble' ? 'Editar' : 'Editar forma', () => {
+      const s = cardSel; card.hidden = true;
+      entrarEdicion(); cambiarModo(s.tipo === 'mueble' ? 'muebles' : 'pisos'); seleccionar(s);
+    });
+    b('Borrar', () => pintarAcciones(true), 'peligro');
   }
   document.getElementById('card-close').addEventListener('click', () => { card.hidden = true; });
 
@@ -1044,7 +1069,7 @@ footer { color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--li
     const c = window.claude;
     const [dbN, userN] = await Promise.all([c && c.use ? c.use('db').catch(() => null) : null, c && c.use ? c.use('user').catch(() => null) : null]);
     if (userN) {
-      try { if ((await userN.canEdit()) === false) { soloLectura = true; tEditar.hidden = true; document.getElementById('nota-lectura').hidden = false; } } catch (e) { /* sin datos: se decide al guardar */ }
+      try { if ((await userN.canEdit()) === false) document.getElementById('nota-lectura').hidden = false; } catch (e) { /* sin datos: se decide al guardar */ }
     }
     db = dbN; dbListo = true;
     if (!db) { if (editando) estado('local'); return; }
@@ -1097,6 +1122,15 @@ footer { color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--li
     reconstruir();
   }
   tEditar.addEventListener('click', () => editando ? salirEdicion() : entrarEdicion());
+  window.addEventListener('keydown', ev => {
+    if (!editando || !sel || (ev.key !== 'Delete' && ev.key !== 'Backspace')) return;
+    const t = ev.target; if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) return;
+    ev.preventDefault();
+    if (sel.tipo === 'mueble') M.muebles = M.muebles.filter(m => m.id !== sel.id);
+    if (sel.tipo === 'pared') M.paredes = M.paredes.filter(p => p.id !== sel.id);
+    if (sel.tipo === 'piso') M.ambientes = M.ambientes.filter(a => a.id !== sel.id);
+    sel = null; medida = null; armarPisos(); armarParedes(); armarMuebles(); armarAsas(); confirmar(); pedir();
+  });
 
   function cambiarModo(m) {
     modo = m; sel = null; herramienta = null; medida = null;
@@ -1338,7 +1372,8 @@ footer { color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--li
     ['Mostrador', 'blanco', 1.4, 0.6, 1.0], ['Camilla', 'camilla', 0.7, 1.9, 0.75], ['Sillón', 'tela', 0.8, 0.9, 0.8],
     ['Sofá', 'tela', 1.8, 0.85, 0.8], ['Silla', 'tela', 0.45, 0.45, 0.45], ['Placard', 'madera', 1.8, 0.6, 2.2],
     ['Mueble bajo', 'madera', 1.2, 0.45, 0.9], ['Cama', 'cama', 1.6, 2.0, 0.5], ['Planta', 'planta', 0.4, 0.4, 1.0],
-    ['Cajas', 'cajas', 0.6, 0.4, 0.6], ['Colchoneta', 'mat', 0.6, 1.8, 0.01]];
+    ['Cajas', 'cajas', 0.6, 0.4, 0.6], ['Exhibidor', 'estante', 1.6, 0.4, 2.0], ['Mesa de reunión', 'mesa', 1.6, 1.0, 0.75],
+    ['Pizarra', 'panel', 1.8, 0.06, 1.2], ['Pantalla', 'gris', 1.1, 0.06, 0.62], ['Colchoneta', 'mat', 0.6, 1.8, 0.01]];
   function espesores(t) {
     const lista = [0.1, 0.12, 0.15, 0.2, 0.3];
     if (lista.indexOf(t) < 0) lista.push(t);
@@ -1381,7 +1416,7 @@ footer { color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--li
       const fila = el('div', { class: 'catalogo', role: 'group', 'aria-label': 'Agregar mueble' }, [el('span', { class: 'cat-tit', texto: 'Agregar:' })]);
       CATALOGO.forEach(([nombre, tipo, w, d, h]) => fila.appendChild(btn('+ ' + nombre, () => {
         const c = centroVista();
-        const m = { id: nuevoId('m'), nombre, zona: zonaEn(c.x, c.y), x: c.x, y: c.y, w, d, rot: 0, z: 0, h, tipo, info: '' };
+        const m = { id: nuevoId('m'), nombre, zona: zonaEn(c.x, c.y), x: c.x, y: c.y, w, d, rot: 0, z: (tipo === 'panel' ? 0.9 : nombre === 'Pantalla' ? 1.25 : 0), h, tipo, info: '' };
         M.muebles.push(m); sel = { tipo: 'mueble', id: m.id }; armarMuebles(); confirmar(); armarAsas(); pedir();
       }, 'chip')));
       tools.appendChild(fila);
