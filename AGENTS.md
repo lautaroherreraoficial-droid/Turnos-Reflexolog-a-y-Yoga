@@ -55,7 +55,7 @@ páginas sueltas que se publican como artifacts (`local/` y `dumme/`):
      usar la misma URL y no pisar ese documento sin leerlo antes.
    - Desde el 2026-11-08 el local es de **Dumme** (la consultora de Lautaro): sala de asesoría,
      showroom de productos para negocios con venta por pedido, y oficina.
-4. **Dumme: software de análisis de procesos** (`dumme/`, no lo sirve Express)
+4. **Dumme: software de análisis de procesos y de residuos** (`dumme/`, no lo sirve Express)
    - `dumme/procesos.html`: toma de tiempos con cronómetro, cursograma actual vs. propuesto,
      centro de gravedad (con punto óptimo de Weiszfeld) y generador del certificado y del cartel
      «Negocio optimizado por Dumme». Un solo HTML con las fuentes embebidas, sin librerías.
@@ -64,8 +64,17 @@ páginas sueltas que se publican como artifacts (`local/` y `dumme/`):
      CSV, SVG y PNG con la capacidad `downloads`.
    - `dumme/descargar/`: las mismas páginas listas para abrir sueltas en el navegador (ahí no
      guardan; el guardado funciona solo dentro de Claude).
+   - `dumme/residuos.html`: cuarta área de Dumme (agregada el 2026-11-11, sin sacar nada de lo
+     anterior): gestión de residuos industriales no especiales (Res. 60/2026 y 181/2026 de PBA).
+     Clientes generadores con checklist de cumplimiento, inventario y retiros con certificado,
+     transportistas y operadores con vencimiento de habilitación, rutas con punto de acopio
+     (Weiszfeld) y recorrido, cotizador del abono con EBITDA y capital de trabajo, reporte
+     mensual y sello «Gestión trazable» en PNG. Publicado como artifact:
+     https://claude.ai/artifact/G6RWiJzjNkpt1EB8xtBE5g. Guarda en las colecciones `generadores`,
+     `proveedores` y `config` de su base (solo editores leen y escriben).
    - El sistema de la consultora (clientes, servicios, técnicos, red de referidos, productos)
-     vive en Notion, página **Dumme**, no en este repo.
+     vive en Notion, página **Dumme**, no en este repo. Residuos tiene su página propia ahí
+     (con el análisis de por qué ese negocio) y la línea/tipo de trabajo «Residuos».
 
 ## Cómo correrlo
 
@@ -93,7 +102,7 @@ explicadas en `.env.example`.
 
 ## Estado actual
 
-_Última actualización: 2026-11-08_
+_Última actualización: 2026-11-12_
 
 Hecho:
 - Código del bot, la web pública, el panel `/admin` y el dashboard `/finanzas` completos y
@@ -103,6 +112,7 @@ Hecho:
 - Modelo 3D del local (`local/`): IFC para Revit, visor web editable (guarda en el artifact).
   Tienda en la esquina con ochava, convertida en showroom de Dumme (2026-11-08).
 - Software de análisis de procesos de Dumme (`dumme/procesos.html`), publicado como artifact.
+- Software de residuos industriales de Dumme (`dumme/residuos.html`), publicado como artifact.
 
 Pendiente (lo hace Lautaro, no se resuelve con código):
 - Crear la app en Meta y conseguir las credenciales de WhatsApp.
